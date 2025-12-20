@@ -5,6 +5,8 @@ function App() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState(null);
 
+  const   x ={a:1}
+
   useEffect(() => {
     // Call the backend API
     fetch('http://localhost:8080/api/hello')
@@ -28,7 +30,7 @@ function App() {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {!error && (
         <p>
-Message from API: <strong>{message}</strong>
+          Message from API: <strong>{message}</strong>
         </p>
       )}
     </main>
