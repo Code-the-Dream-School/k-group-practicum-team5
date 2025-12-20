@@ -5,8 +5,8 @@ function App() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState(null);
 
-const     a={b:1}
-console.log(    a )
+const     c={b:1}
+console.log(    c )
 
 
   useEffect(() => {
