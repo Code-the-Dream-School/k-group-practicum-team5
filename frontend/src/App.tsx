@@ -5,7 +5,7 @@ function App() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState(null);
 
-  const   x ={a:1}
+  const   x_test ={a:1}
 
   useEffect(() => {
     // Call the backend API
