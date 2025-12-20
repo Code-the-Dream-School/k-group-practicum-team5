@@ -4,10 +4,6 @@ import "./App.css";
 function App() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState(null);
-
-  const m = { b: 1 };
-  console.log(m);
-
   useEffect(() => {
     // Call the backend API
     fetch("http://localhost:8080/api/hello")
