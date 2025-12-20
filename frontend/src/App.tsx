@@ -5,8 +5,9 @@ function App() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState(null);
 
-  const    a={b:1}
-  console.log(a)
+const     a={b:1}
+console.log(    a )
+
 
   useEffect(() => {
     // Call the backend API
