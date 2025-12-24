@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import Typography from '@mui/material/Typography';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import './App.css'
 
 function App() {
@@ -33,6 +35,10 @@ function App() {
           Message from API: <strong>{message}</strong>
         </p>
       )}
+
+      <Typography variant="h5" color="primary">
+        MUI is working <CheckCircleIcon />
+      </Typography>
     </main>
   );
 }
