@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import FormattedLabel from "./components/FormattedLabel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Calendar from "./components/Calendar";
+import { Divider } from "@mui/material";
 import "./App.css";
 
 function App() {
@@ -34,6 +36,12 @@ function App() {
       )}
       <FormattedLabel text="MUI is working" />
       MUI is working <CheckCircleIcon />
+
+      <Divider sx={{ my: 4 }} />
+      
+      <Calendar />
+
+
     </main>
   );
 }
