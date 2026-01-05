@@ -1,3 +1,4 @@
+require('express-async-errors');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -5,6 +6,9 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const connectMongo = require('./config/db.mongo');
 const helloRoutes = require('./routes/hello.routes');
+
+// routers
+const authRouter = require('../routes/authRouter');
 
 const app = express();
 
@@ -27,6 +31,7 @@ app.use(limiter);
 
 // Routes
 app.use('/api/hello', helloRoutes);
+app.use('/api/user', authRouter);
 
 // Root route
 app.get('/', (req, res) => {

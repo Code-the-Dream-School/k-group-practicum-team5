@@ -4,8 +4,8 @@ const mongoose = require('mongoose')
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        minlength: 3,
-        maxlength: 20,
+        minlength: [3, 'Username must be at least 3 characters long'],
+        maxlength: [20, 'Username cannot exceed 20 characters'],
         trim: true,
         match: [
             /^[A-Za-z0-9_-]+$/,
