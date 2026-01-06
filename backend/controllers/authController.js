@@ -8,7 +8,7 @@ const hashPassword = async (password) => {
 };
 
 const register = async (req, res) => {
-    if (!req.body.password || req.body.password.trim().length < 6) {
+    if (req.body.password.length < 6) {
         return res.status(400).json({ msg: 'Password must be at least 6 characters long' });
     }
     const hashedPassword = await hashPassword(req.body.password);

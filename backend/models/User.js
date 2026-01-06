@@ -38,7 +38,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         minlength: 6,
         required: [true, 'Please Provide A Password'],
-        trim: true,
     },
     resetToken: {
         type: String,
