@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Contact from "./pages/Contact";
-import FormattedLabel from "./components/FormattedLabel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+// import FormattedLabel from "./components/FormattedLabel";
+// import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import "./App.css";
 
 function App() {
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   // const [error, setError] = useState(null);
   // useEffect(() => {
   //   // Call the backend API
