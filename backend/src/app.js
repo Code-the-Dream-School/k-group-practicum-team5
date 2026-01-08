@@ -1,16 +1,16 @@
+require('express-async-errors');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const connectMongo = require('./config/db.mongo');
+const uploadRoutes = require('./routes/upload.routes');
 const helloRoutes = require('./routes/hello.routes');
-const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRouter');
-
-dotenv.config();
-
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 
 connectMongo().then(() => console.log("MongoDB connected")).catch((err) => console.error("MongoDB connection error:", err));
 // connectDB(process.env.MONGO_URI)
@@ -31,6 +31,7 @@ app.use(limiter);
 
 // Routes
 app.use('/api/hello', helloRoutes);
+app.use('/api/v1/img', uploadRoutes);
 app.use('/api/auth', authRoutes);
 
 // Root route
