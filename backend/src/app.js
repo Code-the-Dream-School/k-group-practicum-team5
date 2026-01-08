@@ -5,6 +5,10 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const connectMongo = require('./config/db.mongo');
 const helloRoutes = require('./routes/hello.routes');
+const dotenv = require('dotenv');
+const authRoutes = require('./routes/authRouter');
+
+dotenv.config();
 
 const app = express();
 
@@ -27,6 +31,7 @@ app.use(limiter);
 
 // Routes
 app.use('/api/hello', helloRoutes);
+app.use('/api/auth', authRoutes);
 
 // Root route
 app.get('/', (req, res) => {

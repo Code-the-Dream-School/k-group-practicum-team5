@@ -1,9 +1,8 @@
-// import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Contact from "./pages/Contact";
-// import FormattedLabel from "./components/FormattedLabel";
-// import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import "./App.css";
+import MainLayout from "@/layout/MainLayout";
+import VideoListPage from "@/pages/VideoListPage";
+import { Box } from "@mui/material";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -40,6 +39,14 @@ function App() {
      <BrowserRouter>
       <Routes>
         <Route path="/contact" element={<Contact />} />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Box>Home Page</Box>} />
+          <Route path="video" element={<VideoListPage />} />
+          <Route path="*" element={<p>Page Not Found</p>} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
