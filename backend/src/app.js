@@ -9,6 +9,7 @@ const helloRoutes = require('./routes/hello.routes');
 
 // routers
 const authRouter = require('../routes/authRouter');
+const volunteeringRouter = require('../routes/volunteeringRouter');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(limiter);
 // Routes
 app.use('/api/hello', helloRoutes);
 app.use('/api/user', authRouter);
+app.use('/api/volunteering', volunteeringRouter);
 
 // Root route
 app.get('/', (req, res) => {
