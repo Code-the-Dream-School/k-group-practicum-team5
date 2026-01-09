@@ -1,5 +1,5 @@
-const Event = require('../../models/Event');
-const OpeningDay = require('../../models/OpeningDay');
+const Event = require('../models/Event');
+const OpeningDay = require('../models/OpeningDay');
 const { normalizeDate, getMonthBoundaries } = require('../utils/dateUtils');
 
 // GET /api/calendar/opening-days
