@@ -29,7 +29,7 @@ function VideoCard({ video }: { video: Video }) {
       </Box>
 
       <CardContent sx={{ padding: 1 }}>
-        <Typography variant="subtitle2" color="text.primary" noWrap>
+        <Typography variant="subtitle2" color="primary.main" noWrap>
           {title}
         </Typography>
         <Typography variant="caption" color="text.secondary">
