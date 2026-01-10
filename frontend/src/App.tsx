@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import MainLayout from "@/layout/MainLayout";
 import VideoListPage from "@/pages/VideoListPage";
+import Contact from "@/pages/Contact";
 import { Box } from "@mui/material";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Box>Home Page</Box>} />
           <Route path="video" element={<VideoListPage />} />
+          <Route path="contact" element={<Contact />} />
           <Route path="*" element={<p>Page Not Found</p>} />
         </Route>
       </Routes>
