@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const  createVolunteeringOpportunity = require('../controllers/volunteeringController');
+const { createOpportunity, getCategories, getOpportunities } = require('../controllers/volunteeringController');
 
-router.post('/new', createVolunteeringOpportunity);
-
+router.get('/enums/categories', getCategories);
+router.get('/opportunities', getOpportunities);
+router.post('/new', createOpportunity);
 module.exports = router;

@@ -1,7 +1,40 @@
 const Volunteering = require('../models/Volunteering');
 const { StatusCodes } = require('http-status-codes');
 
-const createVolunteeringOpportunity = async (req, res) => {
+const getCategories = async (req, res) => {
+    try {
+        const categories = Volunteering.schema.path('category').enumValues;
+        res.status(StatusCodes.OK).json(categories);
+    } catch (error) {
+        console.error(error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: error.message || "Unexpected server error while fetching categories."
+        });
+    }
+}
+
+const getOpportunities = async (req, res) => {
+    try {
+        const opportunities = await Volunteering.aggregate([
+            {
+                $addFields: {
+                    totalAssignees: { $size: { $ifNull: ["$assignees", []] } },
+                    totalApplicants: { $size: { $ifNull: ["$applicants", []] } },
+                },
+            },
+            { $project: { assignees: 0, applicants: 0 } },
+            { $sort: { date: -1 } },
+        ]);
+        res.status(StatusCodes.OK).json(opportunities);
+    } catch (error) {
+        console.error(error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: error.message || "Unexpected server error while fetching opportunities."
+        });
+    }
+}
+
+const createOpportunity = async (req, res) => {
     try {
         await Volunteering.create(req.body);
 
@@ -21,4 +54,8 @@ const createVolunteeringOpportunity = async (req, res) => {
     }
 }
 
-module.exports = createVolunteeringOpportunity;
+module.exports = {
+    createOpportunity,
+    getCategories,
+    getOpportunities,
+}
