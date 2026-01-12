@@ -1,28 +1,12 @@
-import { useEffect, useState } from "react";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
 import VolunteerActivismRoundedIcon from "@mui/icons-material/VolunteerActivismRounded";
+import { type GridColDef } from "@mui/x-data-grid";
+import { Box } from "@mui/material";
+import CommonTable from "../../../components/tables/commonTable";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
-import { Box } from "@mui/material";
 
 export default function ViewOpportunities() {
-  const [rows, setRows] = useState([]);
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/volunteering/opportunities`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-
-        setRows(data);
-      })
-      .catch(console.error);
-  }, []);
-
+ 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 0 },
     {
@@ -63,70 +47,28 @@ export default function ViewOpportunities() {
     },
   ];
 
-  const paginationModel = { page: 0, pageSize: 10 };
-  const columnVisibilityModel = { id: false, timeFrom: false, timeTo: false };
+  const fetchRows = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/volunteering/opportunities`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (data) {
+      return console.error(data);
+    }
+  };
 
   return (
     <div className='min-h-screen bg-zooLight flex flex-col px-4 py-12'>
-      <Box display='flex' alignItems='center' gap={1}>
+      <Box display='flex' alignItems='center' gap={1} marginLeft={"20px"}>
         <VolunteerActivismRoundedIcon
           sx={{
             color: "var(--zooGreen)",
-            fontSize: "4rem",
-            padding: "0.5rem",
-            borderRadius: "0.5rem",
+            fontSize: "3rem",
           }}
         />
-        <h1 className='font-bold text-zooGreen pt-auto text-4xl'>Volunteering Opportunities</h1>
+        <h1 className='font-bold text-zooGreen pt-auto text-2xl'>Volunteering Opportunities</h1>
       </Box>
-      <Paper sx={{ width: "100%", marginTop: "2.5rem", borderRadius: "2rem" }}>
-        <DataGrid
-          rows={rows}
-          getRowId={(row) => row._id}
-          columns={columns}
-          sx={{
-            "& .MuiDataGrid-columnHeaderTitle": {
-              fontWeight: "900",
-            },
-            "& .MuiDataGrid-columnHeader": {
-              color: "var(--zooGreen)",
-              fontSize: "1.2rem",
-            },
-            "& .MuiDataGrid-columnHeader:focus": {
-              outline: "none",
-            },
-            "& .MuiDataGrid-cell:focus": {
-              outline: "none",
-            },
-            "& .MuiDataGrid-cell": {
-              fontSize: "1.1rem",
-              color: "var(--zooDark)",
-            },
-            "& .MuiDataGrid-row:hover": {
-              backgroundColor: "var(--zooLight)",
-            },
-            "& .MuiTablePagination-root": {
-              marginTop: "1.5rem",
-              fontSize: "1.1rem",
-            },
-            "& .MuiTablePagination-selectLabel": {
-              fontSize: "1.1rem",
-            },
-            "& .MuiTablePagination-displayedRows": {
-              fontSize: "1.1rem",
-            },
-            "& .MuiTablePagination-select": {
-              fontSize: "1.1rem",
-            },
-            border: "0px solid var(--zooGreen)",
-            borderRadius: "2rem",
-            padding: "2rem",
-          }}
-          initialState={{ pagination: { paginationModel }, columns: { columnVisibilityModel } }}
-          pageSizeOptions={[5, 10]}
-          disableRowSelectionOnClick
-        />
-      </Paper>
+      <CommonTable fetchRows={fetchRows} columns={columns} />
     </div>
   );
 }
