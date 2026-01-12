@@ -7,6 +7,7 @@ const connectMongo = require('./config/db.mongo');
 const helloRoutes = require('./routes/hello.routes');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRouter');
+const contactInfoRoutes = require('./routes/contactInfo.routes')
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use(limiter);
 // Routes
 app.use('/api/hello', helloRoutes);
 app.use('/api/auth', authRoutes);
+app.use("/api/contact-info", contactInfoRoutes)
 
 // Root route
 app.get('/', (req, res) => {

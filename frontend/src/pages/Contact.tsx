@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import ContactInfo from "../components/ContactInfo";
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -39,7 +39,7 @@ export default function Contact() {
         <p className="text-center text-gray-600 mt-2 mb-8">
           Questions about visits, events, or volunteering? We’re happy to help.
         </p>
-
+            <ContactInfo />
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name */}
           <input
