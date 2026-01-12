@@ -10,7 +10,7 @@ export default function ViewOpportunities() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch("/api/volunteering/opportunities")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/volunteering/opportunities`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
