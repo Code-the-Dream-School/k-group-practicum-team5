@@ -1,1 +1,1 @@
-export { getAllImagesData } from "./apiGallery";
+export { getImagesData } from "./apiGallery";

@@ -94,6 +94,7 @@ function VideoListPage() {
         gap: 1,
         paddingY: 4,
         backgroundColor: "background.default",
+        border: 0,
       }}
     >
       <LinkText

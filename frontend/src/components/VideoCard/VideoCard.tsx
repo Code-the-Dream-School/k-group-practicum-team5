@@ -24,6 +24,8 @@ function VideoCard({ video }: { video: Video }) {
             width: "100%",
             height: "350px",
             border: 0,
+            borderRadius: "16px",
+            overflow: "hidden",
           }}
         />
       </Box>
