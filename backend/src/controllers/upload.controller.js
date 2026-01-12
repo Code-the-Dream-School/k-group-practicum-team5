@@ -26,12 +26,33 @@ class UploadController {
         });
     }
 
-    async getImages(req, res) {
+async getImages(req, res) {
 
-        const files = await cloudinaryService.getFilesFromFolder(REPTILE_ZOO_FOLDER);
-        res.status(StatusCodes.OK).json({ len: files.length, files });
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.min(Number(req.query.limit) || 8, 8);
 
-    }
+    const offset = (page - 1) * limit;
+
+    // Get ALL files once (Cloudinary limitation)
+    const files = await cloudinaryService.getFilesFromFolder(REPTILE_ZOO_FOLDER);
+
+    const total = files.length;
+
+    const paginatedFiles = files.slice(offset, offset + limit);
+
+    const images = paginatedFiles.map(file => ({
+        asset_id: file.asset_id,
+        url: file.secure_url,
+        title: file.display_name,
+    }));
+
+    res.status(StatusCodes.OK).json({
+        data: images,
+        total,
+        totalPages: Math.ceil(total / limit),
+    });
+}
+
 }
 
 module.exports = new UploadController();

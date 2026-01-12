@@ -31,7 +31,7 @@ app.use(limiter);
 
 // Routes
 app.use('/api/hello', helloRoutes);
-app.use('/api/v1/img', uploadRoutes);
+app.use('/api/v1/images', uploadRoutes);
 app.use('/api/auth', authRoutes);
 
 // Root route
