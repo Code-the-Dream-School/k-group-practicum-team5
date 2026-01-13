@@ -1,6 +1,9 @@
 import { useState } from "react";
 import ContactInfo from "../components/ContactInfo";
+import SuccessAlert from "../components/alert/SuccessAlert";
+
 export default function Contact() {
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,13 +23,17 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Contact form submitted:", formData);
-    alert("Message sent!");
+    setShowSuccess(true);
+
     setFormData({
       name: "",
       email: "",
       category: "General",
       message: "",
     });
+    setTimeout(()=>{
+      setShowSuccess(false)
+    },3000)
   };
 
   return (
@@ -39,8 +46,15 @@ export default function Contact() {
         <p className="text-center text-gray-600 mt-2 mb-8">
           Questions about visits, events, or volunteering? We’re happy to help.
         </p>
-            <ContactInfo />
-        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="mt-8">
+               <ContactInfo />
+            </div>
+          {showSuccess && (
+            <div className="mb-6">
+              <SuccessAlert message= "Message sent successfully!"/>
+            </div>
+          )} 
+        <form onSubmit={handleSubmit} className="space-y-6 mt-8">
           {/* Name */}
           <input
             name="name"

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 type ContactInfoData = {
   phone: string;
@@ -9,14 +10,21 @@ type ContactInfoData = {
 export default function ContactInfo() {
   const [info, setInfo] = useState<ContactInfoData | null>(null);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/contact-info")
-      .then((res) => res.json())
-      .then((data) => setInfo(data))
-      .catch((err) => console.error(err));
+ useEffect(() => {
+  const fetchContactInfo = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/contact-info`);
+      // console.log("CONTACT INFO RESPONSE:", res.data);
+      setInfo(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchContactInfo();
   }, []);
 
-  if (!info) return null;
+  if (!info) return <p>Loading...</p>;
 
   return (
     <div className="bg-zoo-light p-8 rounded-xl shadow-md grid grid-cols-1 md:grid-cols-2 gap-6 ">
