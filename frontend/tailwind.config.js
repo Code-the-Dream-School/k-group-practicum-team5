@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -11,5 +12,17 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addBase, theme }) {
+      const colors = theme("colors");
+      addBase({
+        ":root": {
+          "--zooGreen": colors.zooGreen,
+          "--zooDark": colors.zooDark,
+          "--zooLight": colors.zooLight,
+          "--zooOrange": colors.zooOrange,
+        },
+      });
+    }),
+  ],
 };
