@@ -8,6 +8,10 @@ const connectMongo = require('./config/db.mongo');
 const uploadRoutes = require('./routes/upload.routes');
 const helloRoutes = require('./routes/hello.routes');
 const authRoutes = require('./routes/authRouter');
+const volunteeringRoutes = require('./routes/volunteeringRouter');
+const dotenv = require('dotenv');
+dotenv.config();
+
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
@@ -33,6 +37,7 @@ app.use(limiter);
 app.use('/api/hello', helloRoutes);
 app.use('/api/v1/images', uploadRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/volunteering', volunteeringRoutes);
 
 // Root route
 app.get('/', (req, res) => {

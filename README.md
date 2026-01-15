@@ -114,7 +114,7 @@ JWT_SECRET=your_secret_key
 ```
 
 Backend runs on:  
-http://localhost:8080
+http://localhost:5000
 
 ### Frontend Setup
 
