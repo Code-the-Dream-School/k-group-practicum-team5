@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
-const crypto = require('crypto')
-const sendEmail = require('../utils/sendEmail');
 
 const register = async (req, res) => {
     try {
@@ -78,42 +76,4 @@ const login = async (req, res) => {
     }
 
 }
-
-const forgotPassword = async (req, res) => {
-    try {
-        const { email } = req.body;
-        if (!email) {
-            return res.status(400).json({ error: "Please provide email" });
-        }
-        const user = await User.findOne({ email: email.toLowerCase() });
-        if (!user) {
-            return res.status(200).json({ message: "If email is correct, you will receive a reset link to your email" });
-        }
-        const resetToken = user.createPasswordResetToken();
-        await user.save({ validateBeforeSave: false });
-        const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-        const html = `
-      <h2>Password Reset Request</h2>
-      <p>You requested to reset your password.</p>
-      <p>Click the link below to reset your password:</p>
-      <a href="${resetURL}">Reset Password</a>
-      <p>This link expires in 10 minutes.</p>
-    `;
-
-        await sendEmail({
-            to: user.email,
-            subject: "Reset Your Password",
-            html: `<a href="${resetURL}">Reset Password</a>`
-        });
-        console.log(`Password reset link (send this via email): ${resetURL}`);
-        res.status(200).json({ message: "If email is correct, you will receive a reset link to your email" });
-
-    } catch (error) {
-        res.status(500).json({ error: "Unexpected server error during login. Please try again." });
-    }
-
-}
-
-
-
-module.exports = { register, login, forgotPassword };
+module.exports = { register, login };
