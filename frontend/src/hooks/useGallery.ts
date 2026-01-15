@@ -1,23 +1,12 @@
 import { getImagesData } from "@/api";
 import useRequest from "./useRequest";
-import type { Image } from "@/types";
-
-interface GetImagesParams {
-  page: number;
-  limit: number;
-}
-
-interface GetImagesResponse {
-  data: Image[];
-  totalPages: number;
-  total: number;
-}
+import type { GetImagesParams, GetImagesResponse } from "@/api/apiGallery";
 
 export const useGallery = () => {
   const { run, isLoading, isError, error } = useRequest();
 
-  const getImages = ({ page, limit }: GetImagesParams) =>
-    run<GetImagesResponse>(() => getImagesData({ page, limit }));
+  const getImages = ({ cursor, limit }: GetImagesParams) =>
+    run<GetImagesResponse>(() => getImagesData({ cursor, limit }));
 
   return {
     isLoading,

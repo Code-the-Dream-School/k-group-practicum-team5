@@ -10,12 +10,13 @@ const api = axios.create({
 export async function apiCall<T>(
   method: "get" | "post" | "patch" | "delete",
   url: string,
-  data?: unknown,
+  paramsOrData?: object,
+  config: object = {},
 ): Promise<T> {
   const response =
     method === "get" || method === "delete"
-      ? await api[method]<T>(url)
-      : await api[method]<T>(url, data);
+      ? await api[method]<T>(url, { ...config, params: paramsOrData })
+      : await api[method]<T>(url, paramsOrData, config);
 
   return response.data;
 }

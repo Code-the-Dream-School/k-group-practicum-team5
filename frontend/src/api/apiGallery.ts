@@ -2,18 +2,19 @@ import type { Image } from "@/types";
 import { apiCall } from "./axios";
 
 export interface GetImagesParams {
-  page: number;
-  limit: number;
+  cursor?: string | null;
+  limit?: number | null;
 }
 
 export interface GetImagesResponse {
   data: Image[];
-  totalPages: number;
   total: number;
+  nextCursor?: string | null;
 }
 
-export const getImagesData = ({ page, limit }: GetImagesParams) => {
+export const getImagesData = ({ limit, cursor }: GetImagesParams) => {
   return apiCall<GetImagesResponse>("get", "/images", {
-    params: { page, limit },
+    limit,
+    ...(cursor && { cursor }),
   });
 };
