@@ -6,7 +6,9 @@ const rateLimit = require('express-rate-limit');
 const connectMongo = require('./config/db.mongo');
 const helloRoutes = require('./routes/hello.routes');
 const dotenv = require('dotenv');
+
 const authRoutes = require('./routes/authRouter');
+const volunteeringRoutes = require('./routes/volunteeringRouter');
 
 dotenv.config();
 
@@ -32,6 +34,7 @@ app.use(limiter);
 // Routes
 app.use('/api/hello', helloRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/volunteering', volunteeringRoutes);
 
 // Root route
 app.get('/', (req, res) => {
