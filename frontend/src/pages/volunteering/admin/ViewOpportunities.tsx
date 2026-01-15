@@ -1,11 +1,16 @@
 import { type GridColDef } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import VolunteerActivismRoundedIcon from "@mui/icons-material/VolunteerActivismRounded";
 import CommonTable from "../../../components/tables/CommonTable";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import PageModal from "@/components/modals/PageModal";
+import { usePageModal } from "@/hooks/usePageModal";
 
 export default function ViewOpportunities() {
+  const modal = usePageModal();
+
   const columns: GridColDef[] = [
     {
       field: "actions",
@@ -14,7 +19,7 @@ export default function ViewOpportunities() {
       flex: 0.2,
       disableColumnMenu: true,
       sortable: false,
-      renderCell: () => (
+      renderCell: (params) => (
         <IconButton
           aria-label='edit'
           sx={{
@@ -26,7 +31,13 @@ export default function ViewOpportunities() {
             },
           }}
         >
-          <OpenInNewIcon fontSize='small' />
+          <OpenInNewIcon
+            fontSize='small'
+            onClick={() => {
+              console.log(params);
+              modal.show();
+            }}
+          />
         </IconButton>
       ),
     },
@@ -83,7 +94,18 @@ export default function ViewOpportunities() {
             fontSize: "3rem",
           }}
         />
-        <h1 className='text-zooGreen pt-auto text-2xl'>Volunteering Opportunities</h1>
+        <Typography variant='h5' className='text-zooGreen pt-auto text-2xl'>
+          Volunteering Opportunities
+        </Typography>
+        <PageModal width={900} open={modal.open} onClose={modal.hide}>
+          <Typography variant='h6'>Modal Title</Typography>
+          <Typography marginTop={"1rem"} marginBottom={"6rem"}>
+            This is test modal component for data
+          </Typography>
+          <Button variant='outlined' onClick={modal.hide} sx={{color: "var(--zooGreen)", borderColor: "var(--zooGreen)"}}>
+            Close
+          </Button>
+        </PageModal>
       </Box>
       <CommonTable fetchRows={fetchRows} columns={columns} />
     </Box>
