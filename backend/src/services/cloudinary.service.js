@@ -4,7 +4,7 @@ class CloudinaryService {
 
     constructor() {
         cloudinary.config({
-            secure: true 
+            secure: true
         });
     }
 
@@ -12,8 +12,8 @@ class CloudinaryService {
         try {
             const result = await cloudinary.uploader.upload(fileSource, {
                 folder: folder,
-                resource_type: "auto", 
-            });           
+                resource_type: "auto",
+            });
             return result;
         } catch (error) {
             console.error("Cloudinary Upload Error:", error);
@@ -21,15 +21,26 @@ class CloudinaryService {
         }
     }
 
-    async getFilesFromFolder(folderName) {
+    async getFilesFromFolder(folderName, maxResults, nextCursor = null) {
         try {
-            const result = await cloudinary.api.resources({
-                resource_type: 'image',
-                type: 'upload',
-                asset_folder: folderName,
-                max_results: 500
-            });
-            return result.resources; 
+            const options = {
+                    resource_type: "image",
+                    type: "upload",
+                folder: folderName,
+                max_results: maxResults,
+            };
+
+            if (nextCursor) {
+                options.next_cursor = nextCursor;
+            }
+
+            const result = await cloudinary.api.resources(options);
+
+            return {
+                images: result.resources,
+                nextCursor: result.next_cursor || null,
+            };
+
         } catch (error) {
             console.error("Cloudinary Admin API Error:", error);
             throw error;

@@ -26,32 +26,45 @@ class UploadController {
         });
     }
 
-async getImages(req, res) {
+    async getImages(req, res) {
+        const queryParams = req.query.params || req.query;
+        const limit = Math.min(Number(queryParams.limit) || 8, 8);
+        const cursor = queryParams.cursor || null;
 
-    const page = Math.max(Number(req.query.page) || 1, 1);
-    const limit = Math.min(Number(req.query.limit) || 8, 8);
+        // console.log("Query Parameters:", req.query);
+        console.log("Parsed - limit:", limit, "cursor:", cursor);
 
-    const offset = (page - 1) * limit;
+        const result = await cloudinaryService.getFilesFromFolder(
+            REPTILE_ZOO_FOLDER,
+            limit,
+            cursor
+        );
 
-    // Get ALL files once (Cloudinary limitation)
-    const files = await cloudinaryService.getFilesFromFolder(REPTILE_ZOO_FOLDER);
+        //console.log("Cloudinary result:", result);
 
-    const total = files.length;
+        if (!result || (!result.resources && !result.images)) {
+            console.error("Invalid result from Cloudinary:", result);
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                error: "Failed to fetch images from Cloudinary"
+            });
+        }
 
-    const paginatedFiles = files.slice(offset, offset + limit);
+        const imagesList = result.resources || result.images;
 
-    const images = paginatedFiles.map(file => ({
-        asset_id: file.asset_id,
-        url: file.secure_url,
-        title: file.display_name,
-    }));
+        const images = imagesList.map(file => ({
+            asset_id: file.asset_id,
+            url: file.secure_url,
+            title: file.display_name,
+        }));
 
-    res.status(StatusCodes.OK).json({
-        data: images,
-        total,
-        totalPages: Math.ceil(total / limit),
-    });
-}
+        const nextCursor = result.next_cursor || result.nextCursor || null;
+
+        res.status(StatusCodes.OK).json({
+            data: images,
+            nextCursor,
+        });
+
+    }
 
 }
 
