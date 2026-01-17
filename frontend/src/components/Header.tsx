@@ -3,14 +3,15 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { NavLink } from "react-router-dom";
 
-import lizardLogo from "../assets/logo/lizard.png";
+import lizardLogo from "src/assets/logo/rep-zoo-best.png";
 
 const Header = () => {
   return (
     <Box
       component="header"
       sx={{
-        backgroundColor: "#0B3D2E",
+        backgroundColor: "primary.dark",
+        color: "primary.contrastText",
         height: 72,
         display: "flex",
         alignItems: "center",
@@ -26,6 +27,7 @@ const Header = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: 3,
         }}
       >
         {/* LOGO */}
@@ -33,18 +35,19 @@ const Header = () => {
           <Box
             component="img"
             src={lizardLogo}
-            alt="Lizard logo"
-            sx={{ height: 58 }}
+            alt="Reptile Zoo logo"
+            sx={{ height: 56 }}
           />
 
           <Typography
+            variant="h6"
             sx={{
-              color: "#7CFF9B",
-              fontWeight: 300,
-              letterSpacing: 1,
+              color: "primary.contrastText",
+              fontWeight: 500,
+              letterSpacing: 0.5,
             }}
           >
-            Reptile Kingdom
+            Reptile Zoo
           </Typography>
         </Box>
 
@@ -52,21 +55,20 @@ const Header = () => {
         <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
           {/* Navigation */}
           <Box sx={{ display: "flex", gap: 3 }}>
-            {["Home", "Exhibit", "Visit", "About", "Contact"].map((label) => (
+            {["Home", "Exhibits", "Visit", "About", "Contact"].map((label) => (
               <Typography
                 key={label}
                 component={NavLink}
                 to={label === "Home" ? "/" : `/${label.toLowerCase()}`}
+                variant="body2"
                 sx={{
-                  color: "#FFFFFF",
+                  color: "primary.contrastText",
                   textDecoration: "none",
                   fontWeight: 500,
-                  "&:hover": {
-                    color: "#FFD700", // gold on hover
-                  },
-                  "&.active": {
-                    color: "#FFD700", // gold when active
-                  },
+                  opacity: 0.85,
+                  transition: "opacity 0.2s ease",
+                  "&:hover": { opacity: 1 },
+                  "&.active": { opacity: 1, fontWeight: 700 },
                 }}
               >
                 {label}
@@ -74,20 +76,13 @@ const Header = () => {
             ))}
           </Box>
 
-          {/* Getting Tickets*/}
+          {/* Get Tickets */}
           <Button
             variant="contained"
+            color="secondary"
             sx={{
-              backgroundColor: "#2ECC71",
-              color: "#0B3D2E",
-              fontWeight: 600,
-              textTransform: "none",
-              px: 3,
               borderRadius: 999,
-              "&:hover": {
-                backgroundColor: "#FFFFFF",
-                color: "#0B3D2E",
-              },
+              color: "secondary.contrastText",
             }}
           >
             Get Tickets

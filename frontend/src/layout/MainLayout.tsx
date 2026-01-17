@@ -9,9 +9,10 @@ const MainLayout = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
-        width: "100vw",
-        overflow: "hidden",
+        // height: "100vh",
+        width: "100%",
+        minHeight: "100vh",
+        // overflow: "hidden",
       }}
     >
       <Box component="header">
@@ -21,7 +22,7 @@ const MainLayout = () => {
         component="main"
         sx={{
           flex: "1 1 auto",
-          overflow: "hidden",
+          overflowY: "auto",
         }}
       >
         <Outlet />
