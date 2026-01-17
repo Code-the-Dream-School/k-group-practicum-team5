@@ -4,7 +4,7 @@ import MainLayout from "@/layout/MainLayout";
 import VideoListPage from "@/pages/VideoListPage";
 import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
-import ViewOpportunities from "@/pages/volunteering/admin/viewOpportunities";
+import ViewOpportunities from "@/pages/volunteering/admin/ViewOpportunities";
 import { Box } from "@mui/material";
 
 function App() {

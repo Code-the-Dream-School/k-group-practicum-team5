@@ -34,7 +34,7 @@ app.use(limiter);
 // Routes
 app.use('/api/hello', helloRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/volunteering', volunteeringRoutes);
+app.use('/api/v1/volunteering', volunteeringRoutes);
 
 // Root route
 app.get('/', (req, res) => {

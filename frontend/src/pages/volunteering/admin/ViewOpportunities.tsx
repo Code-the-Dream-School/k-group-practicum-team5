@@ -77,7 +77,7 @@ export default function ViewOpportunities() {
 
   const fetchRows = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/volunteering/opportunities`);
+      const res = await fetch(`${import.meta.env.VITE_APP_API_URL}/volunteering/opportunities`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (data) {
