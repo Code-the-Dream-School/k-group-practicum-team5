@@ -5,7 +5,7 @@ import CommonTable from "../../../components/tables/CommonTable";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import PageModal from "@/components/modals/PageModal";
+import PageModal from "@/components/modals/GenericModal";
 import { usePageModal } from "@/hooks/usePageModal";
 
 export default function ViewOpportunities() {
