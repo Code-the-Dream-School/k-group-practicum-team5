@@ -1,15 +1,20 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { Box, CircularProgress, Typography, Button, Fab } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
+import { InfoAlert } from "../alert";
 
 import { ModalImage } from "./ModalImage";
 import { useGallery } from "@/hooks";
 import type { Image } from "@/types";
 
-export function ImagesList() {
+type ImageListProps = {
+  searchQuery?: string;
+};
+
+export function ImagesList({ searchQuery = "" }: ImageListProps) {
   const [open, setOpen] = useState(false);
   const [activeImage, setActiveImage] = useState<Image | null>(null);
   const [images, setImages] = useState<Image[]>([]);
@@ -27,6 +32,17 @@ export function ImagesList() {
   const limit = cols * (isMobile ? 4 : isTablet ? 2 : 3);
 
   const { isLoading, isError, error, getImages } = useGallery();
+
+  const filteredImages = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return images;
+    }
+    const query = searchQuery.toLowerCase();
+    return images.filter(
+      (img) => img.title?.toLowerCase().includes(query),
+      // || img.description?.toLowerCase().includes(query)
+    );
+  }, [images, searchQuery]);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -141,23 +157,24 @@ export function ImagesList() {
       <div ref={galleryTopRef} />
       <ImageList
         cols={cols}
-        gap={12}
-        rowHeight={300}
+        gap={24}
+        rowHeight={275}
         sx={{
           width: "100%",
           maxWidth: "100%",
           m: 0,
-          p: 0,
+          p: 1,
           overflow: "visible",
         }}
       >
-        {images.map((item) => (
+        {filteredImages.map((item) => (
           <ImageListItem
             key={item.asset_id}
             onClick={() => handleOpen(item)}
             sx={{
               cursor: "pointer",
               borderRadius: 2,
+              m: 1,
               overflow: "hidden",
               transition: "all 0.35s",
               "&:hover": { transform: "translateY(-6px)" },
@@ -186,7 +203,7 @@ export function ImagesList() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            margin: 2,
+            mb: 4,
           }}
         >
           <Button
@@ -201,6 +218,19 @@ export function ImagesList() {
               "Load More"
             )}
           </Button>
+        </Box>
+      )}
+
+      {!nextCursor && filteredImages.length > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mb: 4,
+          }}
+        >
+          <InfoAlert message="No more images to load" />
         </Box>
       )}
 
