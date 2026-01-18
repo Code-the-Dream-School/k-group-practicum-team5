@@ -196,30 +196,31 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
         ))}
       </ImageList>
 
-      {nextCursor && (
-        <Box
-          ref={loadMoreRef}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            mb: 4,
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={loadMore}
-            disabled={isLoading || !nextCursor}
-            sx={{ minWidth: 200 }}
+      {nextCursor &&
+        (searchQuery.trim() === "" || filteredImages.length > 0) && (
+          <Box
+            ref={loadMoreRef}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              mb: 4,
+            }}
           >
-            {isLoading ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              "Load More"
-            )}
-          </Button>
-        </Box>
-      )}
+            <Button
+              variant="contained"
+              onClick={loadMore}
+              disabled={isLoading || !nextCursor}
+              sx={{ minWidth: 200 }}
+            >
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Load More"
+              )}
+            </Button>
+          </Box>
+        )}
 
       {!nextCursor && filteredImages.length > 0 && (
         <Box
@@ -231,6 +232,20 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
           }}
         >
           <InfoAlert message="No more images to load" />
+        </Box>
+      )}
+
+      {filteredImages.length === 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "calc(100vh - 250px)",
+            p: 3,
+          }}
+        >
+          <InfoAlert message="No images found" />
         </Box>
       )}
 
