@@ -1,0 +1,1 @@
+export { getImagesData } from "./apiGallery";
