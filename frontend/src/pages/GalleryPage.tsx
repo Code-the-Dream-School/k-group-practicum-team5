@@ -9,13 +9,13 @@ function GalleryPage() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        padding: 4,
+        p: 2,
       }}
     >
-      <Box sx={{ textAlign: "center", mb: 3 }}>
+      <Box sx={{ textAlign: "center", mb: 1 }}>
         <SectionHeading title="Gallery" />
       </Box>
-      <Box sx={{ flex: 1, width: "100%", overflow: "auto" }}>
+      <Box sx={{ flex: 1, width: "100%", overflow: "auto", px: 2 }}>
         <ImagesList />
       </Box>
     </Box>
