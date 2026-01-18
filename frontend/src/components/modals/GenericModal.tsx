@@ -2,14 +2,14 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
-type PageModalProps = {
+type GenericModalProps = {
   width?: number | string;
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
 };
 
-export default function PageModal({ width = 500, open, onClose, children }: PageModalProps) {
+export default function GenericModal({ width = 500, open, onClose, children }: GenericModalProps) {
   return (
     <Modal open={open} onClose={onClose}>
       <Box

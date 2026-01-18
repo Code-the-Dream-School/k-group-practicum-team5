@@ -5,11 +5,11 @@ import CommonTable from "../../../components/tables/CommonTable";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import PageModal from "@/components/modals/GenericModal";
-import { usePageModal } from "@/hooks/usePageModal";
+import { useGenericModal } from "@/hooks/useGenericModal";
+import GenericModal from "@/components/modals/GenericModal";
 
-export default function ViewOpportunities() {
-  const modal = usePageModal();
+export default function ViewOpportunitiesAdmin() {
+  const modal = useGenericModal();
 
   const columns: GridColDef[] = [
     {
@@ -97,7 +97,7 @@ export default function ViewOpportunities() {
         <Typography variant='h5' className='text-zooGreen pt-auto text-2xl'>
           Volunteering Opportunities
         </Typography>
-        <PageModal width={900} open={modal.open} onClose={modal.hide}>
+        <GenericModal width={900} open={modal.open} onClose={modal.hide}>
           <Typography variant='h6'>Modal Title</Typography>
           <Typography marginTop={"1rem"} marginBottom={"6rem"}>
             This is test modal component for data
@@ -105,7 +105,7 @@ export default function ViewOpportunities() {
           <Button variant='outlined' onClick={modal.hide} sx={{color: "var(--zooGreen)", borderColor: "var(--zooGreen)"}}>
             Close
           </Button>
-        </PageModal>
+        </GenericModal>
       </Box>
       <CommonTable fetchRows={fetchRows} columns={columns} />
     </Box>
