@@ -4,7 +4,7 @@ import L from "leaflet";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-const ZOO_LOCATION: [number, number] = [47.8554, -121.9706]; // Example: Monroe, WA
+const ZOO_LOCATION: [number, number] = [47.8554, -121.9706];
 
 function Routing({ destination }: { destination: [number, number] | null }) {
   const map = useMap();
@@ -32,17 +32,32 @@ function Routing({ destination }: { destination: [number, number] | null }) {
 export default function InteractiveMap() {
   const [address, setAddress] = useState("");
   const [destination, setDestination] = useState<[number, number] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const geocodeAddress = async () => {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
-    );
-    const data = await res.json();
+    if (!address.trim()) return;
 
-    if (data.length > 0) {
-      setDestination([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
-    } else {
-      alert("Address not found");
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          address
+        )}`
+      );
+      const data = await res.json();
+
+      if (data.length > 0) {
+        setDestination([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+      } else {
+        setError("Address not found.");
+      }
+    } catch (err) {
+      setError("Failed to fetch location.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,16 +73,18 @@ export default function InteractiveMap() {
         />
         <button
           onClick={geocodeAddress}
-          className="bg-zoo-green text-white px-4 py-2 rounded"
+          className="bg-zooGreen text-white px-4 py-2 rounded"
         >
-          Get Directions
+          {loading ? "Loading..." : "Get Directions"}
         </button>
       </div>
+
+      {error && <p className="text-red-500">{error}</p>}
 
       <MapContainer
         center={ZOO_LOCATION}
         zoom={13}
-        style={{ height: "400px", width: "100%" }}
+        style={{ height: "450px", width: "100%" }}
         className="rounded-xl shadow-md"
       >
         <TileLayer

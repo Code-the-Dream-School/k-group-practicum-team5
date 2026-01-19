@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ContactInfo from "../components/ContactInfo";
 import SuccessAlert from "../components/alert/SuccessAlert";
+import InteractiveMap from "../components/InteractiveMap";
 
 export default function Contact() {
   const [showSuccess, setShowSuccess] = useState(false);
@@ -37,7 +38,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-zooLight flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-zooGreen/80 flex items-center justify-center px-4 py-12">
       <div className="bg-white rounded-2xl shadow-xl max-w-xl w-full p-10">
         <h1 className="text-3xl font-bold text-zooGreen text-center">
           Contact Us
