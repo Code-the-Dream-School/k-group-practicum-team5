@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ContactInfo from "../components/ContactInfo";
 import SuccessAlert from "../components/alert/SuccessAlert";
-import InteractiveMap from "../components/InteractiveMap";
 
 export default function Contact() {
   const [showSuccess, setShowSuccess] = useState(false);

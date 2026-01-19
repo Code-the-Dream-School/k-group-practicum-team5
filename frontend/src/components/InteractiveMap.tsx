@@ -54,7 +54,7 @@ export default function InteractiveMap() {
       } else {
         setError("Address not found.");
       }
-    } catch (err) {
+    } catch {
       setError("Failed to fetch location.");
     } finally {
       setLoading(false);
