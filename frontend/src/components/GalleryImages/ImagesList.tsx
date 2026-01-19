@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useTheme, useMediaQuery } from "@mui/material";
-import { Box, CircularProgress, Typography, Button, Fab } from "@mui/material";
+import { Box, Fab } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import { InfoAlert } from "../alert";
-
+import { InfoAlert, ErrorAlert } from "@/components/alert";
+import { ZooLoader } from "@/components/shared";
 import { ModalImage } from "./ModalImage";
+import { GalleryImageCard } from "./GalleryImageCard";
+import { LoadControls } from "./LoadControls";
 import { useGallery } from "@/hooks";
 import type { Image } from "@/types";
 
@@ -20,9 +21,8 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
   const [images, setImages] = useState<Image[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [noMoreMatches, setNoMoreMatches] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-  const galleryTopRef = useRef<HTMLDivElement>(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -39,21 +39,21 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
     }
     const query = searchQuery.toLowerCase();
     return images.filter(
-      (img) => img.title?.toLowerCase().includes(query),
-      // || img.description?.toLowerCase().includes(query)
+      (img) =>
+        img.title?.toLowerCase().includes(query) ||
+        img.description?.toLowerCase().includes(query),
     );
   }, [images, searchQuery]);
 
   useEffect(() => {
     const fetchImages = async () => {
-      //console.log("Fetching initial images with limit:", limit);
       const res = await getImages({ limit });
-      //console.log("Initial API response:", res);
+
       setImages(res.data);
       setNextCursor(res.nextCursor ?? null);
     };
     fetchImages();
-  }, [limit]);
+  }, [limit, getImages]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -70,31 +70,55 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
   const loadMore = async () => {
     if (!nextCursor || isLoading) return;
 
-    const previousImageCount = images.length;
+    const query = searchQuery.trim().toLowerCase();
+    let cursorLocal: string | null = nextCursor;
+    let aggregatedNewImages: Image[] = [];
+    let aggregatedMatches: Image[] = [];
+    setNoMoreMatches(false);
 
-    //console.log("Fetching more images with cursor:", nextCursor, "and limit:", limit);
-    const res = await getImages({ limit, cursor: nextCursor });
-    //console.log("Load more API response:", res);
-    setImages((prev) => [...prev, ...res.data]);
-    setNextCursor(res.nextCursor ?? null);
-    //console.log("Updated nextCursor:", res.nextCursor);
-
-    setTimeout(() => {
-      if (containerRef.current) {
-        const container = containerRef.current;
-        const imageItems = container.querySelectorAll('[role="listitem"]');
-        const firstNewImage = imageItems[previousImageCount];
-
-        if (firstNewImage) {
-          firstNewImage.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          container.scrollTo({
-            top: container.scrollHeight,
-            behavior: "smooth",
-          });
-        }
+    if (query) {
+      while (cursorLocal && aggregatedMatches.length === 0) {
+        const res = await getImages({ limit, cursor: cursorLocal });
+        const newBatch = res.data;
+        aggregatedNewImages = [...aggregatedNewImages, ...newBatch];
+        const matches = newBatch.filter(
+          (img) =>
+            img.title?.toLowerCase().includes(query) ||
+            img.description?.toLowerCase().includes(query),
+        );
+        aggregatedMatches = [...aggregatedMatches, ...matches];
+        cursorLocal = res.nextCursor ?? null;
       }
-    }, 150);
+
+      if (aggregatedNewImages.length > 0) {
+        setImages((prev) => [...prev, ...aggregatedNewImages]);
+      }
+      setNextCursor(cursorLocal);
+
+      if (!cursorLocal && aggregatedMatches.length === 0) {
+        setNoMoreMatches(true);
+      }
+    } else {
+      const res = await getImages({ limit, cursor: cursorLocal });
+      setImages((prev) => [...prev, ...res.data]);
+      setNextCursor(res.nextCursor ?? null);
+    }
+  };
+
+  const loadAll = async () => {
+    if (!nextCursor || isLoading) return;
+
+    let cursor: string | null = nextCursor;
+    let allNewImages: Image[] = [];
+
+    while (cursor) {
+      const res = await getImages({ limit: 100, cursor });
+      allNewImages = [...allNewImages, ...res.data];
+      cursor = res.nextCursor ?? null;
+    }
+
+    setImages((prev) => [...prev, ...allNewImages]);
+    setNextCursor(null);
   };
 
   const handleOpen = useCallback((image: Image) => {
@@ -123,7 +147,7 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
           minHeight: "calc(100vh - 200px)",
         }}
       >
-        <CircularProgress size={48} />
+        <ZooLoader />
       </Box>
     );
   }
@@ -138,9 +162,9 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
           minHeight: "calc(100vh - 200px)",
         }}
       >
-        <Typography color="error" variant="h6">
-          Error: {error}
-        </Typography>
+        <ErrorAlert
+          message={error || "An error occurred while loading images."}
+        />
       </Box>
     );
   }
@@ -154,7 +178,6 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
         position: "relative",
       }}
     >
-      <div ref={galleryTopRef} />
       <ImageList
         cols={cols}
         gap={24}
@@ -168,59 +191,35 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
         }}
       >
         {filteredImages.map((item) => (
-          <ImageListItem
+          <GalleryImageCard
             key={item.asset_id}
-            onClick={() => handleOpen(item)}
-            sx={{
-              cursor: "pointer",
-              borderRadius: 2,
-              m: 1,
-              overflow: "hidden",
-              transition: "all 0.35s",
-              "&:hover": { transform: "translateY(-6px)" },
-              "& img": { transition: "transform 0.35s" },
-              "&:hover img": { transform: "scale(1.05)" },
-            }}
-          >
-            <img
-              src={item.url}
-              alt={item.title}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-          </ImageListItem>
+            image={item}
+            onClick={handleOpen}
+          />
         ))}
       </ImageList>
 
       {nextCursor &&
         (searchQuery.trim() === "" || filteredImages.length > 0) && (
-          <Box
-            ref={loadMoreRef}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              mb: 4,
-            }}
-          >
-            <Button
-              variant="contained"
-              onClick={loadMore}
-              disabled={isLoading || !nextCursor}
-              sx={{ minWidth: 200 }}
-            >
-              {isLoading ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                "Load More"
-              )}
-            </Button>
-          </Box>
+          <LoadControls
+            isLoading={isLoading}
+            nextCursor={nextCursor}
+            onLoadMore={loadMore}
+            onLoadAll={loadAll}
+          />
         )}
+
+      {searchQuery.trim() && noMoreMatches && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <InfoAlert message="No more images matching filter" />
+        </Box>
+      )}
 
       {!nextCursor && filteredImages.length > 0 && (
         <Box

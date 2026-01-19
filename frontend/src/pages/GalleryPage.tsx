@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Box, IconButton, Backdrop, useTheme } from "@mui/material";
+import { Box, IconButton, Backdrop, useTheme, Chip } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
   ImagesList,
   SectionHeading,
@@ -31,11 +32,34 @@ function GalleryPage() {
         p: 2,
       }}
     >
-      <Box sx={{ textAlign: "center", mb: 3 }}>
+      <Box sx={{ textAlign: "center", my: 2 }}>
         <SectionHeading title="Gallery" />
       </Box>
 
-      <Box sx={{ position: "fixed", top: 20, right: 20, zIndex: 1300 }}>
+      <Box
+        sx={{
+          position: "fixed",
+          top: 20,
+          right: 20,
+          zIndex: 1300,
+          display: "flex",
+          gap: 2,
+          alignItems: "center",
+        }}
+      >
+        {searchQuery.trim() && (
+          <Chip
+            icon={<FilterAltIcon />}
+            label={`Filter: "${searchQuery}"`}
+            color="primary"
+            variant="outlined"
+            onDelete={handleClear}
+            sx={{
+              backgroundColor: "background.paper",
+              boxShadow: 2,
+            }}
+          />
+        )}
         <IconButton
           onClick={() => setShowSearch(!showSearch)}
           sx={{
