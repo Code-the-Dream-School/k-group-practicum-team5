@@ -7,7 +7,7 @@ import VideoListPage from "@/pages/VideoListPage";
 import GalleryPage from "./pages/GalleryPage";
 import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
-import ViewOpportunities from "@/pages/volunteering/admin/ViewOpportunities";
+import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 import { Box } from "@mui/material";
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
             />
             <Route
               path="volunteering/opportunities/admin/view"
-              element={<ViewOpportunities />}
+              element={<ViewOpportunitiesAdmin />}
             />
             <Route path="*" element={<p>Page Not Found</p>} />
           </Route>
