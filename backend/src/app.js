@@ -36,7 +36,7 @@ app.use(limiter);
 
 // Routes
 app.use('/api/hello', helloRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use("/api/v1/contact-info", contactInfoRoutes)
