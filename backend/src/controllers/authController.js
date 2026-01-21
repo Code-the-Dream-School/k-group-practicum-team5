@@ -104,17 +104,43 @@ const forgotPassword = async (req, res) => {
         await sendEmail({
             to: user.email,
             subject: "Reset Your Password",
-            html: `<a href="${resetURL}">Reset Password</a>`
+            html
         });
         console.log(`Password reset link (send this via email): ${resetURL}`);
         res.status(200).json({ message: "If email is correct, you will receive a reset link to your email" });
 
     } catch (error) {
-        res.status(500).json({ error: "Unexpected server error during login. Please try again." });
+        res.status(500).json({ error: "Error sending password reset email. Please try again." });
     }
 
 }
 
+const resetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+        if (!newPassword) {
+            return res.status(400).json({ error: "Invalid request. Please provide a new password." });
+        }
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+        console.log("Hashed token:", hashedToken);
+        const user = await User.findOne({
+            resetToken: hashedToken,
+            resetTokenExpiration: { $gt: Date.now() }
+        });
+        if (!user) {
+            return res.status(400).json({ error: "Invalid or expired password reset token." });
+        }
+        user.password = newPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiration = undefined;
+        await user.save();
+        res.status(200).json({ message: "Password reset successfully." });
+    } catch (error) {
+        res.status(500).json({ error: "Unexpected server error during password reset." });
+    }
+}
 
 
-module.exports = { register, login, forgotPassword };
+
+module.exports = { register, login, forgotPassword, resetPassword };

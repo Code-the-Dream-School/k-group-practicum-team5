@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import type { Video } from "@/types";
 import VideoList from "@/components/VideoList";
-import LinkText from "@/components/LinkText";
+import { LinkText } from "@/components/shared";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 
 const videos: Video[] = [
@@ -93,6 +93,8 @@ function VideoListPage() {
         alignItems: "center",
         gap: 1,
         paddingY: 4,
+        backgroundColor: "background.default",
+        border: 0,
       }}
     >
       <LinkText
