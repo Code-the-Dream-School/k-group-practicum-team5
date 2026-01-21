@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import BusinessHoursPanel from '@/components/BusinessHoursPanel';
+
 
 function Home() {
   return (
@@ -46,15 +48,21 @@ function Home() {
         </Box>
 
         {/* Placeholder sections */}
+            
+
+
         <Box
           sx={{ mt: 8, opacity: 0.85, maxWidth: 600, color: "text.primary" }}
         >
+      
           <Typography>Real-time open/closed status</Typography>
+                  <BusinessHoursPanel/>
           <Typography>Featured Attractions</Typography>
           <Typography>Highlights from Trip Advisor Reviews</Typography>
         </Box>
-      </Box>
+        </Box>
     </Box>
+      
   );
 }
 
