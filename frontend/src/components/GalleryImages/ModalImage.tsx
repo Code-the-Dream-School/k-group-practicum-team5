@@ -1,4 +1,4 @@
-import { Dialog, IconButton } from "@mui/material";
+import { Dialog, IconButton, Box, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import type { Image } from "@/types";
 
@@ -13,13 +13,12 @@ export function ModalImage({ open, activeImage, onClose }: ModalImageProps) {
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="sm"
+      maxWidth="lg"
       fullWidth
       sx={{
         "& .MuiDialog-paper": {
-          backgroundColor: "transparent",
-          boxShadow: "none",
-          overflow: "hidden",
+          backgroundColor: "background.paper",
+          borderRadius: 2,
         },
       }}
       slotProps={{
@@ -39,22 +38,63 @@ export function ModalImage({ open, activeImage, onClose }: ModalImageProps) {
           top: 16,
           right: 16,
           zIndex: 1,
-          color: "primary.contrastText",
+          color: "primary.main",
         }}
       >
         <CloseIcon />
       </IconButton>
 
       {activeImage && (
-        <img
-          src={activeImage.url}
-          alt={activeImage.title}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
+        <Box
+          sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
+        >
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              m: 1,
+            }}
+          >
+            <img
+              src={activeImage.url}
+              alt={activeImage.title}
+              style={{
+                width: "100%",
+                height: "auto",
+                maxHeight: "80vh",
+                objectFit: "cover",
+                borderRadius: "24px",
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              p: 3,
+              pt: 3,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 700, color: "primary.main", mb: 2 }}
+            >
+              {activeImage.title}
+            </Typography>
+            {activeImage.description && (
+              <Typography
+                variant="body2"
+                align="justify"
+                sx={{ color: "text.secondary" }}
+              >
+                {activeImage.description}
+              </Typography>
+            )}
+          </Box>
+        </Box>
       )}
     </Dialog>
   );
