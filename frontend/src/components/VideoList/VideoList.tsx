@@ -13,9 +13,6 @@ function VideoList({ videos }: VideoListProps) {
   return (
     <Box
       sx={{
-        maxHeight: "80vh",
-        overflowY: "auto",
-        overflowX: "hidden",
         paddingX: 4,
         paddingY: 2,
       }}

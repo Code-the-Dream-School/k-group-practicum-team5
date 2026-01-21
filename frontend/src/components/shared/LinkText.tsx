@@ -7,7 +7,7 @@ interface LinkTextProps {
   icon?: ReactNode;
 }
 
-function LinkText({ link, text, icon }: LinkTextProps) {
+export function LinkText({ link, text, icon }: LinkTextProps) {
   return (
     <Typography
       component="a"
@@ -32,5 +32,3 @@ function LinkText({ link, text, icon }: LinkTextProps) {
     </Typography>
   );
 }
-
-export default LinkText;
