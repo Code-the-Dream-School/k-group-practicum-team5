@@ -12,7 +12,7 @@ function Routing({ destination }: { destination: [number, number] | null }) {
   useEffect(() => {
     if (!destination) return;
 
-    const routingControl = (L as any ).Routing.control({
+    const routingControl = L.Routing.control({
       waypoints: [
         L.latLng(ZOO_LOCATION[0], ZOO_LOCATION[1]),
         L.latLng(destination[0], destination[1]),
