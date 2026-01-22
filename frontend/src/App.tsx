@@ -10,6 +10,10 @@ import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 // import { Box } from "@mui/material";
+import MapPage from "./pages/Map";
+
+
+
 
 function App() {
   return (
@@ -21,6 +25,7 @@ function App() {
             <Route path="video" element={<VideoListPage />} />
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="map" element={<MapPage />} />
             <Route
               path="volunteering/opportunities/admin/new"
               element={<NewVolunteeringOpportunity />}

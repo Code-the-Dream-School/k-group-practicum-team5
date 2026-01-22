@@ -4,18 +4,13 @@ import Button from "@mui/material/Button";
 import BusinessHoursPanel from '@/components/BusinessHoursPanel';
 
 
+import Hero from "../components/Hero/Hero";
+
 function Home() {
   return (
-    <Box
-      sx={{
-        backgroundColor: "background.default",
-        minHeight: "100vh",
-        color: "primary.contrastText",
-        px: 4,
-        py: 8,
-      }}
-    >
+    <Box>
       {/* Hero Section */}
+      <Hero />
       <Box
         sx={{
           maxWidth: 1200,
@@ -25,28 +20,6 @@ function Home() {
           gap: 3,
         }}
       >
-        <Typography variant="h2" color="text.primary">
-          Welcome to The Reptile Zoo
-        </Typography>
-
-        <Typography
-          variant="body1"
-          sx={{
-            maxWidth: 600,
-            color: "text.primary",
-          }}
-        >
-          Explore the fascinating world of reptiles through hands-on exhibits,
-          conservation efforts, and unforgettable experiences.
-        </Typography>
-
-        {/* CTA */}
-        <Box sx={{ mt: 2 }}>
-          <Button variant="contained" color="secondary" size="large">
-            Buy Tickets
-          </Button>
-        </Box>
-
         {/* Placeholder sections */}
             
 

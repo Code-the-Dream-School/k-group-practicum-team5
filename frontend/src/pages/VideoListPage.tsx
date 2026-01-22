@@ -95,6 +95,7 @@ function VideoListPage() {
         paddingY: 4,
         backgroundColor: "background.default",
         border: 0,
+        minHeight: "100vh",
       }}
     >
       <LinkText
