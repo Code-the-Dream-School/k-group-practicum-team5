@@ -57,12 +57,12 @@ export default function Hero() {
             mb: 1,
           }}
         >
-          Fountain Valley, California
+          Monroe, Washington
         </Typography>
 
         <Box
           sx={{
-            width: 205,
+            width: 158,
             height: 3,
             backgroundColor: "secondary.main",
             borderRadius: 2,
