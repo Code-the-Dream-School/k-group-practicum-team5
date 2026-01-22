@@ -1,5 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Box,
+  Chip,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 type DaySchedule = {
   day: string;
@@ -14,68 +24,103 @@ type BusinessHoursResponse = {
 
 export default function BusinessHoursPanel() {
   const [data, setData] = useState<BusinessHoursResponse | null>(null);
-  const [isOpen, setIsOpen] = useState<boolean | null>(null);
-
-  const today = new Date().toLocaleString("en-US", { weekday: "long" });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const hoursRes = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/v1/business-hours`
-        );
+    const fetchHours = async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/business-hours`
+      );
 
-        const statusRes = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/v1/business-hours/status`
-        );
-
-        setData(hoursRes.data[0]);
-        setIsOpen(statusRes.data.isOpen);
-      } catch (err) {
-        console.error("Failed to load business hours", err);
-      }
+      setData(res.data[0]); 
     };
-
-    fetchData();
+    fetchHours();
   }, []);
+
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+  });
+
+  const orderedSchedule = useMemo(() => {
+    if (!data) return [];
+
+    const index = data.schedule.findIndex((d) => d.day === today);
+
+    if (index === -1) return data.schedule;
+
+    return [
+      ...data.schedule.slice(index),
+      ...data.schedule.slice(0, index),
+    ];
+  }, [data, today]);
 
   if (!data) return null;
 
+  const todaySchedule = data.schedule.find((d) => d.day === today);
+
+  const isClosedToday =
+    todaySchedule?.open === "Closed" || data.isClosed;
+
   return (
-    <div className="bg-zooGreen text-zooLight rounded-lg p-4 shadow-md w-full max-w-[240px]">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-sm">Hours of Operation</h2>
-
-        {isOpen !== null && (
-          <span
-            className={`px-2 py-0.5 rounded-full text-sm font-semibold ${
-              isOpen ? "bg-green-600" : "bg-red-600"
-            }`}
+    <Box sx={{ maxWidth: 240 }}>
+      <Accordion
+        sx={{
+          borderRadius: 3,
+          boxShadow: 2,
+        //   bgcolor: "var(--zooLight)",
+        }}
+      >
+        {/* HEADER */}
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Box
+            display="flex"
+            gap={1}
+            alignItems="center"
+            width="100%"
           >
-            {isOpen ? "OPEN NOW" : "CLOSED"}
-          </span>
-        )}
-      </div>
+            <AccessTimeIcon fontSize="small" />
 
-      <ul className="space-y-1 text-sm">
-        {data.schedule.map((item) => {
-          const isToday = item.day === today;
+            <Chip
+              label={isClosedToday ? "CLOSED" : "OPEN NOW"}
+              color={isClosedToday ? "error" : "success"}
+              size="small"
+              sx={{ fontWeight: 700 }}
+            />
+          </Box>
+        </AccordionSummary>
 
-          return (
-            <li
-              key={item.day}
-              className={`flex justify-between px-3 py-2 rounded ${
-                isToday ? "bg-zooDark font-bold" : "opacity-90"
-              }`}
-            >
-              <span>{item.day}</span>
-              <span>
-                {item.open === "Closed" ? "Closed" : `${item.open} – ${item.close}`}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+        {/* DROPDOWN LIST */}
+        <AccordionDetails sx={{pt:0}}>
+            {orderedSchedule.map((item) => {
+            const isToday = item.day === today;
+
+            return (
+              <Box
+                key={item.day}
+                display="flex"
+                justifyContent="space-between"
+                sx={{
+                  py: 0.6,
+                  px: 1,
+                  fontSize: "0.95rem",
+                  fontWeight: isToday ? 700 : 400,
+                  borderRadius: 2,
+                  bgcolor: isToday ? "action.hover" : "transparent",
+                }}
+              >
+                <Typography fontSize="inherit" fontWeight={isToday ? 700 : 400}>
+                  {item.day}
+                </Typography>
+
+                <Typography fontSize="inherit" fontWeight={isToday ? 700 : 400}>
+                  {item.open === "Closed"
+                    ? "Closed"
+                    : `${item.open} – ${item.close}`}
+              </Typography>
+            </Box>
+            )
+          })}
+        </AccordionDetails>
+      </Accordion>
+    </Box>
   );
 }

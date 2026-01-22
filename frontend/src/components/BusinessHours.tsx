@@ -13,7 +13,7 @@ export default function BusinessHours() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/business-hours`)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/business-hours`)
       .then((res) => setHours(res.data))
       .catch(console.error);
   }, []);
