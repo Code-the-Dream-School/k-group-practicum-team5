@@ -5,6 +5,7 @@ const cloudinaryService = require('../services/cloudinary.service');
 class UploadController {
     async uploadImage(req, res) {
         const { file } = req;
+        const { title, description } = req.body;
 
         if (!file) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: 'No file uploaded' });
@@ -12,7 +13,8 @@ class UploadController {
 
         const result = await cloudinaryService.uploadToCloudinary(
             file.buffer,
-            REPTILE_ZOO_FOLDER
+            REPTILE_ZOO_FOLDER,
+            { title, description }
         );
 
         res.status(StatusCodes.CREATED).json({
@@ -22,16 +24,16 @@ class UploadController {
                 publicId: result.public_id,
                 width: result.width,
                 height: result.height,
+                title: title || result.display_name,
+                description: description || "",
             },
         });
     }
 
     async getImages(req, res) {
-        const queryParams = req.query.params || req.query;
-        const limit = Math.min(Number(queryParams.limit) || 8, 8);
-        const cursor = queryParams.cursor || null;
-
-        // console.log("Query Parameters:", req.query);
+        const limit = Math.min(Number(req.query.limit) || 8, 8);
+        const cursor = req.query.cursor || null;
+        
         console.log("Parsed - limit:", limit, "cursor:", cursor);
 
         const result = await cloudinaryService.getFilesFromFolder(
@@ -39,8 +41,6 @@ class UploadController {
             limit,
             cursor
         );
-
-        //console.log("Cloudinary result:", result);
 
         if (!result || (!result.resources && !result.images)) {
             console.error("Invalid result from Cloudinary:", result);
@@ -54,7 +54,8 @@ class UploadController {
         const images = imagesList.map(file => ({
             asset_id: file.asset_id,
             url: file.secure_url,
-            title: file.display_name,
+            title: file.context?.custom?.caption ?? "Reptile Zoo",
+            description: file.context?.custom?.alt ?? "Reptile Zoo",
         }));
 
         const nextCursor = result.next_cursor || result.nextCursor || null;

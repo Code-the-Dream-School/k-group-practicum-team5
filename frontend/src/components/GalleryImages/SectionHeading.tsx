@@ -6,9 +6,9 @@ interface SectionHeadingProps {
 
 export function SectionHeading({ title }: SectionHeadingProps) {
   return (
-    <Box sx={{ position: "relative", display: "inline-block", px: 8 }}>
+    <Box sx={{ position: "relative", display: "inline-block", margin: 2 }}>
       <Typography
-        variant="h4"
+        variant="h6"
         sx={{
           fontWeight: 700,
           fontSize: { xs: "1rem", sm: "1.5rem", md: "2rem" },

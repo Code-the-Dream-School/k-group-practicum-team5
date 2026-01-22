@@ -8,11 +8,19 @@ class CloudinaryService {
         });
     }
 
-    async uploadToCloudinary(fileSource, folder = 'uploads') {
+    async uploadToCloudinary(fileSource, folder = 'uploads', metadata = {}) {
         try {
             const result = await cloudinary.uploader.upload(fileSource, {
                 folder: folder,
                 resource_type: "auto",
+                context: {
+                    alt: metadata.title || "",
+                    caption: metadata.description || "",
+                    custom: {
+                        title: metadata.title || "",
+                        description: metadata.description || "",
+                    }
+                }
             });
             return result;
         } catch (error) {
@@ -24,10 +32,11 @@ class CloudinaryService {
     async getFilesFromFolder(folderName, maxResults, nextCursor = null) {
         try {
             const options = {
-                    resource_type: "image",
-                    type: "upload",
+                resource_type: "image",
+                type: "upload",
                 folder: folderName,
                 max_results: maxResults,
+                context: true,
             };
 
             if (nextCursor) {
@@ -46,6 +55,7 @@ class CloudinaryService {
             throw error;
         }
     }
+
 }
 
 module.exports = new CloudinaryService();
