@@ -1,7 +1,27 @@
-import { Box } from "@mui/material";
-import { ImagesList, SectionHeading } from "@/components/GalleryImages";
+import { useState } from "react";
+import { Box, IconButton, Backdrop, useTheme, Chip } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import {
+  ImagesList,
+  SectionHeading,
+  SearchFilter,
+} from "@/components/GalleryImages";
 
 function GalleryPage() {
+  const theme = useTheme();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleClear = () => {
+    setSearchQuery("");
+  };
+
   return (
     <Box
       sx={{
@@ -9,14 +29,93 @@ function GalleryPage() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        padding: 4,
+        p: 2,
       }}
     >
-      <Box sx={{ textAlign: "center", mb: 3 }}>
+      <Box sx={{ textAlign: "center", my: 2 }}>
         <SectionHeading title="Gallery" />
       </Box>
+
+      <Box
+        sx={{
+          position: "fixed",
+          top: 20,
+          right: 20,
+          zIndex: 1300,
+          display: "flex",
+          gap: 2,
+          alignItems: "center",
+        }}
+      >
+        {searchQuery.trim() && (
+          <Chip
+            icon={<FilterAltIcon />}
+            label={`Filter: "${searchQuery}"`}
+            color="primary"
+            variant="outlined"
+            onDelete={handleClear}
+            sx={{
+              backgroundColor: "background.paper",
+              boxShadow: 2,
+            }}
+          />
+        )}
+        <IconButton
+          onClick={() => setShowSearch(!showSearch)}
+          sx={{
+            color: theme.palette.primary.main,
+            borderRadius: "0.5rem",
+            border: `2px solid ${theme.palette.primary.main}`,
+            p: 1.5,
+            backgroundColor: "background.paper",
+            boxShadow: 2,
+            "&:hover": {
+              backgroundColor: theme.palette.background.default,
+            },
+          }}
+        >
+          {showSearch ? (
+            <CloseIcon fontSize="large" />
+          ) : (
+            <SearchIcon fontSize="large" />
+          )}
+        </IconButton>
+      </Box>
+
+      {showSearch && (
+        <>
+          <Backdrop
+            open={showSearch}
+            onClick={() => setShowSearch(false)}
+            sx={{ zIndex: 1200 }}
+          />
+          <Box
+            sx={{
+              position: "fixed",
+              top: 100,
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 1300,
+              backgroundColor: "background.paper",
+              p: 3,
+              borderRadius: 2,
+              boxShadow: 4,
+              minWidth: 350,
+              maxWidth: 600,
+            }}
+          >
+            <SearchFilter
+              initialQuery={searchQuery}
+              isLoading={false}
+              onSearch={handleSearch}
+              onClear={handleClear}
+            />
+          </Box>
+        </>
+      )}
+
       <Box sx={{ flex: 1, width: "100%", overflow: "auto" }}>
-        <ImagesList />
+        <ImagesList searchQuery={searchQuery} />
       </Box>
     </Box>
   );

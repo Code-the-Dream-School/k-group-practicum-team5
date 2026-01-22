@@ -22,7 +22,6 @@ const MainLayout = () => {
         component="main"
         sx={{
           flex: "1 1 auto",
-          overflowY: "auto",
         }}
       >
         <Outlet />

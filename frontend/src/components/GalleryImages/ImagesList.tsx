@@ -1,18 +1,28 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useTheme, useMediaQuery } from "@mui/material";
-import { Box, CircularProgress, Typography, Button } from "@mui/material";
+import { Box, Fab } from "@mui/material";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-
+import { InfoAlert, ErrorAlert } from "@/components/alert";
+import { ZooLoader } from "@/components/shared";
 import { ModalImage } from "./ModalImage";
+import { GalleryImageCard } from "./GalleryImageCard";
+import { LoadControls } from "./LoadControls";
 import { useGallery } from "@/hooks";
 import type { Image } from "@/types";
 
-export function ImagesList() {
+type ImageListProps = {
+  searchQuery?: string;
+};
+
+export function ImagesList({ searchQuery = "" }: ImageListProps) {
   const [open, setOpen] = useState(false);
   const [activeImage, setActiveImage] = useState<Image | null>(null);
   const [images, setImages] = useState<Image[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [noMoreMatches, setNoMoreMatches] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -23,26 +33,92 @@ export function ImagesList() {
 
   const { isLoading, isError, error, getImages } = useGallery();
 
+  const filteredImages = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return images;
+    }
+    const query = searchQuery.toLowerCase();
+    return images.filter(
+      (img) =>
+        img.title?.toLowerCase().includes(query) ||
+        img.description?.toLowerCase().includes(query),
+    );
+  }, [images, searchQuery]);
+
   useEffect(() => {
     const fetchImages = async () => {
-      //console.log("Fetching initial images with limit:", limit);
       const res = await getImages({ limit });
-      //console.log("Initial API response:", res);
+
       setImages(res.data);
       setNextCursor(res.nextCursor ?? null);
     };
     fetchImages();
-  }, [limit]);
+  }, [limit, getImages]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      setShowScrollTop(container.scrollTop > 300);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const loadMore = async () => {
     if (!nextCursor || isLoading) return;
 
-    //console.log("Fetching more images with cursor:", nextCursor, "and limit:", limit);
-    const res = await getImages({ limit, cursor: nextCursor });
-    //console.log("Load more API response:", res);
-    setImages((prev) => [...prev, ...res.data]);
-    setNextCursor(res.nextCursor ?? null);
-    //console.log("Updated nextCursor:", res.nextCursor);
+    const query = searchQuery.trim().toLowerCase();
+    let cursorLocal: string | null = nextCursor;
+    let aggregatedNewImages: Image[] = [];
+    let aggregatedMatches: Image[] = [];
+    setNoMoreMatches(false);
+
+    if (query) {
+      while (cursorLocal && aggregatedMatches.length === 0) {
+        const res = await getImages({ limit, cursor: cursorLocal });
+        const newBatch = res.data;
+        aggregatedNewImages = [...aggregatedNewImages, ...newBatch];
+        const matches = newBatch.filter(
+          (img) =>
+            img.title?.toLowerCase().includes(query) ||
+            img.description?.toLowerCase().includes(query),
+        );
+        aggregatedMatches = [...aggregatedMatches, ...matches];
+        cursorLocal = res.nextCursor ?? null;
+      }
+
+      if (aggregatedNewImages.length > 0) {
+        setImages((prev) => [...prev, ...aggregatedNewImages]);
+      }
+      setNextCursor(cursorLocal);
+
+      if (!cursorLocal && aggregatedMatches.length === 0) {
+        setNoMoreMatches(true);
+      }
+    } else {
+      const res = await getImages({ limit, cursor: cursorLocal });
+      setImages((prev) => [...prev, ...res.data]);
+      setNextCursor(res.nextCursor ?? null);
+    }
+  };
+
+  const loadAll = async () => {
+    if (!nextCursor || isLoading) return;
+
+    let cursor: string | null = nextCursor;
+    let allNewImages: Image[] = [];
+
+    while (cursor) {
+      const res = await getImages({ limit: 100, cursor });
+      allNewImages = [...allNewImages, ...res.data];
+      cursor = res.nextCursor ?? null;
+    }
+
+    setImages((prev) => [...prev, ...allNewImages]);
+    setNextCursor(null);
   };
 
   const handleOpen = useCallback((image: Image) => {
@@ -55,6 +131,12 @@ export function ImagesList() {
     setActiveImage(null);
   }, []);
 
+  const scrollToTop = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   if (isLoading && images.length === 0) {
     return (
       <Box
@@ -65,7 +147,7 @@ export function ImagesList() {
           minHeight: "calc(100vh - 200px)",
         }}
       >
-        <CircularProgress size={48} />
+        <ZooLoader />
       </Box>
     );
   }
@@ -80,83 +162,106 @@ export function ImagesList() {
           minHeight: "calc(100vh - 200px)",
         }}
       >
-        <Typography color="error" variant="h6">
-          Error: {error}
-        </Typography>
+        <ErrorAlert
+          message={error || "An error occurred while loading images."}
+        />
       </Box>
     );
   }
 
   return (
     <Box
+      ref={containerRef}
       sx={{
         maxHeight: "calc(100vh - 150px)",
         overflowY: "auto",
+        position: "relative",
       }}
     >
       <ImageList
         cols={cols}
-        gap={12}
-        rowHeight={300}
+        gap={24}
+        rowHeight={275}
         sx={{
           width: "100%",
           maxWidth: "100%",
           m: 0,
-          p: 0,
+          p: 1,
           overflow: "visible",
         }}
       >
-        {images.map((item) => (
-          <ImageListItem
+        {filteredImages.map((item) => (
+          <GalleryImageCard
             key={item.asset_id}
-            onClick={() => handleOpen(item)}
-            sx={{
-              cursor: "pointer",
-              borderRadius: 2,
-              overflow: "hidden",
-              transition: "all 0.35s",
-              "&:hover": { transform: "translateY(-8px)" },
-              "& img": { transition: "transform 0.35s" },
-              "&:hover img": { transform: "scale(1.1)" },
-            }}
-          >
-            <img
-              src={item.url}
-              alt={item.title}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-          </ImageListItem>
+            image={item}
+            onClick={handleOpen}
+          />
         ))}
       </ImageList>
 
-      {nextCursor && (
+      {nextCursor &&
+        (searchQuery.trim() === "" || filteredImages.length > 0) && (
+          <LoadControls
+            isLoading={isLoading}
+            nextCursor={nextCursor}
+            onLoadMore={loadMore}
+            onLoadAll={loadAll}
+          />
+        )}
+
+      {searchQuery.trim() && noMoreMatches && (
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            mt: 4,
-            mb: 2,
           }}
         >
-          <Button
-            variant="contained"
-            onClick={loadMore}
-            disabled={isLoading || !nextCursor}
-            sx={{ minWidth: 200 }}
-          >
-            {isLoading ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              "Load More"
-            )}
-          </Button>
+          <InfoAlert message="No more images matching filter" />
         </Box>
+      )}
+
+      {!nextCursor && filteredImages.length > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mb: 4,
+          }}
+        >
+          <InfoAlert message="No more images to load" />
+        </Box>
+      )}
+
+      {filteredImages.length === 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "calc(100vh - 250px)",
+            p: 3,
+          }}
+        >
+          <InfoAlert message="No images found" />
+        </Box>
+      )}
+
+      {showScrollTop && (
+        <Fab
+          color="primary"
+          size="medium"
+          onClick={scrollToTop}
+          sx={{
+            position: "fixed",
+            bottom: 32,
+            right: 32,
+            zIndex: 1000,
+          }}
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
       )}
 
       <ModalImage open={open} activeImage={activeImage} onClose={handleClose} />
