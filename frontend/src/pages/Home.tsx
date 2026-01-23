@@ -2,11 +2,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import Hero from "../components/Hero/Hero";
+import { FeaturedAttractionsList } from "@/components/featuredAttractions";
 
 function Home() {
   return (
     <Box>
-      {/* Hero Section */}
       <Hero />
       <Box
         sx={{
@@ -17,12 +17,8 @@ function Home() {
           gap: 3,
         }}
       >
-        {/* Placeholder sections */}
-        <Box
-          sx={{ mt: 8, opacity: 0.85, maxWidth: 600, color: "text.primary" }}
-        >
-          <Typography>Real-time open/closed status</Typography>
-          <Typography>Featured Attractions</Typography>
+        <Box sx={{ color: "text.primary" }}>
+          <FeaturedAttractionsList />
           <Typography>Highlights from Trip Advisor Reviews</Typography>
         </Box>
       </Box>
