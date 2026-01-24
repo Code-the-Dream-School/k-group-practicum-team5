@@ -23,7 +23,6 @@ export function LoadControls({
         justifyContent: "center",
         alignItems: "center",
         gap: 2,
-        mb: 6,
       }}
     >
       <Button

@@ -173,7 +173,7 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
     <Box
       ref={containerRef}
       sx={{
-        maxHeight: "calc(100vh - 150px)",
+        height: "100%",
         overflowY: "auto",
         position: "relative",
       }}
@@ -186,7 +186,7 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
           width: "100%",
           maxWidth: "100%",
           m: 0,
-          p: 1,
+          p: 3,
           overflow: "visible",
         }}
       >
@@ -227,7 +227,6 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            mb: 4,
           }}
         >
           <InfoAlert message="No more images to load" />

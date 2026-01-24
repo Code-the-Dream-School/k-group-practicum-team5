@@ -32,15 +32,15 @@ function GalleryPage() {
         p: 2,
       }}
     >
-      <Box sx={{ textAlign: "center", my: 2 }}>
+      <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 2 }}>
         <SectionHeading title="Gallery" />
       </Box>
 
       <Box
         sx={{
           position: "fixed",
-          top: 20,
-          right: 20,
+          top: 100,
+          right: 40,
           zIndex: 1300,
           display: "flex",
           gap: 2,
@@ -92,16 +92,17 @@ function GalleryPage() {
           <Box
             sx={{
               position: "fixed",
-              top: 100,
+              top: "50%",
               left: "50%",
-              transform: "translateX(-50%)",
+              transform: "translate(-50%, -50%)",
               zIndex: 1300,
               backgroundColor: "background.paper",
               p: 3,
               borderRadius: 2,
               boxShadow: 4,
-              minWidth: 350,
-              maxWidth: 600,
+              width: "90vw",
+              maxWidth: 640,
+              minWidth: { xs: "auto", sm: 360 },
             }}
           >
             <SearchFilter
@@ -114,7 +115,7 @@ function GalleryPage() {
         </>
       )}
 
-      <Box sx={{ flex: 1, width: "100%", overflow: "auto" }}>
+      <Box sx={{ flex: 1, width: "100%", minHeight: 0 }}>
         <ImagesList searchQuery={searchQuery} />
       </Box>
     </Box>

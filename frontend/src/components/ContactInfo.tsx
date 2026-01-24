@@ -13,7 +13,7 @@ export default function ContactInfo() {
  useEffect(() => {
   const fetchContactInfo = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/contact-info`);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/contact-info`);
       // console.log("CONTACT INFO RESPONSE:", res.data);
       setInfo(res.data);
     } catch (error) {

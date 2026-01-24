@@ -85,7 +85,7 @@ export function SearchFilter({
         type="submit"
         variant="contained"
         disabled={isLoading}
-        sx={{ whiteSpace: "nowrap", minWidth: 110 }}
+        sx={{ whiteSpace: "nowrap", minWidth: 100 }}
       >
         {isLoading ? "Searching..." : "Search"}
       </Button>

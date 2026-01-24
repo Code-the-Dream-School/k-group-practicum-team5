@@ -70,8 +70,9 @@ const login = async (req, res) => {
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email,
-                admin: user.is_admin
-            }
+                is_admin: user.is_admin
+            },
+            token
         });
     } catch (error) {
         res.status(500).json({ error: "Unexpected server error during login." });
