@@ -5,31 +5,54 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/calendar";
 
 export const calendarService = {
+  // async getMonthData(year: number, month: number): Promise<MonthData> {
+  //   try {
+  //     const response = await axios.get<MonthData>(
+  //       `${API_BASE_URL}/month-data`,
+  //       {
+  //         params: { year, month },
+  //       }
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error fetching month data:", error);
+  //     throw new Error("Failed to fetch calendar data");
+  //   }
+  // },
+
   async getMonthData(year: number, month: number): Promise<MonthData> {
+    const url = `${API_BASE_URL}/month-data`;
+    
+    // Debugging logs
+    console.log("🔍 API_BASE_URL:", API_BASE_URL);
+    console.log("🔍 Full URL:", url);
+    console.log("🔍 Params:", { year, month });
+
     try {
       const response = await axios.get<MonthData>(
         `${API_BASE_URL}/month-data`,
         {
           params: { year, month },
-        }
+        },
       );
+      console.log("✅ Success:", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error fetching month data:", error);
+      console.error("❌ Error fetching month data:", error);
       throw new Error("Failed to fetch calendar data");
     }
   },
 
   async getOpeningDays(
     startDate: string,
-    endDate: string
+    endDate: string,
   ): Promise<OpeningDay[]> {
     try {
       const response = await axios.get<OpeningDay[]>(
         `${API_BASE_URL}/opening-days`,
         {
           params: { startDate, endDate },
-        }
+        },
       );
       return response.data;
     } catch (error) {
