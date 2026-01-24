@@ -9,11 +9,7 @@ import GalleryPage from "./pages/GalleryPage";
 import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
-// import { Box } from "@mui/material";
 import MapPage from "./pages/Map";
-
-
-
 
 function App() {
   return (
@@ -34,7 +30,6 @@ function App() {
               path="volunteering/opportunities/admin/view"
               element={<ViewOpportunitiesAdmin />}
             />
-
             <Route path="*" element={<p>Page Not Found</p>} />
           </Route>
         </Routes>

@@ -1,0 +1,20 @@
+{
+  "translations": {
+    "header": {
+      "siteTitle": "Reptile Zoo",
+      "home": "Home",
+      "education": "Education",
+      "gallery": "Gallery",
+      "volunteer": "Volunteer",
+      "calendar": "Calendar",
+      "getTickets": "Get Tickets"
+    },
+    "footer": {
+      "about": "Experience the fascinating world of reptiles. Education, conservation, and wonder await at every turn.",
+      "quickLinks": "Quick Links",
+      "contact": "Contact",
+      "hours": "Mon–Fri: 9am – 5pm",
+      "copyright": "© 2025 The Reptile Zoo. All Rights Reserved. Discover the wild within."
+    }
+  }
+}

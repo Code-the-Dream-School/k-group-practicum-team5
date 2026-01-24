@@ -1,11 +1,23 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
 import lizardLogo from "src/assets/logo/rep-zoo-best.png";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
+  const { t } = useTranslation();
+
+  const navItems = [
+    { label: "home", path: "/" },
+    { label: "education", path: "/video" },
+    { label: "gallery", path: "/gallery" },
+    { label: "volunteer", path: "/volunteer" },
+    { label: "calendar", path: "/calendar" },
+  ];
+
   return (
     <Box
       component="header"
@@ -47,7 +59,7 @@ const Header = () => {
               letterSpacing: 0.5,
             }}
           >
-            Reptile Zoo
+            {t("header.siteTitle")}
           </Typography>
         </Box>
 
@@ -55,11 +67,11 @@ const Header = () => {
         <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
           {/* Navigation */}
           <Box sx={{ display: "flex", gap: 3 }}>
-            {["Home", "Exhibits", "Visit", "About", "Contact"].map((label) => (
+            {navItems.map(({ label, path }) => (
               <Typography
                 key={label}
                 component={NavLink}
-                to={label === "Home" ? "/" : `/${label.toLowerCase()}`}
+                to={path}
                 variant="body2"
                 sx={{
                   color: "primary.contrastText",
@@ -71,7 +83,7 @@ const Header = () => {
                   "&.active": { opacity: 1, fontWeight: 700 },
                 }}
               >
-                {label}
+                {t(`header.${label}`)}
               </Typography>
             ))}
           </Box>
@@ -85,8 +97,9 @@ const Header = () => {
               color: "secondary.contrastText",
             }}
           >
-            Get Tickets
+            {t("header.getTickets")}
           </Button>
+          <LanguageSwitcher />
         </Box>
       </Box>
     </Box>

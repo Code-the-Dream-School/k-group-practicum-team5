@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import lizard from "src/assets/logo/rep-zoo-best.png";
 
@@ -16,6 +17,7 @@ const sectionTitleSx = {
 };
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <Box
       component="footer"
@@ -53,28 +55,32 @@ const Footer = () => {
               sx={{ height: 56 }}
             />
             <Typography variant="h6" sx={{ color: "primary.contrastText" }}>
-              Reptile Zoo
+              {t("header.siteTitle")}
             </Typography>
           </Box>
 
           <Typography variant="body2" sx={{ opacity: 0.85, lineHeight: 1.6 }}>
-            Experience the fascinating world of reptiles. Education,
-            conservation, and wonder await at every turn.
+            {t("footer.about")}
           </Typography>
         </Box>
 
         {/* Quick Links */}
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="subtitle1" sx={sectionTitleSx}>
-            Quick Links
+            {t("footer.quickLinks")}
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            {["Home", "Exhibits", "Visit", "About"].map((label) => (
+            {[
+              { label: "home", path: "/" },
+              { label: "education", path: "/video" },
+              { label: "gallery", path: "/gallery" },
+              { label: "volunteer", path: "/volunteer" },
+            ].map(({ label, path }) => (
               <Typography
                 key={label}
                 component={NavLink}
-                to={label === "Home" ? "/" : `/${label.toLowerCase()}`}
+                to={path}
                 variant="body2"
                 sx={{
                   color: "primary.contrastText",
@@ -85,7 +91,7 @@ const Footer = () => {
                   "&.active": { fontWeight: 700, opacity: 1 },
                 }}
               >
-                {label}
+                {t(`header.${label}`)}
               </Typography>
             ))}
           </Box>
@@ -94,7 +100,7 @@ const Footer = () => {
         {/* Contact */}
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="subtitle1" sx={sectionTitleSx}>
-            Contact
+            {t("footer.contact")}
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -105,7 +111,7 @@ const Footer = () => {
               {CONTACT.phone}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.8 }}>
-              {CONTACT.hours}
+              {t("footer.hours")}
             </Typography>
           </Box>
         </Box>
@@ -121,7 +127,7 @@ const Footer = () => {
         }}
       >
         <Typography variant="body2" textAlign="center" sx={{ opacity: 0.7 }}>
-          © 2025 The Reptile Zoo. All Rights Reserved. Discover the wild within.
+          {t("footer.copyright")}
         </Typography>
       </Box>
     </Box>
