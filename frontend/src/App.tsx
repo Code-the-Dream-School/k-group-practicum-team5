@@ -1,35 +1,42 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Calendar from "./components/Calendar";
-import { Divider } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import "./App.css";
+import { zooTheme } from "@/theme";
 import MainLayout from "@/layout/MainLayout";
+import Home from "@/pages/Home";
 import VideoListPage from "@/pages/VideoListPage";
-import { Box } from "@mui/material";
-import { Typography } from "@mui/material";
+import GalleryPage from "./pages/GalleryPage";
+import Contact from "@/pages/Contact";
+import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
+import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
+import MapPage from "./pages/Map";
+import Calendar from "./components/Calendar";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route
-            index
-            element={
-              <Box>
-                <Typography variant="h5">Home Page</Typography>
-                <Calendar />
-              </Box>
-            }
-          />
-          <Route path="video" element={<VideoListPage />} />
-          <Route path="*" element={<p>Page Not Found</p>} />
-        </Route>
-      </Routes>
-
-      <Divider sx={{ my: 4 }} />
-
-      <Calendar />
-    </BrowserRouter>
+    <ThemeProvider theme={zooTheme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Home />} />
+            <Route path="video" element={<VideoListPage />} />
+            <Route path="gallery" element={<GalleryPage />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="map" element={<MapPage />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route
+              path="volunteering/opportunities/admin/new"
+              element={<NewVolunteeringOpportunity />}
+            />
+            <Route
+              path="volunteering/opportunities/admin/view"
+              element={<ViewOpportunitiesAdmin />}
+            />
+            <Route path="*" element={<p>Page Not Found</p>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
