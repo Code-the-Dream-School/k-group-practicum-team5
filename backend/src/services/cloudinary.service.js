@@ -8,52 +8,72 @@ class CloudinaryService {
         });
     }
 
-    async uploadToCloudinary(fileSource, folder = 'uploads', metadata = {}) {
-        try {
-            const result = await cloudinary.uploader.upload(fileSource, {
-                folder: folder,
-                resource_type: "auto",
-                context: {
-                    alt: metadata.title || "",
-                    caption: metadata.description || "",
-                    custom: {
-                        title: metadata.title || "",
-                        description: metadata.description || "",
-                    }
+    async uploadToCloudinary(fileBuffer, folder = 'uploads', metadata = {}) {
+
+        const base64File = `data:image/jpeg;base64,${fileBuffer.toString('base64')}`;
+
+        const result = await cloudinary.uploader.upload(base64File, {
+            folder: folder,
+            resource_type: "auto",
+            context: {
+                alt: metadata.title || "",
+                caption: metadata.description || "",
+                custom: {
+                    title: metadata.title || "",
+                    description: metadata.description || "",
                 }
-            });
-            return result;
-        } catch (error) {
-            console.error("Cloudinary Upload Error:", error);
-            throw error;
-        }
+            }
+        });
+        return result;
+
     }
 
     async getFilesFromFolder(folderName, maxResults, nextCursor = null) {
-        try {
-            const options = {
-                resource_type: "image",
-                type: "upload",
-                folder: folderName,
-                max_results: maxResults,
-                context: true,
-            };
 
-            if (nextCursor) {
-                options.next_cursor = nextCursor;
-            }
+        const options = {
+            resource_type: "image",
+            type: "upload",
+            folder: folderName,
+            max_results: maxResults,
+            context: true,
+        };
 
-            const result = await cloudinary.api.resources(options);
-
-            return {
-                images: result.resources,
-                nextCursor: result.next_cursor || null,
-            };
-
-        } catch (error) {
-            console.error("Cloudinary Admin API Error:", error);
-            throw error;
+        if (nextCursor) {
+            options.next_cursor = nextCursor;
         }
+
+        const result = await cloudinary.api.resources(options);
+
+        return {
+            images: result.resources,
+            nextCursor: result.next_cursor || null,
+        };
+
+
+    }
+
+    async deleteFromCloudinary(publicId) {
+
+        const result = await cloudinary.uploader.destroy(publicId);
+        return result;
+
+    }
+
+    async updateInCloudinary(publicId, metadata = {}) {
+        const currentResource = await cloudinary.api.resource(publicId, { context: true });
+        const existing = currentResource.context?.custom || {};
+        
+        const title = metadata.title ?? existing.title ?? "";
+        const description = metadata.description ?? existing.description ?? "";
+        
+        const result = await cloudinary.uploader.explicit(publicId, {
+            type: 'upload',
+            context: {
+                caption: title,
+                alt: description
+            }
+        });
+        return result;
     }
 
 }
