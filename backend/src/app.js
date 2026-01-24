@@ -8,6 +8,8 @@ const connectMongo = require('./config/db.mongo');
 const uploadRoutes = require('./routes/upload.routes');
 const helloRoutes = require('./routes/hello.routes');
 const authRoutes = require('./routes/authRouter');
+const userRoutes = require('./routes/userRouter');
+const adminRoutes = require('./routes/adminRouter');
 const contactInfoRoutes = require('./routes/contactInfo.routes')
 const volunteeringRoutes = require('./routes/volunteeringRouter');
 const businessHoursRoutes = require('./routes/businessHours.routes')
@@ -35,8 +37,10 @@ app.use(limiter);
 
 // Routes
 app.use('/api/hello', helloRoutes);
-app.use('/api/v1/images', uploadRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/v1/images', uploadRoutes);
 app.use("/api/v1/contact-info", contactInfoRoutes)
 app.use('/api/v1/volunteering', volunteeringRoutes);
 app.use('/api/v1/business-hours', businessHoursRoutes)
