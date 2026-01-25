@@ -1,10 +1,12 @@
 import { useState } from "react";
 import ContactInfo from "../components/ContactInfo";
 import SuccessAlert from "../components/alert/SuccessAlert";
+import { sendContactMessage } from "@/api/contact";
+import type { ContactFormData } from "@/types/contact";
 
 export default function Contact() {
   const [showSuccess, setShowSuccess] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
     category: "General",
@@ -20,9 +22,14 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Contact form submitted:", formData);
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    await sendContactMessage(
+      formData
+    );
+
     setShowSuccess(true);
 
     setFormData({
@@ -31,10 +38,16 @@ export default function Contact() {
       category: "General",
       message: "",
     });
-    setTimeout(()=>{
-      setShowSuccess(false)
-    },3000)
-  };
+
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+  } catch (err) {
+    console.error(err);
+    alert("Failed to send message");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-zooGreen/80 flex items-center justify-center px-4 py-12">
