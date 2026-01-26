@@ -69,12 +69,16 @@ UserSchema.methods.getName = function () {
 }
 
 UserSchema.methods.createJWT = function () {
-    console.log('Creating JWT for user:', this);
-    const fullName = this.getName()
-    console.log('Full name for JWT:', fullName);
+    // console.log('Creating JWT for user:', this);
+    // const fullName = this.getName()
+    // console.log('Full name for JWT:', fullName);
     return jwt.sign({
-        userId: this._id, userName: this.username, fullName: fullName,
-        email: this.email, admin: this.is_admin, createdDate: this.createdAt
+        userId: this._id,
+        // userName: this.username, 
+        // fullName: fullName,
+        email: this.email,
+        is_admin: this.is_admin,
+        // createdDate: this.createdAt
     },
 
         process.env.JWT_SECRET,
