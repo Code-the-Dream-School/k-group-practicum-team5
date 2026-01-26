@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import { NavLink } from "react-router-dom";
 
 import lizardLogo from "src/assets/logo/rep-zoo-best.png";
+import { navItems } from "src/components/shared/navConfig";
 
 const Header = () => {
   return (
@@ -55,11 +56,11 @@ const Header = () => {
         <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
           {/* Navigation */}
           <Box sx={{ display: "flex", gap: 3 }}>
-            {["Home", "Exhibits", "Visit", "About", "Contact"].map((label) => (
+            {navItems.map(({ label, path }) => (
               <Typography
                 key={label}
                 component={NavLink}
-                to={label === "Home" ? "/" : `/${label.toLowerCase()}`}
+                to={path}
                 variant="body2"
                 sx={{
                   color: "primary.contrastText",
