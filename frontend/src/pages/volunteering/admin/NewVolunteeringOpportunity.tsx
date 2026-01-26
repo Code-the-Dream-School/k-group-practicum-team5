@@ -1,45 +1,217 @@
-import InputLabel from "@mui/material/InputLabel";
+import { useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
-import { useEffect, useState } from "react";
+import { Select, Typography, Box, TextField, InputAdornment, Stack, Button } from "@mui/material";
+import { apiCall } from "../../../api/axios";
+import Schedule from "@/pages/volunteering/admin/Schedule";
+import { SectionHeading } from "@/components/GalleryImages";
+import type { AvailabilityFormValue } from "@/types/volunteering/AvailabilityFormValue.type";
+
+// Icons
+import CategoryIcon from "@mui/icons-material/Category";
+import EventIcon from "@mui/icons-material/Event";
+import DescriptionIcon from "@mui/icons-material/Description";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 export default function NewVolunteeringOpportunity() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [category, setCategory] = useState<string>("");
+  const [opportunity, setOpportunity] = useState({ category: "", description: "" });
+  const [schedules, setSchedules] = useState<AvailabilityFormValue[]>([
+    {
+      date: null,
+      timeFrom: null,
+      timeTo: null,
+      slotsAvailable: 1,
+    },
+  ]);
+  // const [schedule, setSchedule] = useState<{ date: ""; timeFrom: ""; timeTo: ""; slotsAvailable: 1 }[]>([]);
 
- useEffect(() => {
-   fetch("/api/volunteering/enums/categories")
-     .then((res) => {
-       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-       return res.json();
-     })
-     .then(setCategories)
-     .catch(console.error);
- }, []);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await apiCall<string[]>(
+          "get",
+          `${import.meta.env.VITE_API_BASE_URL}/volunteering/enums/categories`,
+        );
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    console.log(event.target.value);
+    fetchCategories();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await apiCall<{ data: { id: string } }>("post", `${import.meta.env.VITE_API_BASE_URL}/volunteering/new`, opportunity);
+      console.log(response);
+      
+      const volunteeringId = response.data.id;
+      // Now create schedules
+      for (const schedule of schedules) {
+        await apiCall("post", `${import.meta.env.VITE_API_BASE_URL}/volunteeringSchedule/${volunteeringId}/schedules`, {
+          volunteeringId,
+          date: schedule.date,
+          timeFrom: schedule.timeFrom,
+          timeTo: schedule.timeTo,
+          slotsAvailable: schedule.slotsAvailable,
+        });
+      }
+      // Optionally, you can add a success message or redirect the user here
+    } catch (error) {
+      console.error("Error creating opportunity:", error);
+    }
   };
 
   return (
-    <div className='min-h-screen bg-zooLight flex flex-col px-4 py-12'>
-      <h1 className='text-3xl font-bold text-zooGreen text-center self-start'>New Volunteering Opportunity</h1>
-      <FormControl fullWidth>
-        <InputLabel id='demo-simple-select-label'>Category</InputLabel>
-        <Select
-          labelId='demo-simple-select-label'
-          id='demo-simple-select'
-          value={categories.length > 0 ? categories[0] : ""}
-          label='Category'
-          onChange={handleChange}
-        >
-          {categories.map((category) => (
-            <MenuItem key={category} value={category}>
-              {category}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <Box className='min-h-screen flex flex-col px-4' bgcolor={"background.default"}>
+      {/* Header */}
+      <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 1 }}>
+        <SectionHeading title='New Volunteering Opportunity' />
+      </Box>
+
+    <form onSubmit={handleSubmit}>
+      <Box border={0.1} borderColor={"primary.light"} borderRadius={1} padding={4} boxShadow={1}>
+        {/* Select Category */}
+        <Box display={"flex"} border={0} alignItems={"end"}>
+          <FormControl size='small'>
+            <Select
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setOpportunity({ ...opportunity, category: e.target.value });
+              }}
+              startAdornment={
+                <InputAdornment position='start'>
+                  <CategoryIcon fontSize='small' />
+                  <Typography variant='body1' color='primary.main' ml={1} fontWeight={"bold"}>
+                    Category:
+                  </Typography>
+                  {category === "" && (
+                    <Typography variant='body2' color='primary.main' ml={1} sx={{ opacity: 0.7 }}>
+                      Select Category
+                    </Typography>
+                  )}
+                </InputAdornment>
+              }
+              sx={{
+                color: "primary.main",
+                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                "& .MuiSelect-icon": {
+                  color: "primary.main",
+                },
+              }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    borderRadius: "0.5rem",
+                    "& .MuiMenuItem-root": {
+                      fontWeight: "bold",
+                      color: "primary.main",
+                    },
+                    "& .MuiMenuItem-root:hover": {
+                      bgcolor: "primary.light",
+                      color: "white",
+                    },
+                    "& .MuiMenuItem-root.Mui-selected": {
+                      bgcolor: "primary.main",
+                      color: "white",
+                    },
+                    "& .MuiMenuItem-root.Mui-selected:hover": {
+                      bgcolor: "primary.dark",
+                    },
+                  },
+                },
+              }}
+            >
+              {categories.map((cat) => (
+                <MenuItem key={cat} value={cat}>
+                  {cat}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Stack direction='row' spacing={2} marginLeft={"auto"} position={"relative"} top={-10}>
+            <Button variant='outlined' size='large' type="button" sx={{ borderRadius: 0.5, width: 150 }} startIcon={<CancelIcon />}>
+              Cancel
+            </Button>
+            <Button variant='contained' size='large' type="submit" sx={{ borderRadius: 0.5, width: 150 }} startIcon={<SaveIcon />}>
+              Save
+            </Button>
+          </Stack>
+        </Box>
+
+        {/* Description */}
+        <Box border={1.5} marginTop={1} borderRadius={1} borderColor={"primary.main"}>
+          <Box bgcolor={"primary.light"} sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
+            <Typography color='white' marginLeft={1} fontWeight={"bold"} padding={1}>
+              <DescriptionIcon sx={{ marginRight: 0.7 }} />
+              Description
+            </Typography>
+          </Box>
+          <TextField
+            value={opportunity.description}
+            onChange={(e) => setOpportunity((prev) => ({ ...prev, description: e.target.value }))}
+            multiline
+            rows={5}
+            fullWidth
+            placeholder='Describe the volunteering opportunity...'
+            sx={{
+              "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+              "& .MuiInputBase-inputMultiline": {
+                color: "primary.main",
+              },
+              fontWeight: 100,
+              padding: 1,
+              color: "red",
+            }}
+          />
+        </Box>
+
+        {/* Schedules */}
+        <Box border={1.5} marginTop={2} borderRadius={1} borderColor={"primary.main"}>
+          <Box bgcolor={"primary.light"} sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
+            <Typography color='white' fontWeight={"bold"} padding={1}>
+              <EventIcon sx={{ marginRight: 0.7 }} />
+              Schedules
+            </Typography>
+          </Box>
+
+          {/* Schedules: Titles */}
+          <Box
+            paddingLeft={1.5}
+            paddingY={1.5}
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr 1fr 0.5fr 72px" },
+              gap: 2,
+              alignItems: "center",
+            }}
+          >
+            <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
+              Date
+            </Typography>
+            <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
+              Start Time
+            </Typography>
+            <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
+              End Time
+            </Typography>
+            <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
+              Slots
+            </Typography>
+          </Box>
+
+          {/* Schedules: Inputs */}
+          <Schedule setSchedules={setSchedules} schedules={schedules} />
+        </Box>
+      </Box>
+      </form>
+    </Box>
   );
 }
