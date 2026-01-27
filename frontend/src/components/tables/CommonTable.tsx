@@ -20,19 +20,19 @@ const CommonTable = ({ fetchRows, columns }: CommonTableProps) => {
       });
   }, [fetchRows]);
 
-  // const paginationModel = { page: 0, pageSize: 10 };
+  const paginationModel = { page: 0, pageSize: 25 };
   const columnVisibilityModel = { id: false, timeFrom: false, timeTo: false };
 
   return (
     <Paper>
       <DataGrid
         rows={rows}
-        hideFooterPagination
+        // hideFooterPagination
         getRowId={(row) => row.id ?? row._id}
         columns={columns}
-        // initialState={{ pagination: { paginationModel }, columns: { columnVisibilityModel } }}
-        initialState={{  columns: { columnVisibilityModel } }}
-        // pageSizeOptions={[5, 10]}
+        initialState={{ pagination: { paginationModel }, columns: { columnVisibilityModel } }}
+        // initialState={{  columns: { columnVisibilityModel } }}
+        pageSizeOptions={[5,  10, 25, 50]}
         disableRowSelectionOnClick
         slots={{
           noRowsOverlay: () => (

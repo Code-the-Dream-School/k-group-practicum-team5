@@ -72,145 +72,157 @@ export default function NewVolunteeringOpportunity() {
     <Box className='min-h-screen flex flex-col px-4' bgcolor={"background.default"}>
       {/* Header */}
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 1 }}>
-        <SectionHeading title='New Volunteering Opportunity' />
+        <SectionHeading title='New Volunteering Opportunity' fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }} />
       </Box>
 
-    <form onSubmit={handleSubmit}>
-      <Box border={0.1} borderColor={"primary.light"} borderRadius={1} padding={4} boxShadow={1}>
-        {/* Select Category */}
-        <Box display={"flex"} border={0} alignItems={"end"}>
-          <FormControl size='small'>
-            <Select
-              value={category}
-              onChange={(e) => {
-                setCategory(e.target.value);
-                setOpportunity({ ...opportunity, category: e.target.value });
-              }}
-              startAdornment={
-                <InputAdornment position='start'>
-                  <CategoryIcon fontSize='small' />
-                  <Typography variant='body1' color='primary.main' ml={1} fontWeight={"bold"}>
-                    Category:
-                  </Typography>
-                  {category === "" && (
-                    <Typography variant='body2' color='primary.main' ml={1} sx={{ opacity: 0.7 }}>
-                      Select Category
+      <form onSubmit={handleSubmit}>
+        <Box border={0.1} borderColor={"primary.light"} borderRadius={1} padding={4} boxShadow={1}>
+          {/* Select Category */}
+          <Box display={"flex"} border={0} alignItems={"end"}>
+            <FormControl size='small'>
+              <Select
+                value={category}
+                onChange={(e) => {
+                  setCategory(e.target.value);
+                  setOpportunity({ ...opportunity, category: e.target.value });
+                }}
+                startAdornment={
+                  <InputAdornment position='start'>
+                    <CategoryIcon fontSize='small' />
+                    <Typography variant='body1' color='primary.main' ml={1} fontWeight={"bold"}>
+                      Category:
                     </Typography>
-                  )}
-                </InputAdornment>
-              }
-              sx={{
-                color: "primary.main",
-                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-                "& .MuiSelect-icon": {
+                    {category === "" && (
+                      <Typography variant='body2' color='primary.main' ml={1} sx={{ opacity: 0.7 }}>
+                        Select Category
+                      </Typography>
+                    )}
+                  </InputAdornment>
+                }
+                sx={{
                   color: "primary.main",
-                },
-              }}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    borderRadius: "0.5rem",
-                    "& .MuiMenuItem-root": {
-                      fontWeight: "bold",
-                      color: "primary.main",
-                    },
-                    "& .MuiMenuItem-root:hover": {
-                      bgcolor: "primary.light",
-                      color: "white",
-                    },
-                    "& .MuiMenuItem-root.Mui-selected": {
-                      bgcolor: "primary.main",
-                      color: "white",
-                    },
-                    "& .MuiMenuItem-root.Mui-selected:hover": {
-                      bgcolor: "primary.dark",
+                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                  "& .MuiSelect-icon": {
+                    color: "primary.main",
+                  },
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      borderRadius: "0.5rem",
+                      "& .MuiMenuItem-root": {
+                        fontWeight: "bold",
+                        color: "primary.main",
+                      },
+                      "& .MuiMenuItem-root:hover": {
+                        bgcolor: "primary.light",
+                        color: "white",
+                      },
+                      "& .MuiMenuItem-root.Mui-selected": {
+                        bgcolor: "primary.main",
+                        color: "white",
+                      },
+                      "& .MuiMenuItem-root.Mui-selected:hover": {
+                        bgcolor: "primary.dark",
+                      },
                     },
                   },
+                }}
+              >
+                {categories.map((cat) => (
+                  <MenuItem key={cat} value={cat}>
+                    {cat}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Stack direction='row' spacing={2} marginLeft={"auto"} position={"relative"} top={-7} mr={0.5}>
+              <Button
+                variant='outlined'
+                size='medium'
+                type='button'
+                sx={{ borderRadius: 0.8, width: 150 }}
+                startIcon={<CancelIcon />}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant='contained'
+                size='medium'
+                type='submit'
+                sx={{ borderRadius: 0.8, width: 150 }}
+                startIcon={<SaveIcon />}
+              >
+                Save
+              </Button>
+            </Stack>
+          </Box>
+
+          {/* Description */}
+          <Box border={1.5} marginTop={1} borderRadius={1} borderColor={"primary.main"}>
+            <Box bgcolor={"primary.light"} sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
+              <Typography color='white' marginLeft={1} fontWeight={"bold"} padding={1}>
+                <DescriptionIcon sx={{ marginRight: 0.7 }} />
+                Description
+              </Typography>
+            </Box>
+            <TextField
+              value={opportunity.description}
+              onChange={(e) => setOpportunity((prev) => ({ ...prev, description: e.target.value }))}
+              multiline
+              rows={5}
+              fullWidth
+              placeholder='Describe the volunteering opportunity...'
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                "& .MuiInputBase-inputMultiline": {
+                  color: "primary.main",
                 },
+                fontWeight: 100,
+                padding: 1,
+                color: "red",
+              }}
+            />
+          </Box>
+
+          {/* Schedules */}
+          <Box border={1.5} marginTop={2} borderRadius={1} borderColor={"primary.main"}>
+            <Box bgcolor={"primary.light"} sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
+              <Typography color='white' fontWeight={"bold"} padding={1}>
+                <EventIcon sx={{ marginRight: 0.7 }} />
+                Schedules
+              </Typography>
+            </Box>
+
+            {/* Schedules: Titles */}
+            <Box
+              paddingLeft={1.5}
+              paddingY={1.5}
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr 1fr 0.5fr 72px" },
+                gap: 2,
+                alignItems: "center",
               }}
             >
-              {categories.map((cat) => (
-                <MenuItem key={cat} value={cat}>
-                  {cat}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Stack direction='row' spacing={2} marginLeft={"auto"} position={"relative"} top={-10}>
-            <Button variant='outlined' size='large' type="button" sx={{ borderRadius: 0.5, width: 150 }} startIcon={<CancelIcon />}>
-              Cancel
-            </Button>
-            <Button variant='contained' size='large' type="submit" sx={{ borderRadius: 0.5, width: 150 }} startIcon={<SaveIcon />}>
-              Save
-            </Button>
-          </Stack>
-        </Box>
+              <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
+                Date
+              </Typography>
+              <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
+                Start Time
+              </Typography>
+              <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
+                End Time
+              </Typography>
+              <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
+                Slots
+              </Typography>
+            </Box>
 
-        {/* Description */}
-        <Box border={1.5} marginTop={1} borderRadius={1} borderColor={"primary.main"}>
-          <Box bgcolor={"primary.light"} sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
-            <Typography color='white' marginLeft={1} fontWeight={"bold"} padding={1}>
-              <DescriptionIcon sx={{ marginRight: 0.7 }} />
-              Description
-            </Typography>
+            {/* Schedules: Inputs */}
+            <Schedule setSchedules={setSchedules} schedules={schedules} />
           </Box>
-          <TextField
-            value={opportunity.description}
-            onChange={(e) => setOpportunity((prev) => ({ ...prev, description: e.target.value }))}
-            multiline
-            rows={5}
-            fullWidth
-            placeholder='Describe the volunteering opportunity...'
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-              "& .MuiInputBase-inputMultiline": {
-                color: "primary.main",
-              },
-              fontWeight: 100,
-              padding: 1,
-              color: "red",
-            }}
-          />
         </Box>
-
-        {/* Schedules */}
-        <Box border={1.5} marginTop={2} borderRadius={1} borderColor={"primary.main"}>
-          <Box bgcolor={"primary.light"} sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
-            <Typography color='white' fontWeight={"bold"} padding={1}>
-              <EventIcon sx={{ marginRight: 0.7 }} />
-              Schedules
-            </Typography>
-          </Box>
-
-          {/* Schedules: Titles */}
-          <Box
-            paddingLeft={1.5}
-            paddingY={1.5}
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr 1fr 0.5fr 72px" },
-              gap: 2,
-              alignItems: "center",
-            }}
-          >
-            <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
-              Date
-            </Typography>
-            <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
-              Start Time
-            </Typography>
-            <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
-              End Time
-            </Typography>
-            <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
-              Slots
-            </Typography>
-          </Box>
-
-          {/* Schedules: Inputs */}
-          <Schedule setSchedules={setSchedules} schedules={schedules} />
-        </Box>
-      </Box>
       </form>
     </Box>
   );
