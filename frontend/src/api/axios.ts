@@ -7,16 +7,49 @@ const api = axios.create({
   timeout: 10000,
 });
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export async function apiCall<T>(
-  method: "get" | "post" | "patch" | "delete",
+  method: "get" | "post" | "patch" | "delete" | "put",
   url: string,
   paramsOrData?: object,
   config: object = {},
 ): Promise<T> {
-  const response =
-    method === "get" || method === "delete"
-      ? await api[method]<T>(url, { ...config, params: paramsOrData })
-      : await api[method]<T>(url, paramsOrData, config);
-
-  return response.data;
+  switch (method) {
+    case "get": {
+      const response = await api.get<T>(url, {
+        ...config,
+        params: paramsOrData,
+      });
+      return response.data;
+    }
+    case "delete": {
+      const response = await api.delete<T>(url, {
+        ...config,
+        data: paramsOrData,
+      });
+      return response.data;
+    }
+    case "put": {
+      const response = await api.put<T>(url, paramsOrData, config);
+      return response.data;
+    }
+    case "post": {
+      const response = await api.post<T>(url, paramsOrData, config);
+      return response.data;
+    }
+    case "patch": {
+      const response = await api.patch<T>(url, paramsOrData, config);
+      return response.data;
+    }
+    default:
+      throw new Error(`Unsupported method: ${method}`);
+  }
 }
