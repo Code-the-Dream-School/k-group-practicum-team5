@@ -5,11 +5,11 @@ import BusinessHoursPanel from '@/components/BusinessHoursPanel';
 
 
 import Hero from "../components/Hero/Hero";
+import { FeaturedAttractionsList } from "@/components/featuredAttractions";
 
 function Home() {
   return (
     <Box>
-      {/* Hero Section */}
       <Hero />
       <Box
         sx={{
@@ -20,17 +20,12 @@ function Home() {
           gap: 3,
         }}
       >
-        {/* Placeholder sections */}
-            
 
-
-        <Box
-          sx={{ mt: 8, opacity: 0.85, maxWidth: 600, color: "text.primary" }}
-        >
-      
-          <Typography>Real-time open/closed status</Typography>
+        <Box sx={{ color: "text.primary" }}>
+          <FeaturedAttractionsList />
+     
                   <BusinessHoursPanel/>
-          <Typography>Featured Attractions</Typography>
+
           <Typography>Highlights from Trip Advisor Reviews</Typography>
         </Box>
         </Box>
