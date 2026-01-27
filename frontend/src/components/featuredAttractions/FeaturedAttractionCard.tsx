@@ -29,7 +29,7 @@ export function FeaturedAttractionCard({
         "&:hover": onClick
           ? {
               borderColor: "primary.main",
-              boxShadow: "0 14px 30px rgba(31,61,43,0.18)",
+              boxShadow: (theme) => `0 14px 30px ${theme.palette.primary.dark}`,
             }
           : undefined,
       }}
