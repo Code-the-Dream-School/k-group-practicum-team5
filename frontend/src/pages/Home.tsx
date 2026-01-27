@@ -11,6 +11,7 @@ function Home() {
   return (
     <Box>
       <Hero />
+
       <Box
         sx={{
           maxWidth: 1200,
