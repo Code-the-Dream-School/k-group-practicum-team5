@@ -11,6 +11,7 @@ import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeri
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 // import { Box } from "@mui/material";
 import MapPage from "./pages/Map";
+import Signup from "./components/Authentication/Signup";
 
 
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="signup" element={<Signup />} />
             <Route
               path="volunteering/opportunities/admin/new"
               element={<NewVolunteeringOpportunity />}
