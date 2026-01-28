@@ -13,6 +13,7 @@ import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunities
 import MapPage from "./pages/Map";
 import Login from "@/pages/LoginDummy";
 import ProtectedRoute from "@/routes/ProtectedRoute";
+import Signup from "./components/Authentication/Signup";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="signup" element={<Signup />} />
             <Route
               path="volunteering/opportunities/admin/new"
               element={<NewVolunteeringOpportunity />}
