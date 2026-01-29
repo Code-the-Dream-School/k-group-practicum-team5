@@ -75,7 +75,7 @@ export function ModalImage({ open, activeImage, onClose }: ModalImageProps) {
               display: "flex",
               flexDirection: "column",
               p: 3,
-              pt: 3,
+              pt: 8,
             }}
           >
             <Typography
