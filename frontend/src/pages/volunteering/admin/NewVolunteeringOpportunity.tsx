@@ -9,6 +9,7 @@ import type { AvailabilityFormValue } from "@/types/volunteering/AvailabilityFor
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Slide from "@mui/material/Slide";
+import Backdrop from "@mui/material/Backdrop";
 
 // Icons
 import CategoryIcon from "@mui/icons-material/Category";
@@ -16,6 +17,7 @@ import EventIcon from "@mui/icons-material/Event";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function NewVolunteeringOpportunity() {
   const [categories, setCategories] = useState<string[]>([]);
@@ -31,6 +33,7 @@ export default function NewVolunteeringOpportunity() {
   ]);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -52,6 +55,7 @@ export default function NewVolunteeringOpportunity() {
     e.preventDefault();
 
     try {
+      setIsSaving(true);
       const response = await apiCall<{ data: { id: string } }>(
         "post",
         `${import.meta.env.VITE_API_BASE_URL}/volunteering/new`,
@@ -60,29 +64,57 @@ export default function NewVolunteeringOpportunity() {
 
       const volunteeringId = response.data.id;
       // Create schedules
-      // for (const schedule of schedules) {
-      //   await apiCall("post", `${import.meta.env.VITE_API_BASE_URL}/volunteeringSchedule/${volunteeringId}/schedules`, {
-      //     volunteeringId,
-      //     date: schedule.date,
-      //     timeFrom: schedule.timeFrom,
-      //     timeTo: schedule.timeTo,
-      //     slotsAvailable: schedule.slotsAvailable,
-      //   });
-      // }
+      for (const schedule of schedules) {
+        await apiCall("post", `${import.meta.env.VITE_API_BASE_URL}/volunteeringSchedule/${volunteeringId}/schedules`, {
+          volunteeringId,
+          date: schedule.date,
+          timeFrom: schedule.timeFrom,
+          timeTo: schedule.timeTo,
+          slotsAvailable: schedule.slotsAvailable,
+        });
+      }
       setSuccessMessage("Volunteering opportunity created successfully!");
       setErrorMessage(null);
       setTimeout(() => {
         setSuccessMessage(null);
       }, 3000);
+      setIsSaving(false);
     } catch (error) {
       console.error("Error creating opportunity:", error);
       setErrorMessage("Failed to create volunteering opportunity.");
       setSuccessMessage(null);
+      setIsSaving(false);
     }
+  };
+
+  const menuPropsSx = {
+    borderRadius: "0.5rem",
+    "& .MuiMenuItem-root": {
+      fontWeight: "bold",
+      color: "primary.main",
+    },
+    "& .MuiMenuItem-root:hover": {
+      bgcolor: "primary.light",
+      color: "white",
+    },
+    "& .MuiMenuItem-root.Mui-selected": {
+      bgcolor: "primary.main",
+      color: "white",
+    },
+    "& .MuiMenuItem-root.Mui-selected:hover": {
+      bgcolor: "primary.dark",
+    },
   };
 
   return (
     <Box className='min-h-screen flex flex-col px-4' bgcolor={"background.default"}>
+      {/* Loader */}
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isSaving}>
+        <CircularProgress color='inherit' />
+        <Typography variant='h6'>&nbsp;Saving...</Typography>
+      </Backdrop>
+
+      {/* Alerts */}
       {successMessage && (
         <Slide direction='down' in={!!successMessage} mountOnEnter unmountOnExit>
           <Box
@@ -134,11 +166,13 @@ export default function NewVolunteeringOpportunity() {
           </Box>
         </Slide>
       )}
+
       {/* Header */}
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 1 }}>
         <SectionHeading title='New Volunteering Opportunity' fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }} />
       </Box>
 
+      {/* Form */}
       <form onSubmit={handleSubmit}>
         <Box border={0.1} borderColor={"primary.light"} borderRadius={1} padding={4} boxShadow={1}>
           {/* Select Category */}
@@ -172,24 +206,7 @@ export default function NewVolunteeringOpportunity() {
                 }}
                 MenuProps={{
                   PaperProps: {
-                    sx: {
-                      borderRadius: "0.5rem",
-                      "& .MuiMenuItem-root": {
-                        fontWeight: "bold",
-                        color: "primary.main",
-                      },
-                      "& .MuiMenuItem-root:hover": {
-                        bgcolor: "primary.light",
-                        color: "white",
-                      },
-                      "& .MuiMenuItem-root.Mui-selected": {
-                        bgcolor: "primary.main",
-                        color: "white",
-                      },
-                      "& .MuiMenuItem-root.Mui-selected:hover": {
-                        bgcolor: "primary.dark",
-                      },
-                    },
+                    sx: menuPropsSx,
                   },
                 }}
               >
@@ -200,7 +217,15 @@ export default function NewVolunteeringOpportunity() {
                 ))}
               </Select>
             </FormControl>
-            <Stack direction='row' spacing={2} marginLeft={"auto"} position={"relative"} top={-7} mr={0.5}>
+            <Stack
+              direction='row'
+              spacing={2}
+              marginLeft={"auto"}
+              position={"relative"}
+              top={-7}
+              mr={0.5}
+              display={{ xs: "none", sm: "flex" }}
+            >
               <Button
                 variant='outlined'
                 size='medium'
@@ -213,8 +238,7 @@ export default function NewVolunteeringOpportunity() {
                 disabled={
                   opportunity.category === "" ||
                   opportunity.description === "" ||
-                  (schedules.length === 1 &&
-                  schedules[0].date === null)
+                  (schedules.length === 1 && schedules[0].date === null)
                 }
               >
                 Reset
@@ -228,8 +252,8 @@ export default function NewVolunteeringOpportunity() {
                 disabled={
                   opportunity.category === "" ||
                   opportunity.description === "" ||
-                  (schedules.length === 1 &&
-                  schedules[0].date === null)
+                  (schedules.length === 1 && schedules[0].date === null) ||
+                  isSaving
                 }
               >
                 Save
@@ -278,7 +302,7 @@ export default function NewVolunteeringOpportunity() {
               paddingLeft={1.5}
               paddingY={1.5}
               sx={{
-                display: "grid",
+                display: { xs: "none", md: "grid" },
                 gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr 1fr 0.5fr 72px" },
                 gap: 2,
                 alignItems: "center",
@@ -302,6 +326,47 @@ export default function NewVolunteeringOpportunity() {
             <Schedule setSchedules={setSchedules} schedules={schedules} />
           </Box>
         </Box>
+        <Stack
+          direction='row'
+          spacing={2}
+          marginY={2}
+          marginLeft={"auto"}
+          mr={0.5}
+          display={{ xs: "flex", sm: "none" }}
+        >
+          <Button
+            variant='contained'
+            size='medium'
+            type='submit'
+            sx={{ borderRadius: 0.8, width: 150 }}
+            startIcon={<SaveIcon />}
+            disabled={
+              opportunity.category === "" ||
+              opportunity.description === "" ||
+              (schedules.length === 1 && schedules[0].date === null) ||
+              isSaving
+            }
+          >
+            Save
+          </Button>
+          <Button
+            variant='outlined'
+            size='medium'
+            type='button'
+            sx={{ borderRadius: 0.8, width: 150 }}
+            startIcon={<CancelIcon />}
+            onClick={() => {
+              window.location.reload();
+            }}
+            disabled={
+              opportunity.category === "" ||
+              opportunity.description === "" ||
+              (schedules.length === 1 && schedules[0].date === null)
+            }
+          >
+            Reset
+          </Button>
+        </Stack>
       </form>
     </Box>
   );

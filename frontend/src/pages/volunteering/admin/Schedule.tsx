@@ -37,7 +37,9 @@ export default function Schedule({
               marginBottom: 1,
               position: "relative",
               top: "-9px",
-              paddingLeft: 1.5,
+              paddingX: { xs: 1.5, md: 0 },
+              paddingLeft: { xs: 0, md: 1.5 },
+              marginTop: { xs: 3, md: 0 },
             }}
           >
             {/* Date */}
