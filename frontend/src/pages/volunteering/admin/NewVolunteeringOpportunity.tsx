@@ -6,6 +6,9 @@ import { apiCall } from "../../../api/axios";
 import Schedule from "@/pages/volunteering/admin/Schedule";
 import { SectionHeading } from "@/components/GalleryImages";
 import type { AvailabilityFormValue } from "@/types/volunteering/AvailabilityFormValue.type";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Slide from "@mui/material/Slide";
 
 // Icons
 import CategoryIcon from "@mui/icons-material/Category";
@@ -26,7 +29,8 @@ export default function NewVolunteeringOpportunity() {
       slotsAvailable: 1,
     },
   ]);
-  // const [schedule, setSchedule] = useState<{ date: ""; timeFrom: ""; timeTo: ""; slotsAvailable: 1 }[]>([]);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -48,28 +52,88 @@ export default function NewVolunteeringOpportunity() {
     e.preventDefault();
 
     try {
-      const response = await apiCall<{ data: { id: string } }>("post", `${import.meta.env.VITE_API_BASE_URL}/volunteering/new`, opportunity);
-      console.log(response);
-      
+      const response = await apiCall<{ data: { id: string } }>(
+        "post",
+        `${import.meta.env.VITE_API_BASE_URL}/volunteering/new`,
+        opportunity,
+      );
+
       const volunteeringId = response.data.id;
-      // Now create schedules
-      for (const schedule of schedules) {
-        await apiCall("post", `${import.meta.env.VITE_API_BASE_URL}/volunteeringSchedule/${volunteeringId}/schedules`, {
-          volunteeringId,
-          date: schedule.date,
-          timeFrom: schedule.timeFrom,
-          timeTo: schedule.timeTo,
-          slotsAvailable: schedule.slotsAvailable,
-        });
-      }
-      // Optionally, you can add a success message or redirect the user here
+      // Create schedules
+      // for (const schedule of schedules) {
+      //   await apiCall("post", `${import.meta.env.VITE_API_BASE_URL}/volunteeringSchedule/${volunteeringId}/schedules`, {
+      //     volunteeringId,
+      //     date: schedule.date,
+      //     timeFrom: schedule.timeFrom,
+      //     timeTo: schedule.timeTo,
+      //     slotsAvailable: schedule.slotsAvailable,
+      //   });
+      // }
+      setSuccessMessage("Volunteering opportunity created successfully!");
+      setErrorMessage(null);
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
     } catch (error) {
       console.error("Error creating opportunity:", error);
+      setErrorMessage("Failed to create volunteering opportunity.");
+      setSuccessMessage(null);
     }
   };
 
   return (
     <Box className='min-h-screen flex flex-col px-4' bgcolor={"background.default"}>
+      {successMessage && (
+        <Slide direction='down' in={!!successMessage} mountOnEnter unmountOnExit>
+          <Box
+            mt={2}
+            position={"absolute"}
+            top={60}
+            justifyContent={"center"}
+            display={"flex"}
+            width={"100%"}
+            zIndex={100}
+          >
+            <Alert
+              severity='success'
+              variant='filled'
+              sx={{ paddingRight: 5, borderRadius: 0.5, bgcolor: "primary.main", boxShadow: 10 }}
+            >
+              <AlertTitle>
+                <strong>Success</strong>
+              </AlertTitle>
+              {successMessage}
+            </Alert>
+          </Box>
+        </Slide>
+      )}
+      {errorMessage && (
+        <Slide direction='down' in={!!errorMessage} mountOnEnter unmountOnExit>
+          <Box
+            mt={2}
+            position={"absolute"}
+            top={60}
+            justifyContent={"center"}
+            display={"flex"}
+            width={"100%"}
+            zIndex={100}
+          >
+            <Alert
+              onClose={() => {
+                setErrorMessage(null);
+              }}
+              severity='error'
+              variant='filled'
+              sx={{ paddingRight: 3, borderRadius: 0.5, bgcolor: "error.dark", boxShadow: 10 }}
+            >
+              <AlertTitle>
+                <strong>Error</strong>
+              </AlertTitle>
+              {errorMessage}
+            </Alert>
+          </Box>
+        </Slide>
+      )}
       {/* Header */}
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 1 }}>
         <SectionHeading title='New Volunteering Opportunity' fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }} />
@@ -143,8 +207,17 @@ export default function NewVolunteeringOpportunity() {
                 type='button'
                 sx={{ borderRadius: 0.8, width: 150 }}
                 startIcon={<CancelIcon />}
+                onClick={() => {
+                  window.location.reload();
+                }}
+                disabled={
+                  opportunity.category === "" ||
+                  opportunity.description === "" ||
+                  (schedules.length === 1 &&
+                  schedules[0].date === null)
+                }
               >
-                Cancel
+                Reset
               </Button>
               <Button
                 variant='contained'
@@ -152,6 +225,12 @@ export default function NewVolunteeringOpportunity() {
                 type='submit'
                 sx={{ borderRadius: 0.8, width: 150 }}
                 startIcon={<SaveIcon />}
+                disabled={
+                  opportunity.category === "" ||
+                  opportunity.description === "" ||
+                  (schedules.length === 1 &&
+                  schedules[0].date === null)
+                }
               >
                 Save
               </Button>
