@@ -1,13 +1,11 @@
 import { apiCall } from "./axios";
 
-interface SignupPayload {
-  first_name: string;
-  last_name: string;
+interface LoginPayload {
   email: string;
   password: string;
 }
 
-interface SignupResponse {
+interface LoginResponse {
   user: {
     id: string;
     fullName: string;
@@ -15,9 +13,10 @@ interface SignupResponse {
     last_name: string;
     email: string;
     is_admin: boolean;
+    
   };
   token: string;
 }
 
-export const signup = (data: SignupPayload) =>
-  apiCall<SignupResponse>("post", "/auth/register", data);
+export const loginApi = (data: LoginPayload) =>
+  apiCall<LoginResponse>("post", "/auth/login", data);

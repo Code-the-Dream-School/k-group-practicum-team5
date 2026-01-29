@@ -3,10 +3,10 @@ import { useState } from "react";
 import {
   Box,
   Button,
+  Link,
   TextField,
   Typography,
   CircularProgress,
-  Alert,
   Card,
   CardContent,
   IconButton,
@@ -18,6 +18,9 @@ import {Visibility, VisibilityOff } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {useAuth} from "@/hooks/useAuth";
+import { Link as RouterLink } from "react-router-dom";
+import BasicAlert from "../alert/BasicAlert";
 
 
 interface SignupForm {
@@ -29,6 +32,7 @@ interface SignupForm {
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const handleClose = () => {
     navigate("/"); 
   }
@@ -48,8 +52,12 @@ const Signup = () => {
 
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [alert, setAlert] = useState<{
+  message: string;
+  severity: "success" | "info" | "warning" | "error";
+} | null>(null);
+
 
 
 const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -67,12 +75,17 @@ const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 const handleTogglePassword = () => {
   setShowPassword((prev) => !prev);
 };
+const isValidEmail = (email: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidPassword = (password: string) =>
+  password.length >= 6;
+
 const validate = () => {
   const newErrors = {
     first_name: formData.first_name.trim() === "",
     last_name: formData.last_name.trim() === "",
-    email: formData.email.trim() === "",
-    password: formData.password.trim() === "",
+    email: formData.email.trim() === ""||!isValidEmail(formData.email),
+    password: formData.password.trim() === ""||!isValidPassword(formData.password),
   };
 
   setErrors(newErrors);
@@ -82,7 +95,7 @@ const validate = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setAlert(null);
     setLoading(true);
 
     if (!validate()) {
@@ -91,14 +104,24 @@ const validate = () => {
     }
 
     try {
-      await signup(formData);
-      alert("Signup successful");
+      const res =await signup(formData);
+      login(res.user, res.token);
+      setAlert({
+         message: "Account created successfully ",
+         severity: "success",
+      });
       navigate("/");
     } catch (err: unknown) {
-        if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || "Signup failed");
+         if (axios.isAxiosError(err)) {
+        setAlert({
+           message: err.response?.data?.error || "Signup failed",
+           severity: "error",
+      });
      } else {
-    setError("Signup failed");
+    setAlert({
+      message: "Signup failed",
+      severity: "error",
+    });
     }
     } finally {
     setLoading(false);
@@ -141,11 +164,18 @@ const validate = () => {
           <Typography variant="h4" color="primary" mb={2}>
             Create Account
           </Typography>
+          <Typography variant="h5" color="primary" mb={2}>
+            Already have an account?{" "}
+            <Link component={RouterLink} to="/login" color="secondary" sx={{ fontWeight: 600 }}>
+              Login
+            </Link>
+          </Typography>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
+          {alert && (
+            <BasicAlert
+              message={alert.message}
+              severity={alert.severity}
+            />
           )}
 
           <Box component="form" onSubmit={handleSubmit} 
@@ -186,6 +216,7 @@ const validate = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.email}
+              helperText={errors.email && "Enter a valid email address"}
             />
 
             <TextField
@@ -199,7 +230,9 @@ const validate = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.password}
-              InputProps={{
+              helperText={errors.password && "Password must be at least 6 characters long"}
+              slotProps={{
+                input: {               
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton 
@@ -211,6 +244,7 @@ const validate = () => {
                     </IconButton>
                   </InputAdornment>
                 ),
+              },
               }}
             />
 
