@@ -1,11 +1,16 @@
-  export type OpportunityRow = {
-    id: string;
-    date?: string;
-    timeFrom: string;
-    timeTo: string;
-    category: string;
-    description: string;
-    totalApplicants: number;
+export type OpportunityRow = {
+  id: string;
+  createdAt: string;
+  category: string;
+  description: string;
+  schedulesCount: number;
+  slotsAvailableCount: number;
+};
 
-    totalAssignees: number;
-  };
+export type OpportunityApiItem = Omit<OpportunityRow, "id"> & {
+  _id: string;
+};
+
+export type OpportunitiesResponse = {
+  opportunities: OpportunityApiItem[];
+};
