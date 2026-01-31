@@ -192,7 +192,7 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
       >
         {filteredImages.map((item) => (
           <GalleryImageCard
-            key={item.asset_id}
+            key={item.publicId}
             image={item}
             onClick={handleOpen}
           />

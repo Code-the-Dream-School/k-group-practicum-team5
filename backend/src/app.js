@@ -10,10 +10,14 @@ const helloRoutes = require('./routes/hello.routes');
 const calendarRoutes = require('./routes/calendar.routes');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRouter');
+const userRoutes = require('./routes/userRouter');
+const adminRoutes = require('./routes/adminRouter');
 const contactInfoRoutes = require('./routes/contactInfo.routes')
-const volunteeringRoutes = require('./routes/volunteeringRouter');
+const volunteeringRoutes = require('./routes/volunteering.routes');
+const volunteeringScheduleRoutes = require('./routes/volunteeringSchedule.routes');
 const businessHoursRoutes = require('./routes/businessHours.routes')
-
+const notFoundMiddleware = require('./middleware/not-found');
+const errorHandlerMiddleware = require('./middleware/error-handler');
 const app = express();
 
 dotenv.config();
@@ -40,14 +44,20 @@ app.use('/api/hello', helloRoutes);
 
 app.use('/api/v1/calendar', calendarRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/v1/images', uploadRoutes);
 app.use("/api/v1/contact-info", contactInfoRoutes)
 app.use('/api/v1/volunteering', volunteeringRoutes);
 app.use('/api/v1/business-hours', businessHoursRoutes)
+app.use('/api/v1/volunteeringSchedule', volunteeringScheduleRoutes);
 
 // Root route
 app.get('/', (req, res) => {
   res.send('Backend API is running');
 });
+
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 module.exports = app;

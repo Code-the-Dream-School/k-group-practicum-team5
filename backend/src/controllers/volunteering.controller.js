@@ -1,5 +1,7 @@
-const Volunteering = require('../models/Volunteering');
 const { StatusCodes } = require('http-status-codes');
+const Volunteering = require('../models/Volunteering');
+const VolunteeringSchedule = require('../models/VolunteeringSchedule');
+
 
 const getCategories = async (req, res) => {
     try {
@@ -14,32 +16,57 @@ const getCategories = async (req, res) => {
 }
 
 const getOpportunities = async (req, res) => {
+
+    const scheduleCollection = VolunteeringSchedule.collection.name;
+
     try {
         const opportunities = await Volunteering.aggregate([
             {
+                $lookup: {
+                    from: scheduleCollection,
+                    localField: "_id",
+                    foreignField: "volunteeringId",
+                    as: "schedules",
+                },
+            }, {
                 $addFields: {
-                    totalAssignees: { $size: { $ifNull: ["$assignees", []] } },
-                    totalApplicants: { $size: { $ifNull: ["$applicants", []] } },
+                    schedulesCount: { $size: "$schedules" },
+                    slotsAvailableCount: {
+                        $sum: "$schedules.slotsAvailable",
+                    },
                 },
             },
-            { $project: { assignees: 0, applicants: 0 } },
-            { $sort: { date: -1 } },
+            
+            {
+                $project: {
+                    _id: 1,
+                    createdAt: 1,
+                    category: 1,
+                    description: 1,
+                    schedulesCount: 1,
+                    slotsAvailableCount: 1,
+                },
+            },
+            { $sort: { createdAt: -1 } },
         ]);
-        res.status(StatusCodes.OK).json(opportunities);
+        return res.status(StatusCodes.OK).json({ opportunities });
     } catch (error) {
-        console.error(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: error.message || "Unexpected server error while fetching opportunities."
-        });
+        console.error("getOpportunities error:", error);
+        return res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "Failed to load opportunities" });
     }
-}
+};
 
 const createOpportunity = async (req, res) => {
     try {
-        await Volunteering.create(req.body);
+        const volunteering = await Volunteering.create(req.body);
 
         res.status(StatusCodes.CREATED).json({
             message: "Volunteering opportunity created successfully",
+            data: {
+                id: volunteering._id,
+            },
         });
     } catch (error) {
         console.error(error);

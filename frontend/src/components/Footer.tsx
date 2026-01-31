@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { NavLink } from "react-router-dom";
 import lizard from "src/assets/logo/rep-zoo-best.png";
+import { navItems } from "src/components/shared/navConfig";
 
 const CONTACT = {
   email: "info@thereptilezoo.com",
@@ -70,11 +71,11 @@ const Footer = () => {
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            {["Home", "Exhibits", "Visit", "About"].map((label) => (
+            {navItems.map(({ label, path }) => (
               <Typography
                 key={label}
                 component={NavLink}
-                to={label === "Home" ? "/" : `/${label.toLowerCase()}`}
+                to={path}
                 variant="body2"
                 sx={{
                   color: "primary.contrastText",
