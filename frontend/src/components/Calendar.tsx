@@ -1,145 +1,114 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useTheme } from "@mui/material/styles";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import type { PickersDayProps } from "@mui/x-date-pickers/PickersDay";
-import {
-  Box,
-  CircularProgress,
-  Alert,
-  Typography,
-  Paper,
-  Chip,
-} from "@mui/material";
+import { Box, CircularProgress, Typography, Paper, Chip } from "@mui/material";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
-import type { MonthData } from "../types/calendar.types";
-import { calendarService } from "../services/calendar.service";
+import { formatDate } from "../utils/utilDate";
+import { downloadICS } from "../utils/addToCalendar";
+import { useCalendar } from "../hooks/useCalendar";
+import type { MonthData, Event, OpeningDay } from "../types/calendar.types";
+import { ErrorAlert } from "./alert";
 
 export default function Calendar() {
+  const theme = useTheme();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
   const [monthData, setMonthData] = useState<MonthData | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const year = selectedDate.year();
   const month = selectedDate.month() + 1;
 
-  //   useEffect(() => {
-  //     loadMonthData(selectedDate.year(), selectedDate.month() + 1);
-  //   }, [selectedDate]);
+  const { getMonthData, isLoading, isError, error } = useCalendar();
 
   useEffect(() => {
-    loadMonthData(year, month);
-  }, [year, month]);
-
-  const loadMonthData = async (year: number, month: number) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const data = await calendarService.getMonthData(year, month);
+    const fetchData = async () => {
+      const data = await getMonthData(year, month);
       setMonthData(data);
-      console.log("Calendar data loaded:", data);
-    } catch (err) {
-      setError("Failed to load calendar data");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    fetchData();
+  }, [year, month, getMonthData]);
 
-  // Check if a day has events
+  const eventDaysSet = useMemo(() => {
+    if (!monthData) return new Set<string>();
+    return new Set(
+      monthData.events.map((event: Event) => formatDate(event.date)),
+    );
+  }, [monthData]);
+
   const hasEventsOnDay = (day: Dayjs): boolean => {
     if (!monthData) return false;
-    const dayStr = day.format("YYYY-MM-DD");
-    return monthData.events.some(
-      (event) => dayjs(event.date).format("YYYY-MM-DD") === dayStr,
-    );
+    return eventDaysSet.has(formatDate(day));
   };
 
-  // Check if zoo is closed on a day
   const isClosedOnDay = (day: Dayjs): boolean => {
     if (!monthData) return false;
-    const dayStr = day.format("YYYY-MM-DD");
+    const dayStr = formatDate(day);
     const openingDay = monthData.openingDays.find(
-      (od) => dayjs(od.date).format("YYYY-MM-DD") === dayStr,
+      (od: OpeningDay) => formatDate(od.date) === dayStr,
     );
     return openingDay ? !openingDay.isOpen : false;
   };
 
-  // Check if day has special hours
   const hasSpecialHours = (day: Dayjs): boolean => {
     if (!monthData) return false;
-    const dayStr = day.format("YYYY-MM-DD");
+    const dayStr = formatDate(day);
     const openingDay = monthData.openingDays.find(
-      (od) => dayjs(od.date).format("YYYY-MM-DD") === dayStr,
+      (od: OpeningDay) => formatDate(od.date) === dayStr,
     );
     return openingDay?.specialHours ? true : false;
   };
 
-  // Premium custom day renderer with color shading
   const CustomDay = (props: PickersDayProps) => {
     const { day, ...other } = props;
     const hasEvents = hasEventsOnDay(day as Dayjs);
     const isClosed = isClosedOnDay(day as Dayjs);
     const specialHours = hasSpecialHours(day as Dayjs);
 
-    // Determine background color (priority: closed > special > events)
     let backgroundColor = "transparent";
     let hoverColor = "transparent";
 
     if (isClosed) {
-      backgroundColor = "#ffcdd2"; // Light red
-      hoverColor = "#ef9a9a";
+      backgroundColor = theme.palette.error.light;
+      hoverColor = theme.palette.error.main;
     } else if (specialHours) {
-      backgroundColor = "#fff9c4"; // Light yellow
-      hoverColor = "#fff59d";
+      backgroundColor = theme.palette.warning.light;
+      hoverColor = theme.palette.warning.main;
     } else if (hasEvents) {
-      backgroundColor = "#c8e6c9"; // Light green
-      hoverColor = "#a5d6a7";
+      backgroundColor = theme.palette.success.light;
+      hoverColor = theme.palette.success.main;
     }
 
     return (
       <PickersDay
         {...other}
         day={day}
+        disabled={isClosed}
         sx={{
           backgroundColor,
           fontWeight: hasEvents || isClosed || specialHours ? "bold" : "normal",
           "&:hover": {
             backgroundColor: hoverColor,
           },
-          // Selected day styling
           "&.Mui-selected": {
             backgroundColor: `${backgroundColor} !important`,
-            border: "2px solid #2e7d32",
-            color: "#2e7d32 !important",
+            border: `2px solid ${theme.palette.success.dark}`,
+            color: `${theme.palette.success.dark} !important`,
             fontWeight: "bold !important",
           },
         }}
       />
     );
   };
-  // old code below--
-  // const eventsOnSelectedDay = monthData?.events.filter(
-  //     (event) => dayjs(event.date).format('YYYY-MM-DD') === selectedDate.format('YYYY-MM-DD')
-  // ) || [];
-
-  // const openingDayInfo = monthData?.openingDays.find(
-  //     (od) => dayjs(od.date).format('YYYY-MM-DD') === selectedDate.format('YYYY-MM-DD')
-  // );
 
   const eventsOnSelectedDay = (monthData?.events ?? []).filter(
-    (event) =>
-      dayjs(event.date).format("YYYY-MM-DD") ===
-      selectedDate.format("YYYY-MM-DD"),
+    (event) => formatDate(event.date) === formatDate(selectedDate),
   );
 
   const openingDayInfo = (monthData?.openingDays ?? []).find(
-    (od) =>
-      dayjs(od.date).format("YYYY-MM-DD") === selectedDate.format("YYYY-MM-DD"),
+    (od) => formatDate(od.date) === formatDate(selectedDate),
   );
 
   return (
@@ -149,16 +118,11 @@ export default function Calendar() {
           Zoo Calendar
         </Typography>
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+        {isError && <ErrorAlert message={error} />}
 
         <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-          {/* Calendar Section */}
           <Paper elevation={2} sx={{ p: 2 }}>
-            {loading ? (
+            {isLoading ? (
               <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
                 <CircularProgress />
               </Box>
@@ -167,17 +131,19 @@ export default function Calendar() {
                 <DateCalendar
                   value={selectedDate}
                   onChange={(newValue) => setSelectedDate(newValue || dayjs())}
+                  onMonthChange={(newValue) => {
+                    setSelectedDate(newValue || dayjs());
+                  }}
                   slots={{
                     day: CustomDay,
                   }}
                 />
 
-                {/* Premium Legend */}
                 <Box
                   sx={{
                     mt: 2,
                     p: 2,
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: theme.palette.background.default,
                     borderRadius: 1,
                   }}
                 >
@@ -195,8 +161,8 @@ export default function Calendar() {
                         sx={{
                           width: 20,
                           height: 20,
-                          backgroundColor: "#c8e6c9",
-                          border: "1px solid #81c784",
+                          backgroundColor: theme.palette.success.light,
+                          border: `1px solid ${theme.palette.success.main}`,
                           borderRadius: "4px",
                         }}
                       />
@@ -207,8 +173,8 @@ export default function Calendar() {
                         sx={{
                           width: 20,
                           height: 20,
-                          backgroundColor: "#ffcdd2",
-                          border: "1px solid #e57373",
+                          backgroundColor: theme.palette.error.light,
+                          border: `1px solid ${theme.palette.error.main}`,
                           borderRadius: "4px",
                         }}
                       />
@@ -219,8 +185,8 @@ export default function Calendar() {
                         sx={{
                           width: 20,
                           height: 20,
-                          backgroundColor: "#fff9c4",
-                          border: "1px solid #fff176",
+                          backgroundColor: theme.palette.warning.light,
+                          border: `1px solid ${theme.palette.warning.main}`,
                           borderRadius: "4px",
                         }}
                       />
@@ -231,15 +197,11 @@ export default function Calendar() {
               </>
             )}
           </Paper>
-
-          {/* Selected Date Details Section */}
           <Box sx={{ flex: 1, minWidth: 300 }}>
             <Paper elevation={2} sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
                 {selectedDate.format("MMMM D, YYYY")}
               </Typography>
-
-              {/* Opening Status */}
               {openingDayInfo && (
                 <Box sx={{ mb: 2 }}>
                   <Chip
@@ -264,8 +226,6 @@ export default function Calendar() {
                   )}
                 </Box>
               )}
-
-              {/* Events for Selected Date */}
               <Typography
                 variant="subtitle1"
                 gutterBottom
@@ -274,55 +234,93 @@ export default function Calendar() {
                 Events:
               </Typography>
               {eventsOnSelectedDay.length > 0 ? (
-                eventsOnSelectedDay.map((event) => (
-                  <Paper
-                    key={event._id}
-                    elevation={1}
-                    sx={{ mb: 2, p: 2, borderRadius: 2 }}
-                  >
-                    {/* Display event image if it exists */}
-                    {event.image && (
-                      <Box
-                        component="img"
-                        src={event.image}
-                        alt={event.title}
-                        sx={{
-                          width: "100%",
-                          maxHeight: 200,
-                          objectFit: "cover",
-                          borderRadius: 1,
-                          mb: 2,
-                        }}
-                      />
-                    )}
-                    <Typography variant="h6" gutterBottom>
-                      {event.title}
-                    </Typography>
-                    <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-                      <Chip
-                        label={event.eventType}
-                        size="small"
-                        color="primary"
-                      />
-                      {event.price > 0 && (
+                eventsOnSelectedDay.map((event) => {
+                  const handleAddToCalendar = () => {
+                    const date = formatDate(selectedDate);
+                    const start = event.startTime
+                      ? `${date}T${event.startTime}`
+                      : `${date}T12:00:00`;
+                    const end = event.endTime
+                      ? `${date}T${event.endTime}`
+                      : `${date}T13:00:00`;
+                    downloadICS({
+                      title: event.title,
+                      description: event.description,
+                      location: event.location,
+                      start,
+                      end,
+                    });
+                  };
+                  return (
+                    <Paper
+                      key={event._id}
+                      elevation={1}
+                      sx={{ mb: 2, p: 2, borderRadius: 2 }}
+                    >
+                      <Typography variant="h6" gutterBottom>
+                        {event.title}
+                      </Typography>
+                      <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
                         <Chip
-                          label={`$${event.price}`}
+                          label={event.eventType}
                           size="small"
-                          color="secondary"
+                          color="primary"
+                        />
+                        {event.price > 0 && (
+                          <Chip
+                            label={`$${event.price}`}
+                            size="small"
+                            color="secondary"
+                          />
+                        )}
+                        {typeof event.capacity === "number" &&
+                          typeof event.booked === "number" && (
+                            <Chip
+                              label={`Available: ${event.capacity - event.booked}}`}
+                              size="small"
+                              color={
+                                event.capacity - event.booked > 0
+                                  ? "success"
+                                  : "error"
+                              }
+                            />
+                          )}
+                      </Box>
+                      <Typography variant="body2" color="text.secondary">
+                        {event.startTime || "TBD"}
+                        {event.endTime && ` - ${event.endTime}`}
+                      </Typography>
+                      {event.description && (
+                        <Typography variant="body2" sx={{ mt: 1 }}>
+                          {event.description}
+                        </Typography>
+                      )}
+                      <Box sx={{ mt: 2 }}>
+                        <Chip
+                          label="Add to Calendar"
+                          color="info"
+                          onClick={handleAddToCalendar}
+                          sx={{ cursor: "pointer" }}
+                        />
+                      </Box>
+                      {event.image && (
+                        <Box
+                          component="img"
+                          src={event.image}
+                          alt={event.title}
+                          sx={{
+                            width: 400,
+                            maxHeight: 400,
+                            objectFit: "cover",
+                            borderRadius: 2,
+                            display: "block",
+                            mt: 2,
+                          }}
                         />
                       )}
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      {event.startTime || "TBD"}
-                      {event.endTime && ` - ${event.endTime}`}
-                    </Typography>
-                    {event.description && (
-                      <Typography variant="body2" sx={{ mt: 1 }}>
-                        {event.description}
-                      </Typography>
-                    )}
-                  </Paper>
-                ))
+                    </Paper>
+                  );
+                })
               ) : (
                 <Typography variant="body2" color="text.secondary">
                   No events scheduled for this day.
