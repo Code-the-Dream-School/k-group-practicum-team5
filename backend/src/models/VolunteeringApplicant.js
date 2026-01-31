@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const VolunteeringApplicantSchema = new mongoose.Schema({
     ScheduleId: {
         type: mongoose.Schema.Types.ObjectId,
