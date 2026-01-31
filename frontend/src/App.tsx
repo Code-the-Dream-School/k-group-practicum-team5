@@ -6,27 +6,30 @@ import MainLayout from "@/layout/MainLayout";
 import Home from "@/pages/Home";
 import VideoListPage from "@/pages/VideoListPage";
 import GalleryPage from "./pages/GalleryPage";
+import ManageGalleryPage from "./pages/ManageGalleryPage";
 import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 import ViewOpportunities from "@/pages/volunteering/viewOpportunities";
 // import { Box } from "@mui/material";
 import MapPage from "./pages/Map";
-
-
-
+import Login from "@/pages/LoginDummy";
+import ProtectedRoute from "@/routes/ProtectedRoute";
+import Signup from "./components/Authentication/Signup";
 
 function App() {
   return (
     <ThemeProvider theme={zooTheme}>
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="video" element={<VideoListPage />} />
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="signup" element={<Signup />} />
             <Route
               path="volunteering/opportunities/admin/new"
               element={<NewVolunteeringOpportunity />}
@@ -35,6 +38,9 @@ function App() {
               path="volunteering/opportunities/admin/view"
               element={<ViewOpportunitiesAdmin />}
             />
+            <Route element={<ProtectedRoute />}>
+              <Route path="gallery/manage" element={<ManageGalleryPage />} />
+            </Route>            
             <Route path="volunteering/opportunities/view"
             element={<ViewOpportunities />} />
 

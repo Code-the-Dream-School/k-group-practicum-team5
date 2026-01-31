@@ -1,2 +1,7 @@
-export { getImagesData } from "./apiGallery";
+export {
+  getImagesData,
+  createImage,
+  updateImage,
+  deleteImage,
+} from "./apiGallery";
 export { getOpportunitiesData } from "./volunteering/apiOpportunity";

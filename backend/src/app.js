@@ -14,7 +14,8 @@ const contactInfoRoutes = require('./routes/contactInfo.routes')
 const volunteeringRoutes = require('./routes/volunteering.routes');
 const volunteeringScheduleRoutes = require('./routes/volunteeringSchedule.routes');
 const businessHoursRoutes = require('./routes/businessHours.routes')
-
+const notFoundMiddleware = require('./middleware/not-found');
+const errorHandlerMiddleware = require('./middleware/error-handler');
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
@@ -51,5 +52,8 @@ app.use('/api/v1/volunteeringSchedule', volunteeringScheduleRoutes);
 app.get('/', (req, res) => {
   res.send('Backend API is running');
 });
+
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 module.exports = app;

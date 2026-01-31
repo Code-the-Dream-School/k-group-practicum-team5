@@ -23,7 +23,10 @@ type BusinessHoursResponse = {
 };
 
 export default function BusinessHoursPanel() {
-  const [data, setData] = useState<BusinessHoursResponse | null>(null);
+  const [data, setData] = useState<BusinessHoursResponse>({
+    isClosed: false,
+    schedule:[],
+  });
 
   useEffect(() => {
     const fetchHours = async () => {
@@ -41,7 +44,7 @@ export default function BusinessHoursPanel() {
   });
 
   const orderedSchedule = useMemo(() => {
-    if (!data) return [];
+    if (!data?.schedule) return [];
 
     const index = data.schedule.findIndex((d) => d.day === today);
 
