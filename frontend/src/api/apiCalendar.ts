@@ -20,6 +20,9 @@ export const apiCalendar = {
   },
 
   async getEvents(startDate: string, endDate: string): Promise<Event[]> {
-    return await apiCall<Event[]>("get", "/events", { startDate, endDate });
+    return await apiCall<Event[]>("get", "/calendar/events", {
+      startDate,
+      endDate,
+    });
   },
 };
