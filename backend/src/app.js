@@ -37,8 +37,8 @@ app.use(limiter);
 
 // Routes
 app.use('/api/hello', helloRoutes);
-app.use('/api/calendar', calendarRoutes);
-//app.use('/api/auth', authRoutes); // Authentication routes. duplicate below?
+
+app.use('/api/v1/calendar', calendarRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/images', uploadRoutes);
 app.use("/api/v1/contact-info", contactInfoRoutes)
