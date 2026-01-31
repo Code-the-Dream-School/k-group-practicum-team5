@@ -17,7 +17,14 @@ import { ErrorAlert } from "./alert";
 export default function Calendar() {
   const theme = useTheme();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
-  const [monthData, setMonthData] = useState<MonthData | null>(null);
+  const [monthData, setMonthData] = useState<MonthData>({
+    events: [],
+    openingDays: [],
+    meta: {
+      year: dayjs().year(),
+      month: dayjs().month() + 1,
+    },
+  });
   const year = selectedDate.year();
   const month = selectedDate.month() + 1;
 
