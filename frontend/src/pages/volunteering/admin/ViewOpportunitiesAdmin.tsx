@@ -14,34 +14,30 @@ export default function ViewOpportunitiesAdmin() {
       width: 80,
     },
     {
+      field: "category",
+      headerName: "Category",
+      flex: 0.4,
+      renderCell: (params) => <strong>{params.value}</strong>,
+    },
+    {
       field: "createdAt",
-      headerName: "Date",
+      headerName: "Posted Date",
       flex: 0.4,
       valueFormatter: (value) => (value ? new Date(value).toLocaleDateString() : ""),
     },
     {
-      field: "category",
-      headerName: "Category",
-      flex: 0.4,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      flex: 1,
-    },
-    {
       field: "schedulesCount",
       headerName: "Schedules",
-      flex: 0.5,
+      flex: 0.4,
       align: "center",
-      renderHeader: () => <Box sx={{ marginLeft: 6.5 }}>Schedules</Box>,
+      renderHeader: () => <Box sx={{ marginLeft: 10 }}>Schedules</Box>,
     },
     {
       field: "slotsAvailableCount",
       headerName: "Slots",
       flex: 0.5,
       align: "center",
-      renderHeader: () => <Box sx={{ marginLeft: 9.5 }}>Slots</Box>,
+      renderHeader: () => <Box sx={{ marginLeft: 17.8 }}>Slots</Box>,
     },
   ];
 
@@ -65,7 +61,7 @@ export default function ViewOpportunitiesAdmin() {
     <Box className='min-h-screen flex flex-col px-4' bgcolor={"background.default"}>
       {/* Header */}
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 1 }}>
-        <SectionHeading title='Volunteering Opportunities' />
+        <SectionHeading title='Volunteering Opportunities' fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }} />
       </Box>
       <CommonTable fetchRows={fetchRows} columns={columns} />
     </Box>
