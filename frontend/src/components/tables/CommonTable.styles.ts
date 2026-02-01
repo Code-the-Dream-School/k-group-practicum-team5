@@ -3,41 +3,47 @@ export const commonTableSx = {
     outline: "none",
   },
   "& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
-    outline: "none",
+    // outline: "none",
   },
   "& .MuiButtonBase-root.Mui-focusVisible": {
-    outline: "none",
-    boxShadow: "none",
+    // outline: "none",
+    // boxShadow: "none",
   },
   "& .MuiDataGrid-columnSeparator": {
     display: "none",
   },
   "& .MuiDataGrid-columnHeaderTitle": {
-    fontWeight: "500",
+    fontWeight: "bold",
+  },
+  "& .MuiDataGrid-row": {
+    cursor: "pointer",
+    paddingX: "1.3rem",
   },
   "& .MuiDataGrid-columnHeader": {
-    color: "var(--zooGreen)",
+    color: "white",
     fontSize: "1rem",
+    backgroundColor: "primary.main",
+    fontWeight: "bold",
+    // borderRadius: "120px",
+    // margin: "0.5rem",
   },
   "& .MuiDataGrid-columnHeaders": {
-    borderBottom: "6px double var(--zooLight)",
+    // padding: "0.5rem 0",
+    fontWeight: "bold",
+    backgroundColor: "primary.main",
   },
   "& .MuiDataGrid-cell": {
     fontSize: "0.9rem",
-    color: "var(--zooDark)",
-    fontWeight: "200",
+    color: "text.primary",
+  },
+  "& .MuiDataGrid-columnHeaderTitleContainer": {
+    // justifyContent: "center",
+    paddingX: "1.5rem",
   },
   "& .MuiDataGrid-row:hover": {
-    backgroundColor: "var(--zooLight)",
+    backgroundColor: "background.default",
   },
-  "& .MuiTablePagination-root": {
-    marginTop: "1.5rem",
-  },
-  "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows, & .MuiTablePagination-select": {
-    fontSize: "0.8rem",
-    fontWeight: "100",
-  },
-  border: "1px solid var(--zooGreen)",
-  borderRadius: "2rem",
-  padding: "2rem",
+  border: "20px solid primary.main",
+  // borderRadius: "2rem",
+  // padding: "2rem",
 };

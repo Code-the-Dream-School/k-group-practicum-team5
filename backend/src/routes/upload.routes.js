@@ -3,7 +3,13 @@ const router = express.Router();
 const uploadController = require('../controllers/upload.controller'); 
 const multer = require('../middleware/upload.multer'); 
 
-router.post('/upload', multer.single('image'), uploadController.uploadImage);
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
+
 router.get('/', uploadController.getImages);
+
+router.post('/upload', auth, admin, multer.single('image'), uploadController.uploadImage);
+router.delete('/', auth, admin, uploadController.deleteImage);
+router.put('/', auth, admin, uploadController.updateImage);
 
 module.exports = router;

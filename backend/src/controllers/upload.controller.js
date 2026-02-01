@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const { REPTILE_ZOO_FOLDER } = require('../constants');
 const cloudinaryService = require('../services/cloudinary.service');
+const { BadRequestError, NotFoundError } = require('../errors');
 
 class UploadController {
     async uploadImage(req, res) {
@@ -8,7 +9,7 @@ class UploadController {
         const { title, description } = req.body;
 
         if (!file) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ error: 'No file uploaded' });
+            throw new BadRequestError('No file uploaded');
         }
 
         const result = await cloudinaryService.uploadToCloudinary(
@@ -33,7 +34,7 @@ class UploadController {
     async getImages(req, res) {
         const limit = Math.min(Number(req.query.limit) || 8, 8);
         const cursor = req.query.cursor || null;
-        
+
         console.log("Parsed - limit:", limit, "cursor:", cursor);
 
         const result = await cloudinaryService.getFilesFromFolder(
@@ -52,6 +53,7 @@ class UploadController {
         const imagesList = result.resources || result.images;
 
         const images = imagesList.map(file => ({
+            publicId: file.public_id,
             asset_id: file.asset_id,
             url: file.secure_url,
             title: file.context?.custom?.caption ?? "Reptile Zoo",
@@ -63,6 +65,54 @@ class UploadController {
         res.status(StatusCodes.OK).json({
             data: images,
             nextCursor,
+        });
+
+    }
+
+    async deleteImage(req, res) {
+        const { publicId } = req.body;
+
+        if (!publicId) {
+            throw new BadRequestError('Public ID is required');
+        }
+        const result = await cloudinaryService.deleteFromCloudinary(publicId);
+
+        if (result.result === 'ok') {
+            res.status(StatusCodes.OK).json({
+                message: 'Image deleted successfully',
+                result
+            });
+        } else {
+            throw new NotFoundError('Image not found or already deleted');
+        }
+
+    }
+
+    async updateImage(req, res) {
+        const { publicId, title, description } = req.body;
+
+        if (!publicId) {
+            throw new BadRequestError('Public ID is required');
+        }
+
+        if (!title && !description) {
+            throw new BadRequestError('title and description must be provided');
+        }
+
+        const metadata = {};
+        if (title !== undefined) metadata.title = title;
+        if (description !== undefined) metadata.description = description;
+
+        const result = await cloudinaryService.updateInCloudinary(publicId, metadata);
+
+        res.status(StatusCodes.OK).json({
+            message: 'Image metadata updated successfully',
+            image: {
+                url: result.secure_url,
+                publicId: result.public_id,
+                title: metadata.title,
+                description: metadata.description,
+            }
         });
 
     }

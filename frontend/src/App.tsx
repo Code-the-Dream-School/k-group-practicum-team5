@@ -6,11 +6,13 @@ import MainLayout from "@/layout/MainLayout";
 import Home from "@/pages/Home";
 import VideoListPage from "@/pages/VideoListPage";
 import GalleryPage from "./pages/GalleryPage";
+import ManageGalleryPage from "./pages/ManageGalleryPage";
 import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
-// import { Box } from "@mui/material";
 import MapPage from "./pages/Map";
+import Login from "@/pages/LoginDummy";
+import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
 import StaffDirectory from "./pages/StaffDirectory";
 ;
@@ -21,6 +23,7 @@ function App() {
     <ThemeProvider theme={zooTheme}>
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="video" element={<VideoListPage />} />
@@ -37,7 +40,9 @@ function App() {
               path="volunteering/opportunities/admin/view"
               element={<ViewOpportunitiesAdmin />}
             />
-
+            <Route element={<ProtectedRoute />}>
+              <Route path="gallery/manage" element={<ManageGalleryPage />} />
+            </Route>
             <Route path="*" element={<p>Page Not Found</p>} />
           </Route>
         </Routes>
