@@ -13,6 +13,8 @@ const adminRoutes = require('./routes/adminRouter');
 const contactInfoRoutes = require('./routes/contactInfo.routes')
 const volunteeringRoutes = require('./routes/volunteeringRouter');
 const businessHoursRoutes = require('./routes/businessHours.routes')
+const staffRoutes = require("./routes/staff.routes")
+
 
 const app = express();
 const dotenv = require('dotenv');
@@ -44,6 +46,7 @@ app.use('/api/v1/images', uploadRoutes);
 app.use("/api/v1/contact-info", contactInfoRoutes)
 app.use('/api/v1/volunteering', volunteeringRoutes);
 app.use('/api/v1/business-hours', businessHoursRoutes)
+app.use('/api/v1/staff', staffRoutes)
 
 // Root route
 app.get('/', (req, res) => {
