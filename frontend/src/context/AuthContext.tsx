@@ -1,5 +1,11 @@
-
 import { createContext } from "react";
+import { storage } from "./authStorage";
+
+export function getInitialAuthState() {
+  const user = storage.getUser();
+  const token = localStorage.getItem("token");
+  return { user, token };
+}
 
 export interface User {
   id: string;
@@ -18,8 +24,5 @@ export interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
+  undefined,
 );
-
-
-
