@@ -14,6 +14,7 @@ import MapPage from "./pages/Map";
 import Login from "@/pages/LoginDummy";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
+import Login from "./components/Authentication/Login";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
             <Route path="signup" element={<Signup />} />
+            <Route path="login" element={<Login />} />
             <Route
               path="volunteering/opportunities/admin/new"
               element={<NewVolunteeringOpportunity />}
