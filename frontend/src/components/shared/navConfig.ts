@@ -5,4 +5,6 @@ export const navItems = [
   { label: "Volunteer", path: "/volunteering/opportunities/admin/new" },
   { label: "Calendar", path: "/calendar" },
   { label: "Contact", path: "/contact" },
+  { label: "SignUp", path: "/signup" },
+  { label: "Login", path: "/login" },
 ];

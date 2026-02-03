@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Box,
   Button,
+  Link,
   TextField,
   Typography,
   CircularProgress,
@@ -18,6 +19,7 @@ import axios from "axios";
 import reptileImage from "@/assets/logo/reptile1.jpeg";
 import { useAuth } from "@/hooks/useAuth";
 import BasicAlert from "../alert/BasicAlert";
+import { Link as RouterLink } from "react-router-dom";
 
 
 interface LoginForm {
@@ -157,6 +159,13 @@ const isValidPassword = (password: string) =>
           <Typography variant="h4" color="primary" mb={2}>
             Login
           </Typography>
+          <Typography variant="h5" color="primary" mb={2}>
+            Not a member?{" "}
+            <Link component={RouterLink} to="/signup" color="secondary" sx={{ fontWeight: 600 }}>
+                Create an account
+            </Link>
+          </Typography>
+
 
           {alert && (
             <BasicAlert
@@ -207,6 +216,11 @@ const isValidPassword = (password: string) =>
               },
               }}
             />
+            <Typography variant="h6"  align="center" color="primary" mt={4}>
+            <Link component={RouterLink} to="/forgot-password" color="secondary" sx={{ fontWeight: 600 }}>
+                Forgot password?
+            </Link>
+          </Typography>
 
             <Button
               type="submit"
@@ -218,6 +232,7 @@ const isValidPassword = (password: string) =>
             >
               {loading ? <CircularProgress size={22} /> : "Login"}
             </Button>
+             
           </Box>
         </CardContent>
 
