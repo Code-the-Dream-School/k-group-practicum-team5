@@ -82,7 +82,7 @@ const createOpportunity = async (req, res) => {
     }
 }
 
-const getOpportunitiesWithSchedulesAndApplicants = async (req, res) => {
+const getUserOpportunities = async (req, res) => {
     const scheduleCollection = VolunteeringSchedule.collection.name;
     const applicantCollection = VolunteeringApplicant.collection.name;
 
@@ -150,7 +150,7 @@ const getOpportunitiesWithSchedulesAndApplicants = async (req, res) => {
 
         return res.status(StatusCodes.OK).json({ opportunities });
     } catch (error) {
-        console.error("getOpportunitiesWithSchedulesAndApplicants error:", error);
+        console.error("getUserOpportunities error:", error);
         return res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ error: "Failed to load opportunities with schedules and applicants" });
@@ -161,5 +161,5 @@ module.exports = {
     createOpportunity,
     getCategories,
     getOpportunities,
-    getOpportunitiesWithSchedulesAndApplicants,
+    getUserOpportunities,
 }

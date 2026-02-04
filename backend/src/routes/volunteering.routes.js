@@ -5,11 +5,11 @@ const {
   createOpportunity,
   getCategories,
   getOpportunities,
-  getOpportunitiesWithSchedulesAndApplicants,
+  getUserOpportunities,
 } = require('../controllers/volunteering.controller');
 
 router.get('/enums/categories', getCategories);
 router.get('/opportunities', getOpportunities);
-router.get('/opportunities/full', getOpportunitiesWithSchedulesAndApplicants);
+router.get('/opportunities/full', getUserOpportunities);
 router.post('/new', createOpportunity);
 module.exports = router;

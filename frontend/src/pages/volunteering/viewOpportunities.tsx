@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useOpportunity } from "@/hooks/volunteering/admin/useOpportunity";
 import { Accordion, AccordionSummary, AccordionDetails, Box, Typography, Chip, Paper } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import type { GetOpportunitiesResponse } from "@/types/volunteering/ViewOppUser.type";
 import { SectionHeading } from "@/components/GalleryImages";
 
 // Mui Icons
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EventIcon from "@mui/icons-material/Event";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import Button from "@mui/material/Button";
