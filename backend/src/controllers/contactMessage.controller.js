@@ -1,13 +1,15 @@
 const ContactMessage = require("../models/ContactMessage");
+const {BadRequestError }= require('../errors/BadRequestError')
+const {StatusCodes}= require("http-status-codes")
 
 
 // CREATE message
 exports.createMessage = async (req, res) => {
   try {
     const { name, email, category, message } = req.body;
-
+    
     if (!name || !email || !message) {
-      return res.status(400).json({ message: "Missing required fields" });
+      throw new BadRequestError("Missing required fields");
     }
 
     const newMessage = await ContactMessage.create({
@@ -17,13 +19,15 @@ exports.createMessage = async (req, res) => {
       message,
     });
 
-    res.status(201).json({
+    res.status(StatusCodes.CREATED).json({
       message: "Message sent successfully",
       data: newMessage,
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to send message" });
+    
+  } 
+  
+  catch (err) {
+    console.error(err)
   }
 };
 

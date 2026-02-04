@@ -1,6 +1,9 @@
 import axios from "axios";
+import type { ContactFormData} from "@/types/contact";
 
-const API = import.meta.env.VITE_API_BASE_URL;
 
-export const sendContactMessage = (data: any) =>
-  axios.post(`${API}/contact-messages`, data);
+
+export const sendContactMessage = async (data: ContactFormData) =>{
+  const res= await axios.post(`${import.meta.env.VITE_API_BASE_URL}/contact-messages`, data)
+  return res.data
+}

@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const admin = require("../middleware/admin")
+
 
 const {
   createMessage,
@@ -9,7 +11,7 @@ const {
 } = require("../controllers/contactMessage.controller");
 
 router.post("/", createMessage);       // submit form
-router.get("/", getMessages);          // admin list
+router.get("/", admin, getMessages);          // admin list
 router.get("/:id", getMessageById);    // single
 router.delete("/:id", deleteMessage);  // admin delete
 
