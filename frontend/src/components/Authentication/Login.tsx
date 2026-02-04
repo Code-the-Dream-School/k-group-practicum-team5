@@ -14,13 +14,12 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
- import {  loginApi } from "@/api/apiLogin";
+import { loginApi } from "@/api/apiLogin";
 import axios from "axios";
 import reptileImage from "@/assets/logo/reptile1.jpeg";
 import { useAuth } from "@/hooks/useAuth";
 import BasicAlert from "../alert/BasicAlert";
 import { Link as RouterLink } from "react-router-dom";
-
 
 interface LoginForm {
   email: string;
@@ -28,7 +27,7 @@ interface LoginForm {
 }
 
 const Login = () => {
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -48,10 +47,9 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [alert, setAlert] = useState<{
-  message: string;
-  severity: "success" | "info" | "warning" | "error";
-} | null>(null);
-
+    message: string;
+    severity: "success" | "info" | "warning" | "error";
+  } | null>(null);
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,15 +63,15 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const isValidEmail = (email: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-const isValidPassword = (password: string) =>
-  password.length >= 6;
+  const isValidPassword = (password: string) => password.length >= 6;
 
   const validate = () => {
     const newErrors = {
-      email: formData.email.trim() === ""||!isValidEmail(formData.email),
-      password: formData.password.trim() === ""||!isValidPassword(formData.password),
+      email: formData.email.trim() === "" || !isValidEmail(formData.email),
+      password:
+        formData.password.trim() === "" || !isValidPassword(formData.password),
     };
 
     setErrors(newErrors);
@@ -91,29 +89,33 @@ const isValidPassword = (password: string) =>
     }
 
     try {
-    
-    const res = await loginApi(formData);
+      const res = await loginApi(formData);
 
-    login({
-    id: res.user.id,
-    fullName: res.user.fullName ,
-    email: res.user.email,
-    is_admin: res.user.is_admin ?? false,
-  }, 
-  res.token);
-     setAlert({
-    message: "Login successful ",
-    severity: "success",
-  });
+      login(
+        {
+          id: res.user.id,
+          fullName: res.user.fullName,
+          email: res.user.email,
+          is_admin: res.user.is_admin ?? false,
+        },
+        res.token,
+      );
+      setAlert({
+        message: "Login successful ",
+        severity: "success",
+      });
       navigate("/");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        setAlert({message: err.response?.data?.error || "Invalid email or password", severity: "error",});
+        setAlert({
+          message: err.response?.data?.error || "Invalid email or password",
+          severity: "error",
+        });
       } else {
         setAlert({
-      message: "Login failed",
-      severity: "error",
-    });
+          message: "Login failed",
+          severity: "error",
+        });
       }
     } finally {
       setLoading(false);
@@ -138,7 +140,6 @@ const isValidPassword = (password: string) =>
           p: { xs: 2, md: 4 },
         }}
       >
-       
         <IconButton
           onClick={handleClose}
           sx={{ position: "absolute", top: 12, right: 12, zIndex: 1 }}
@@ -146,7 +147,6 @@ const isValidPassword = (password: string) =>
           <CloseIcon />
         </IconButton>
 
-       
         <CardContent
           sx={{
             flex: 1,
@@ -161,17 +161,18 @@ const isValidPassword = (password: string) =>
           </Typography>
           <Typography variant="h5" color="primary" mb={2}>
             Not a member?{" "}
-            <Link component={RouterLink} to="/signup" color="secondary" sx={{ fontWeight: 600 }}>
-                Create an account
+            <Link
+              component={RouterLink}
+              to="/signup"
+              color="secondary"
+              sx={{ fontWeight: 600 }}
+            >
+              Create an account
             </Link>
           </Typography>
 
-
           {alert && (
-            <BasicAlert
-              message={alert.message}
-              severity={alert.severity}
-            />
+            <BasicAlert message={alert.message} severity={alert.severity} />
           )}
 
           <Box component="form" onSubmit={handleSubmit}>
@@ -200,27 +201,34 @@ const isValidPassword = (password: string) =>
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.password}
-              helperText={errors.password && "Password must be at least 6 characters"}
+              helperText={
+                errors.password && "Password must be at least 6 characters"
+              }
               slotProps={{
                 input: {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
-            <Typography variant="h6"  align="center" color="primary" mt={4}>
-            <Link component={RouterLink} to="/forgot-password" color="secondary" sx={{ fontWeight: 600 }}>
+            <Typography variant="h6" align="center" color="primary" mt={4}>
+              <Link
+                component={RouterLink}
+                to="/forgot-password"
+                color="secondary"
+                sx={{ fontWeight: 600 }}
+              >
                 Forgot password?
-            </Link>
-          </Typography>
+              </Link>
+            </Typography>
 
             <Button
               type="submit"
@@ -232,7 +240,6 @@ const isValidPassword = (password: string) =>
             >
               {loading ? <CircularProgress size={22} /> : "Login"}
             </Button>
-             
           </Box>
         </CardContent>
 

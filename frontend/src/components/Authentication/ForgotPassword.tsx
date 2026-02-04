@@ -28,7 +28,7 @@ const ForgotPassword = () => {
     email: "",
   });
 
-  const [error, setError] = useState( false);
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState<{
     message: string;
@@ -121,16 +121,13 @@ const ForgotPassword = () => {
             Forgot Password
           </Typography>
 
-          <Typography variant="h6"  color="secondary" mb={3}>
+          <Typography variant="h6" color="secondary" mb={3}>
             Enter your registered email address and we’ll send you a password
             reset link.
           </Typography>
 
           {alert && (
-            <BasicAlert
-              message={alert.message}
-              severity={alert.severity}
-            />
+            <BasicAlert message={alert.message} severity={alert.severity} />
           )}
 
           <Box component="form" onSubmit={handleSubmit}>
@@ -155,17 +152,18 @@ const ForgotPassword = () => {
               sx={{ mt: 3 }}
               disabled={loading}
             >
-              {loading ? (
-                <CircularProgress size={22} />
-              ) : (
-                "Send Reset Link"
-              )}
+              {loading ? <CircularProgress size={22} /> : "Send Reset Link"}
             </Button>
           </Box>
 
           <Typography variant="h5" color="primary" mt={4}>
             Remember your password?{" "}
-            <Link component={RouterLink} to="/login" color="secondary" sx={{ fontWeight: 600 }}>
+            <Link
+              component={RouterLink}
+              to="/login"
+              color="secondary"
+              sx={{ fontWeight: 600 }}
+            >
               Login
             </Link>
           </Typography>

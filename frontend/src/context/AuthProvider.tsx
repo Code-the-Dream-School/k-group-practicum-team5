@@ -1,18 +1,23 @@
 import { useState, type ReactNode } from "react";
-import { AuthContext, type User } from "./AuthContext";
+import { AuthContext, type User, getInitialAuthState } from "./AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const initial = getInitialAuthState();
+  const [user, setUser] = useState<User | null>(initial.user);
+  const [token, setToken] = useState<string | null>(initial.token);
 
   const login = (userData: User, jwt: string) => {
     setUser(userData);
     setToken(jwt);
+    localStorage.setItem("token", jwt);
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
   return (

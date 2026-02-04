@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { NavLink } from "react-router-dom";
+import QuickLinks from "./shared/QuickLinks";
 import lizard from "src/assets/logo/rep-zoo-best.png";
-import { navItems } from "src/components/shared/navConfig";
 
 const CONTACT = {
   email: "info@thereptilezoo.com",
@@ -69,27 +68,7 @@ const Footer = () => {
           <Typography variant="subtitle1" sx={sectionTitleSx}>
             Quick Links
           </Typography>
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            {navItems.map(({ label, path }) => (
-              <Typography
-                key={label}
-                component={NavLink}
-                to={path}
-                variant="body2"
-                sx={{
-                  color: "primary.contrastText",
-                  opacity: 0.8,
-                  textDecoration: "none",
-                  transition: "opacity 0.2s ease",
-                  "&:hover": { opacity: 1 },
-                  "&.active": { fontWeight: 700, opacity: 1 },
-                }}
-              >
-                {label}
-              </Typography>
-            ))}
-          </Box>
+          <QuickLinks />
         </Box>
 
         {/* Contact */}

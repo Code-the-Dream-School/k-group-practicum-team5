@@ -15,10 +15,9 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, useParams, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-import {resetPasswordApi} from "@/api/apiResetPassword";
+import { resetPasswordApi } from "@/api/apiResetPassword";
 import reptileImage from "@/assets/logo/reptile4.webp";
 import BasicAlert from "../alert/BasicAlert";
-
 
 interface ResetPasswordForm {
   password: string;
@@ -76,19 +75,18 @@ const ResetPassword = () => {
     try {
       setLoading(true);
 
-        await resetPasswordApi(token, formData.password);
+      await resetPasswordApi(token, formData.password);
       setAlert({
         message: "Password reset successful. You can now login.",
         severity: "success",
       });
 
-       navigate("/login");
+      navigate("/login");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setAlert({
           message:
-            err.response?.data?.message ||
-            "Reset link is invalid or expired",
+            err.response?.data?.message || "Reset link is invalid or expired",
           severity: "error",
         });
       } else {
@@ -139,15 +137,12 @@ const ResetPassword = () => {
             Reset Password
           </Typography>
 
-          <Typography variant="h6"color="secondary" mb={3}>
+          <Typography variant="h6" color="secondary" mb={3}>
             Enter your new password below.
           </Typography>
 
           {alert && (
-            <BasicAlert
-              message={alert.message}
-              severity={alert.severity}
-            />
+            <BasicAlert message={alert.message} severity={alert.severity} />
           )}
 
           <Box component="form" onSubmit={handleSubmit}>
@@ -189,7 +184,7 @@ const ResetPassword = () => {
               onChange={handleChange}
               error={errors.confirmPassword}
               helperText={errors.confirmPassword && "Passwords do not match"}
-               slotProps={{
+              slotProps={{
                 input: {
                   endAdornment: (
                     <InputAdornment position="end">
@@ -197,7 +192,11 @@ const ResetPassword = () => {
                         onClick={() => setShowConfirmPassword((p) => !p)}
                         edge="end"
                       >
-                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                        {showConfirmPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -212,16 +211,17 @@ const ResetPassword = () => {
               sx={{ mt: 3 }}
               disabled={loading}
             >
-              {loading ? (
-                <CircularProgress size={22} />
-              ) : (
-                "Reset Password"
-              )}
+              {loading ? <CircularProgress size={22} /> : "Reset Password"}
             </Button>
           </Box>
 
           <Typography variant="h6" align="center" mt={3}>
-            <Link component={RouterLink} to="/login" color="secondary" fontWeight={600}>
+            <Link
+              component={RouterLink}
+              to="/login"
+              color="secondary"
+              fontWeight={600}
+            >
               Back to Login
             </Link>
           </Typography>
