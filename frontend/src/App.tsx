@@ -11,27 +11,35 @@ import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 import MapPage from "./pages/Map";
-import Login from "@/pages/LoginDummy";
+import Calendar from "./components/Calendar";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
 import StaffDirectory from "./pages/StaffDirectory";
 ;
 
+import Login from "./components/Authentication/Login";
+import ForgotPassword from "./components/Authentication/ForgotPassword";
+import ResetPassword from "./components/Authentication/ResetPassword";
+import Logout from "./components/Authentication/Logout";
 
 function App() {
   return (
     <ThemeProvider theme={zooTheme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="video" element={<VideoListPage />} />
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="calendar" element={<Calendar />} />
             <Route path="signup" element={<Signup />} />
             <Route path='staff' element={<StaffDirectory/>}/>
+            <Route path="login" element={<Login />} />
+            <Route path="logout" element={<Logout />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password/:token" element={<ResetPassword />} />
             <Route
               path="volunteering/opportunities/admin/new"
               element={<NewVolunteeringOpportunity />}

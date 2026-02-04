@@ -55,8 +55,9 @@ const login = async (req, res) => {
             return res.status(400).json({ error: "Please provide email and password" });
         }
         const user = await User.findOne({ email: email.toLowerCase() });
+
         if (!user) {
-            return res.status(401).json({ error: "Invalid Credentials" });
+            return res.status(401).json({ error: "Invalid email or password" });
         }
         const isPasswordCorrect = await user.comparePassword(password);
         if (!isPasswordCorrect) {
@@ -88,7 +89,7 @@ const forgotPassword = async (req, res) => {
         }
         const user = await User.findOne({ email: email.toLowerCase() });
         if (!user) {
-            return res.status(200).json({ message: "If email is correct, you will receive a reset link to your email" });
+            return res.status(200).json({ error: "If email is correct, you will receive a reset link to your email" });
         }
         const resetToken = user.createPasswordResetToken();
         await user.save({ validateBeforeSave: false });
@@ -122,18 +123,23 @@ const resetPassword = async (req, res) => {
         if (!newPassword) {
             return res.status(400).json({ error: "Invalid request. Please provide a new password." });
         }
-        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-        console.log("Hashed token:", hashedToken);
+       
+        const hashedToken = crypto
+            .createHash('sha256')
+            .update(token)
+            .digest('hex');
+       
         const user = await User.findOne({
-            resetToken: hashedToken,
-            resetTokenExpiration: { $gt: Date.now() }
+            resetPasswordToken: hashedToken,
+            resetPasswordTokenExpiration: { $gt: Date.now() }
         });
+       
         if (!user) {
             return res.status(400).json({ error: "Invalid or expired password reset token." });
         }
         user.password = newPassword;
-        user.resetToken = undefined;
-        user.resetTokenExpiration = undefined;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordTokenExpiration = undefined;
         await user.save();
         res.status(200).json({ message: "Password reset successfully." });
     } catch (error) {

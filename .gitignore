@@ -57,3 +57,6 @@ coverage/
 # =========================
 .cache/
 .temp/
+file-list.txt
+codebase-snapshot.txt
+*-snapshot.txt
