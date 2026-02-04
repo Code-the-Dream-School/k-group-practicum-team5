@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   Box,
   Button,
-  Link,
   TextField,
   Typography,
   CircularProgress,
@@ -10,110 +9,89 @@ import {
   CardContent,
   IconButton,
   InputAdornment,
+  Link,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
-import { loginApi } from "@/api/apiLogin";
+import { useNavigate, useParams, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-import reptileImage from "@/assets/logo/reptile1.jpeg";
-import { useAuth } from "@/hooks/useAuth";
+import { resetPasswordApi } from "@/api/apiResetPassword";
+import reptileImage from "@/assets/logo/reptile4.webp";
 import BasicAlert from "../alert/BasicAlert";
-import { Link as RouterLink } from "react-router-dom";
 
-interface LoginForm {
-  email: string;
+interface ResetPasswordForm {
   password: string;
+  confirmPassword: string;
 }
 
-const Login = () => {
-  const { login } = useAuth();
+const ResetPassword = () => {
   const navigate = useNavigate();
+  const { token } = useParams<{ token: string }>();
 
-  const handleClose = () => {
-    navigate("/");
-  };
-
-  const [formData, setFormData] = useState<LoginForm>({
-    email: "",
+  const [formData, setFormData] = useState<ResetPasswordForm>({
     password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({
-    email: false,
     password: false,
+    confirmPassword: false,
   });
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [alert, setAlert] = useState<{
     message: string;
     severity: "success" | "info" | "warning" | "error";
   } | null>(null);
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setErrors((prev) => ({
-      ...prev,
-      [name]: value.trim() === "",
-    }));
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-  const isValidEmail = (email: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const handleClose = () => navigate("/");
 
   const isValidPassword = (password: string) => password.length >= 6;
 
   const validate = () => {
     const newErrors = {
-      email: formData.email.trim() === "" || !isValidEmail(formData.email),
-      password:
-        formData.password.trim() === "" || !isValidPassword(formData.password),
+      password: !isValidPassword(formData.password),
+      confirmPassword:
+        formData.confirmPassword !== formData.password ||
+        formData.confirmPassword === "",
     };
 
     setErrors(newErrors);
     return !Object.values(newErrors).some(Boolean);
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAlert(null);
-    setLoading(true);
 
-    if (!validate()) {
-      setLoading(false);
-      return;
-    }
+    if (!validate() || !token) return;
 
     try {
-      const res = await loginApi(formData);
+      setLoading(true);
 
-      login(
-        {
-          id: res.user.id,
-          fullName: res.user.fullName,
-          email: res.user.email,
-          is_admin: res.user.is_admin ?? false,
-        },
-        res.token,
-      );
+      await resetPasswordApi(token, formData.password);
       setAlert({
-        message: "Login successful ",
+        message: "Password reset successful. You can now login.",
         severity: "success",
       });
-      navigate("/");
+
+      navigate("/login");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setAlert({
-          message: err.response?.data?.error || "Invalid email or password",
+          message:
+            err.response?.data?.message || "Reset link is invalid or expired",
           severity: "error",
         });
       } else {
         setAlert({
-          message: "Login failed",
+          message: "Failed to reset password",
           severity: "error",
         });
       }
@@ -142,11 +120,10 @@ const Login = () => {
       >
         <IconButton
           onClick={handleClose}
-          sx={{ position: "absolute", top: 12, right: 12, zIndex: 1 }}
+          sx={{ position: "absolute", top: 12, right: 12 }}
         >
           <CloseIcon />
         </IconButton>
-
         <CardContent
           sx={{
             flex: 1,
@@ -157,18 +134,11 @@ const Login = () => {
           }}
         >
           <Typography variant="h4" color="primary" mb={2}>
-            Login
+            Reset Password
           </Typography>
-          <Typography variant="h5" color="primary" mb={2}>
-            Not a member?{" "}
-            <Link
-              component={RouterLink}
-              to="/signup"
-              color="secondary"
-              sx={{ fontWeight: 600 }}
-            >
-              Create an account
-            </Link>
+
+          <Typography variant="h6" color="secondary" mb={3}>
+            Enter your new password below.
           </Typography>
 
           {alert && (
@@ -177,21 +147,7 @@ const Login = () => {
 
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
-              label="Email"
-              name="email"
-              type="email"
-              fullWidth
-              required
-              margin="normal"
-              value={formData.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={errors.email}
-              helperText={errors.email && "Enter a valid email address"}
-            />
-
-            <TextField
-              label="Password"
+              label="New Password"
               name="password"
               type={showPassword ? "text" : "password"}
               fullWidth
@@ -199,17 +155,14 @@ const Login = () => {
               margin="normal"
               value={formData.password}
               onChange={handleChange}
-              onBlur={handleBlur}
               error={errors.password}
-              helperText={
-                errors.password && "Password must be at least 6 characters"
-              }
+              helperText={errors.password && "Minimum 6 characters"}
               slotProps={{
                 input: {
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
-                        onClick={() => setShowPassword((prev) => !prev)}
+                        onClick={() => setShowPassword((p) => !p)}
                         edge="end"
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -219,34 +172,64 @@ const Login = () => {
                 },
               }}
             />
-            <Typography variant="h6" align="center" color="primary" mt={4}>
-              <Link
-                component={RouterLink}
-                to="/forgot-password"
-                color="secondary"
-                sx={{ fontWeight: 600 }}
-              >
-                Forgot password?
-              </Link>
-            </Typography>
+
+            <TextField
+              label="Confirm Password"
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              fullWidth
+              required
+              margin="normal"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              error={errors.confirmPassword}
+              helperText={errors.confirmPassword && "Passwords do not match"}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowConfirmPassword((p) => !p)}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
 
             <Button
               type="submit"
               variant="contained"
-              color="primary"
               fullWidth
               sx={{ mt: 3 }}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={22} /> : "Login"}
+              {loading ? <CircularProgress size={22} /> : "Reset Password"}
             </Button>
           </Box>
-        </CardContent>
 
+          <Typography variant="h6" align="center" mt={3}>
+            <Link
+              component={RouterLink}
+              to="/login"
+              color="secondary"
+              fontWeight={600}
+            >
+              Back to Login
+            </Link>
+          </Typography>
+        </CardContent>
         <Box
           sx={{
             flex: 1,
-            display: { xs: "stack", md: "flex" },
+            display: { xs: "small", md: "flex" },
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -258,8 +241,8 @@ const Login = () => {
             sx={{
               width: "100%",
               height: "100%",
-              backgroundSize: "contain",
               borderRadius: 2,
+              backgroundSize: "contain",
             }}
           />
         </Box>
@@ -268,4 +251,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

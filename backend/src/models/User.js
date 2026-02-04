@@ -43,10 +43,10 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Please Provide A Password'],
         trim: true,
     },
-    resetToken: {
+    resetPasswordToken: {
         type: String,
     },
-    resetTokenExpiration: {
+    resetPasswordTokenExpiration: {
         type: Date,
     },
     is_admin: {
@@ -69,16 +69,12 @@ UserSchema.methods.getName = function () {
 }
 
 UserSchema.methods.createJWT = function () {
-    // console.log('Creating JWT for user:', this);
-    // const fullName = this.getName()
-    // console.log('Full name for JWT:', fullName);
+
     return jwt.sign({
         userId: this._id,
-        // userName: this.username, 
-        // fullName: fullName,
         email: this.email,
         is_admin: this.is_admin,
-        // createdDate: this.createdAt
+
     },
 
         process.env.JWT_SECRET,
@@ -92,8 +88,8 @@ UserSchema.methods.comparePassword = async function (basePassword) {
 
 UserSchema.methods.createPasswordResetToken = function () {
     const resetToken = crypto.randomBytes(32).toString('hex')
-    this.resetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
-    this.resetTokenExpiration = Date.now() + 10 * 60 * 1000
+    this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+    this.resetPasswordTokenExpiration = Date.now() + 10 * 60 * 1000
     return resetToken
 }
 
