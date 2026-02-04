@@ -1,12 +1,13 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { navItems, adminNavItems } from "./navConfig";
+import { navItems, LoggedNavItems, adminNavItems } from "./navConfig";
 import { useAuth } from "@/hooks/useAuth";
 import { NavLink } from "react-router-dom";
 
 const Navigation: React.FC = () => {
-  const { isAdmin } = useAuth();
-  const items = isAdmin ? adminNavItems : navItems;
+  const { user, isAdmin } = useAuth();
+  const items =
+    user && isAdmin ? adminNavItems : user ? LoggedNavItems : navItems;
 
   return (
     <Box sx={{ display: "flex", gap: 3 }}>

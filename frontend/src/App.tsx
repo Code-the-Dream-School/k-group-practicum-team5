@@ -14,13 +14,15 @@ import MapPage from "./pages/Map";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
 import Login from "./components/Authentication/Login";
+import ForgotPassword from "./components/Authentication/ForgotPassword";
+import ResetPassword from "./components/Authentication/ResetPassword";
+import Logout from "./components/Authentication/Logout";
 
 function App() {
   return (
     <ThemeProvider theme={zooTheme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="video" element={<VideoListPage />} />
@@ -29,6 +31,9 @@ function App() {
             <Route path="map" element={<MapPage />} />
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
+            <Route path="logout" element={<Logout />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password/:token" element={<ResetPassword />} />
             <Route
               path="volunteering/opportunities/admin/new"
               element={<NewVolunteeringOpportunity />}
