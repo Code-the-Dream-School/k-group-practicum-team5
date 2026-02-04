@@ -12,7 +12,6 @@ import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeri
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 import MapPage from "./pages/Map";
 import Calendar from "./components/Calendar";
-import Login from "@/pages/LoginDummy";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
 import Login from "./components/Authentication/Login";
