@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useOpportunity } from "@/hooks/volunteering/admin/useOpportunity";
 import { Accordion, AccordionSummary, AccordionDetails, Box, Typography, Chip, Paper } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import type { GetOpportunitiesResponse } from "@/types/volunteering/ViewOppUser";
+import type { GetOpportunitiesResponse } from "@/types/volunteering/ViewOppUser.type";
 import { SectionHeading } from "@/components/GalleryImages";
 
 // Mui Icons
