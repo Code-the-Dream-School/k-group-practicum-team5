@@ -44,8 +44,8 @@ app.use('/api/hello', helloRoutes);
 
 app.use('/api/v1/calendar', calendarRoutes);
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/images', uploadRoutes);
 app.use("/api/v1/contact-info", contactInfoRoutes)
 app.use('/api/v1/volunteering', volunteeringRoutes);
