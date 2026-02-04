@@ -11,6 +11,7 @@ import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 import MapPage from "./pages/Map";
+import Calendar from "./components/Calendar";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
 import Login from "./components/Authentication/Login";
@@ -29,6 +30,7 @@ function App() {
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="calendar" element={<Calendar />} />
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
             <Route path="logout" element={<Logout />} />

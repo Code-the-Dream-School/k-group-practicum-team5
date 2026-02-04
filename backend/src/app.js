@@ -7,6 +7,8 @@ const rateLimit = require('express-rate-limit');
 const connectMongo = require('./config/db.mongo');
 const uploadRoutes = require('./routes/upload.routes');
 const helloRoutes = require('./routes/hello.routes');
+const calendarRoutes = require('./routes/calendar.routes');
+const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRouter');
 const userRoutes = require('./routes/userRouter');
 const adminRoutes = require('./routes/adminRouter');
@@ -17,7 +19,7 @@ const businessHoursRoutes = require('./routes/businessHours.routes')
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 const app = express();
-const dotenv = require('dotenv');
+
 dotenv.config();
 
 connectMongo().then(() => console.log("MongoDB connected")).catch((err) => console.error("MongoDB connection error:", err));
@@ -39,6 +41,8 @@ app.use(limiter);
 
 // Routes
 app.use('/api/hello', helloRoutes);
+
+app.use('/api/v1/calendar', calendarRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/admin', adminRoutes);
