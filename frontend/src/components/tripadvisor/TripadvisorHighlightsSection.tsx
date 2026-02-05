@@ -79,7 +79,8 @@ export default function TripadvisorHighlightsSection() {
     <Box
       component="section"
       sx={{
-        mt: 7,
+        mt: 2,
+        mb: 4,
         px: { xs: 2, md: 3 },
         color: "text.primary",
       }}

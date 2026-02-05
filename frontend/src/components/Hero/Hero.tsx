@@ -7,22 +7,8 @@ export default function Hero() {
     <Box
       component="section"
       sx={{
-        animation: "fadeUp 800ms ease-out",
-        "@keyframes fadeUp": {
-          from: {
-            opacity: 2,
-            transform: "translateY(12px)",
-          },
-          to: {
-            opacity: 1,
-            transform: "translateY(0)",
-          },
-        },
         position: "relative",
-        minHeight: {
-          xs: "calc(70vh - 72px)",
-          md: "calc(100vh - 72px)",
-        },
+        minHeight: { xs: "calc(70vh - 72px)", md: "calc(100vh - 72px)" },
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
