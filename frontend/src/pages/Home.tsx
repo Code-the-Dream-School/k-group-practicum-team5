@@ -1,7 +1,4 @@
 import Box from "@mui/material/Box";
-// import Typography from "@mui/material/Typography";
-
-import BusinessHoursPanel from "@/components/BusinessHoursPanel";
 
 import Hero from "../components/Hero/Hero";
 import { FeaturedAttractionsList } from "@/components/featuredAttractions";
@@ -23,8 +20,6 @@ function Home() {
       >
         <Box sx={{ color: "text.primary" }}>
           <FeaturedAttractionsList />
-
-          <BusinessHoursPanel />
 
           <TripadvisorHighlightsSection />
         </Box>
