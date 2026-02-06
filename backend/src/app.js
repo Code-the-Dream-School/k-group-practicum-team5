@@ -23,6 +23,8 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 const app = express();
 
+app.set("etag", false);
+
 dotenv.config();
 
 connectMongo().then(() => console.log("MongoDB connected")).catch((err) => console.error("MongoDB connection error:", err));
