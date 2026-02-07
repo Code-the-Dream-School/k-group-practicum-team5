@@ -1,11 +1,12 @@
 import { Box, Typography } from "@mui/material";
-import { navItems, adminNavItems } from "./navConfig";
+import { navItems, adminNavItems, LoggedNavItems } from "./navConfig";
 import { useAuth } from "@/hooks/useAuth";
 import { NavLink } from "react-router-dom";
 
 function QuickLinks() {
-  const { isAdmin } = useAuth();
-  const items = isAdmin ? adminNavItems : navItems;
+  const { user, isAdmin } = useAuth();
+  const items =
+    user && isAdmin ? adminNavItems : user ? LoggedNavItems : navItems;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>

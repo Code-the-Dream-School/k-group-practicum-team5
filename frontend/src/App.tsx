@@ -13,8 +13,12 @@ import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunities
 import ViewOpportunities from "@/pages/volunteering/viewOpportunities";
 // import { Box } from "@mui/material";
 import MapPage from "./pages/Map";
+import Calendar from "./components/Calendar";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
+import StaffDirectory from "./pages/StaffDirectory";
+;
+
 import Login from "./components/Authentication/Login";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
@@ -31,7 +35,9 @@ function App() {
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="calendar" element={<Calendar />} />
             <Route path="signup" element={<Signup />} />
+            <Route path='staff' element={<StaffDirectory/>}/>
             <Route path="login" element={<Login />} />
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
