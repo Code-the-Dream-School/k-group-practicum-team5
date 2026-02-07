@@ -2,6 +2,8 @@ import { Box, Typography, Button } from "@mui/material";
 import HeroMedia from "./HeroMedia";
 import { heroMediaMock } from "../../data/heroMediaMock";
 
+import BusinessHoursPanel from "@/components/BusinessHoursPanel";
+
 export default function Hero() {
   return (
     <Box
@@ -72,9 +74,20 @@ export default function Hero() {
           hands-on experiences.
         </Typography>
 
-        <Button variant="contained" color="secondary" size="large">
-          Purchase Tickets
-        </Button>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 3,
+            mt: 2,
+          }}
+        >
+          <BusinessHoursPanel />
+
+          <Button variant="contained" color="secondary" size="large">
+            Purchase Tickets
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
