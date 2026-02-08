@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Navigation from "./shared/Navigation";
 import lizardLogo from "src/assets/logo/rep-zoo-best.png";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -56,6 +57,8 @@ const Header = () => {
           <Navigation />
           {/* Get Tickets */}
           <Button
+            component={Link}
+            to="/book-tickets"
             variant="contained"
             color="secondary"
             sx={{

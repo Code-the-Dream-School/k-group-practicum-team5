@@ -1,6 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import HeroMedia from "./HeroMedia";
 import { heroMediaMock } from "../../data/heroMediaMock";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
@@ -72,7 +73,13 @@ export default function Hero() {
           hands-on experiences.
         </Typography>
 
-        <Button variant="contained" color="secondary" size="large">
+        <Button
+          component={Link}
+          to="/book-tickets"
+          variant="contained"
+          color="secondary"
+          size="large"
+        >
           Purchase Tickets
         </Button>
       </Box>

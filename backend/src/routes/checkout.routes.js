@@ -3,9 +3,9 @@ const express = require("express");
 const router = express.Router();
 
 const TICKET_TYPES = [
-  { id: "adult", label: "Adult", priceCents: 2500 },
-  { id: "child", label: "Child", priceCents: 1500 },
-  { id: "senior", label: "Senior", priceCents: 2000 },
+  { id: "adult", label: "Adult", priceCents: 1500 },
+  { id: "child", label: "Child", priceCents: 1000 },
+  { id: "toddler", label: "Toddler", priceCents: 0 },
 ];
 
 router.get("/ticket-types", (req, res) => {
