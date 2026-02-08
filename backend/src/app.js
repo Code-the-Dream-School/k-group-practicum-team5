@@ -25,6 +25,8 @@ const contactRoutes = require('./routes/contactMessage.routes');
 
 const app = express();
 
+app.set("etag", false);
+
 dotenv.config();
 
 connectMongo().then(() => console.log("MongoDB connected")).catch((err) => console.error("MongoDB connection error:", err));
