@@ -1,47 +1,62 @@
 import { type GridColDef } from "@mui/x-data-grid";
-import type { OpportunityRow, OpportunitiesResponse } from "@/types/volunteering/ViewOppAdmin.type";
+import type {
+  OpportunityRow,
+  OpportunitiesResponse,
+} from "@/types/volunteering/ViewOppAdmin.type";
 import { Box } from "@mui/material";
 import CommonTable from "@/components/tables/CommonTable";
 import { apiCall } from "../../../api/axios";
 import { useCallback } from "react";
 import { SectionHeading } from "@/components/GalleryImages";
+import { useTranslation } from "react-i18next";
 
 export default function ViewOpportunitiesAdmin() {
+  const { t } = useTranslation();
+
   const columns: GridColDef<OpportunityRow>[] = [
     {
       field: "id",
-      headerName: "ID",
+      headerName: t("volunteeringAdmin.columns.id"),
       width: 80,
     },
     {
       field: "createdAt",
-      headerName: "Date",
+      headerName: t("volunteeringAdmin.columns.date"),
       flex: 0.4,
-      valueFormatter: (value) => (value ? new Date(value).toLocaleDateString() : ""),
+      valueFormatter: (value) =>
+        value ? new Date(value).toLocaleDateString() : "",
     },
     {
       field: "category",
-      headerName: "Category",
+      headerName: t("volunteeringAdmin.columns.category"),
       flex: 0.4,
     },
     {
       field: "description",
-      headerName: "Description",
+      headerName: t("volunteeringAdmin.columns.description"),
       flex: 1,
     },
     {
       field: "schedulesCount",
-      headerName: "Schedules",
+      headerName: t("volunteeringAdmin.columns.schedules"),
       flex: 0.5,
       align: "center",
-      renderHeader: () => <Box sx={{ marginLeft: 6.5 }}>Schedules</Box>,
+      renderHeader: () => (
+        <Box sx={{ marginLeft: 6.5 }}>
+          {t("volunteeringAdmin.columns.schedules")}
+        </Box>
+      ),
     },
     {
       field: "slotsAvailableCount",
-      headerName: "Slots",
+      headerName: t("volunteeringAdmin.columns.slots"),
       flex: 0.5,
       align: "center",
-      renderHeader: () => <Box sx={{ marginLeft: 9.5 }}>Slots</Box>,
+      renderHeader: () => (
+        <Box sx={{ marginLeft: 9.5 }}>
+          {t("volunteeringAdmin.columns.slots")}
+        </Box>
+      ),
     },
   ];
 
@@ -62,10 +77,13 @@ export default function ViewOpportunitiesAdmin() {
   }, []);
 
   return (
-    <Box className='min-h-screen flex flex-col px-4' bgcolor={"background.default"}>
+    <Box
+      className="min-h-screen flex flex-col px-4"
+      bgcolor={"background.default"}
+    >
       {/* Header */}
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 1 }}>
-        <SectionHeading title='Volunteering Opportunities' />
+        <SectionHeading title={t("volunteeringAdmin.title")} />
       </Box>
       <CommonTable fetchRows={fetchRows} columns={columns} />
     </Box>

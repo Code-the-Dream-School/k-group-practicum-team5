@@ -13,9 +13,11 @@ import { downloadICS } from "../utils/addToCalendar";
 import { useCalendar } from "../hooks/useCalendar";
 import type { MonthData, Event, OpeningDay } from "../types/calendar.types";
 import { ErrorAlert } from "./alert";
+import { useTranslation } from "react-i18next";
 
 export default function Calendar() {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
   const [monthData, setMonthData] = useState<MonthData>({
     events: [],
@@ -122,7 +124,7 @@ export default function Calendar() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ p: 3 }}>
         <Typography variant="h4" gutterBottom>
-          Zoo Calendar
+          {t("calendar.title")}
         </Typography>
 
         {isError && <ErrorAlert message={error} />}
@@ -158,7 +160,7 @@ export default function Calendar() {
                     variant="subtitle2"
                     sx={{ mb: 1, fontWeight: "bold" }}
                   >
-                    Legend:
+                    {t("calendar.legend")}
                   </Typography>
                   <Box
                     sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}
@@ -173,7 +175,9 @@ export default function Calendar() {
                           borderRadius: "4px",
                         }}
                       />
-                      <Typography variant="body2">Days with events</Typography>
+                      <Typography variant="body2">
+                        {t("calendar.daysWithEvents")}
+                      </Typography>
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <Box
@@ -185,7 +189,9 @@ export default function Calendar() {
                           borderRadius: "4px",
                         }}
                       />
-                      <Typography variant="body2">Zoo closed</Typography>
+                      <Typography variant="body2">
+                        {t("calendar.zooClosed")}
+                      </Typography>
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <Box
@@ -197,7 +203,9 @@ export default function Calendar() {
                           borderRadius: "4px",
                         }}
                       />
-                      <Typography variant="body2">Special hours</Typography>
+                      <Typography variant="body2">
+                        {t("calendar.specialHours")}
+                      </Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -212,13 +220,18 @@ export default function Calendar() {
               {openingDayInfo && (
                 <Box sx={{ mb: 2 }}>
                   <Chip
-                    label={openingDayInfo.isOpen ? "Zoo Open" : "Zoo Closed"}
+                    label={
+                      openingDayInfo.isOpen
+                        ? t("calendar.zooOpen")
+                        : t("calendar.zooClosed")
+                    }
                     color={openingDayInfo.isOpen ? "success" : "error"}
                     sx={{ mb: 1 }}
                   />
                   {openingDayInfo.specialHours && (
                     <Typography variant="body2" color="text.secondary">
-                      Special Hours: {openingDayInfo.specialHours.openTime} -{" "}
+                      {t("calendar.specialHours")}:{" "}
+                      {openingDayInfo.specialHours.openTime} -{" "}
                       {openingDayInfo.specialHours.closeTime}
                     </Typography>
                   )}
@@ -238,7 +251,7 @@ export default function Calendar() {
                 gutterBottom
                 sx={{ mt: 2, fontWeight: "bold" }}
               >
-                Events:
+                {t("calendar.events")}
               </Typography>
               {eventsOnSelectedDay.length > 0 ? (
                 eventsOnSelectedDay.map((event) => {
@@ -283,7 +296,9 @@ export default function Calendar() {
                         {typeof event.capacity === "number" &&
                           typeof event.booked === "number" && (
                             <Chip
-                              label={`Available: ${event.capacity - event.booked}}`}
+                              label={`${t("calendar.available")}: ${
+                                event.capacity - event.booked
+                              }`}
                               size="small"
                               color={
                                 event.capacity - event.booked > 0
@@ -294,7 +309,7 @@ export default function Calendar() {
                           )}
                       </Box>
                       <Typography variant="body2" color="text.secondary">
-                        {event.startTime || "TBD"}
+                        {event.startTime || t("calendar.tbd")}
                         {event.endTime && ` - ${event.endTime}`}
                       </Typography>
                       {event.description && (
@@ -304,7 +319,7 @@ export default function Calendar() {
                       )}
                       <Box sx={{ mt: 2 }}>
                         <Chip
-                          label="Add to Calendar"
+                          label={t("calendar.addToCalendar")}
                           color="info"
                           onClick={handleAddToCalendar}
                           sx={{ cursor: "pointer" }}
@@ -330,7 +345,7 @@ export default function Calendar() {
                 })
               ) : (
                 <Typography variant="body2" color="text.secondary">
-                  No events scheduled for this day.
+                  {t("calendar.noEvents")}
                 </Typography>
               )}
             </Paper>

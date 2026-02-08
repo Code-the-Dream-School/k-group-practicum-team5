@@ -1,0 +1,389 @@
+{
+  "translations": {
+    "header": {
+      "siteTitle": "Reptile Zoo",
+      "home": "Home",
+      "education": "Education",
+      "gallery": "Gallery",
+      "volunteer": "Volunteer",
+      "calendar": "Calendar",
+      "getTickets": "Get Tickets"
+    },
+    "footer": {
+      "about": "Experience the fascinating world of reptiles. Education, conservation, and wonder await at every turn.",
+      "quickLinks": "Quick Links",
+      "contact": "Contact",
+      "hours": "Mon–Fri: 9am – 5pm",
+      "copyright": "© 2025 The Reptile Zoo. All Rights Reserved. Discover the wild within."
+    },
+    "map": {
+      "title": "Zoo Map",
+      "description": "Find your way to Reptile Zoo easily using the interactive map below.",
+      "interactive": {
+        "placeholder": "Enter your address",
+        "cta": "Get Directions",
+        "loading": "Loading...",
+        "addressNotFound": "Address not found.",
+        "fetchFailed": "Failed to fetch location.",
+        "popup": "Reptile Zoo"
+      }
+    },
+    "nav": {
+      "home": "Home",
+      "media": "Media",
+      "gallery": "Gallery",
+      "staff": "Our Staff",
+      "contact": "Contact",
+      "map": "Map",
+      "signup": "Sign Up",
+      "login": "Login",
+      "calendar": "Calendar",
+      "joinVolunteer": "Join as a Volunteer",
+      "logout": "Logout",
+      "manageGallery": "Manage Gallery",
+      "newOpportunity": "New Opportunity",
+      "volunteerOpportunities": "Volunteer Opportunities",
+      "manageCalendar": "Manage Calendar"
+    },
+    "galleryManage": {
+      "title": "Manage Gallery",
+      "addAria": "Add new image",
+      "deleteAria": "Delete image",
+      "addFailed": "Add failed: {{error}}",
+      "addSuccess": "Image added successfully",
+      "deleteFailed": "Delete failed: {{error}}",
+      "deleteSuccess": "Image deleted successfully",
+      "loadFailed": "Failed to load images",
+      "noImages": "No images found",
+      "noMore": "No more images to load"
+    },
+    "gallery": {
+      "title": "Gallery",
+      "filter": "Filter: \"{{query}}\""
+    },
+    "contact": {
+      "title": "Contact Us",
+      "subtitle": "Questions about visits, events, or volunteering? We're happy to help.",
+      "success": "Message sent successfully!",
+      "send": "Send Message",
+      "fields": {
+        "name": "Full Name",
+        "email": "Email Address",
+        "message": "Your message..."
+      },
+      "categories": {
+        "general": "General",
+        "parties": "Parties",
+        "volunteers": "Volunteers",
+        "education": "Education",
+        "other": "Other"
+      }
+    },
+    "calendar": {
+      "title": "Zoo Calendar",
+      "legend": "Legend",
+      "daysWithEvents": "Days with events",
+      "zooClosed": "Zoo closed",
+      "specialHours": "Special hours",
+      "zooOpen": "Zoo Open",
+      "events": "Events",
+      "available": "Available",
+      "tbd": "TBD",
+      "addToCalendar": "Add to Calendar",
+      "noEvents": "No events scheduled for this day."
+    },
+    "businessHours": {
+      "title": "Business Hours",
+      "status": {
+        "openNow": "OPEN NOW",
+        "closedNow": "CLOSED",
+        "closed": "Closed"
+      },
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
+    },
+    "contactInfo": {
+      "loading": "Loading...",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address"
+    },
+    "table": {
+      "errorLoading": "Error loading data",
+      "noRows": "No rows"
+    },
+    "searchFilter": {
+      "placeholder": "Search images",
+      "search": "Search",
+      "searching": "Searching...",
+      "clear": "Clear search"
+    },
+    "loadControls": {
+      "loadMore": "Load More",
+      "loadAll": "Load All"
+    },
+    "imagesList": {
+      "loadError": "An error occurred while loading images.",
+      "noMoreMatches": "No more images matching filter",
+      "noMore": "No more images to load",
+      "noImages": "No images found"
+    },
+    "deleteImage": {
+      "title": "Delete Image",
+      "message": "Are you sure you want to delete this image?",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "editImage": {
+      "success": "Image updated successfully",
+      "saveFailed": "Failed to save changes",
+      "closeAria": "Close",
+      "fields": {
+        "title": "Title",
+        "description": "Description"
+      },
+      "placeholders": {
+        "title": "Enter image title",
+        "description": "Enter image description"
+      },
+      "cancel": "Cancel",
+      "save": "Save Changes"
+    },
+    "heroMedia": {
+      "alt": "Reptile Zoo hero image"
+    },
+    "hero": {
+      "location": "Monroe, Washington",
+      "title": "A Closer Look at Nature's Most Fascinating Creatures",
+      "subtitle": "Come face-to-face with extraordinary reptiles through immersive, hands-on experiences.",
+      "cta": "Purchase Tickets"
+    },
+    "featuredAttractions": {
+      "title": "Featured Attractions",
+      "subtitle": "Discover rare species, iconic favorites, and unforgettable exhibits that define the Reptile Zoo experience.",
+      "featured": "Featured",
+      "endangered": "Endangered",
+      "venomous": "Venomous",
+      "imageAlt": "{{name}} - {{species}}"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your registered email address and we will send you a password reset link.",
+      "success": "If this email exists, a reset link has been sent.",
+      "failed": "Failed to send reset link",
+      "fields": {
+        "email": "Email"
+      },
+      "errors": {
+        "email": "Enter a valid email address"
+      },
+      "submit": "Send Reset Link",
+      "remember": "Remember your password?",
+      "login": "Login",
+      "closeAria": "Close",
+      "imageAlt": "Reptile"
+    },
+    "login": {
+      "title": "Login",
+      "prompt": "Not a member?",
+      "createAccount": "Create an account",
+      "forgotPassword": "Forgot password?",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "email": "Enter a valid email address",
+        "password": "Password must be at least 6 characters"
+      },
+      "togglePassword": "Toggle password visibility",
+      "submit": "Login",
+      "success": "Login successful",
+      "invalid": "Invalid email or password",
+      "failed": "Login failed",
+      "closeAria": "Close",
+      "imageAlt": "Reptile"
+    },
+    "signup": {
+      "title": "Create Account",
+      "already": "Already have an account?",
+      "login": "Login",
+      "fields": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "email": "Enter a valid email address",
+        "password": "Password must be at least 6 characters long"
+      },
+      "togglePassword": "Toggle password visibility",
+      "submit": "Sign Up",
+      "success": "Account created successfully",
+      "failed": "Signup failed",
+      "closeAria": "Close",
+      "imageAlt": "Reptile"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password below.",
+      "success": "Password reset successful. You can now login.",
+      "invalidLink": "Reset link is invalid or expired",
+      "failed": "Failed to reset password",
+      "fields": {
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password"
+      },
+      "errors": {
+        "min": "Minimum 6 characters",
+        "mismatch": "Passwords do not match"
+      },
+      "togglePassword": "Toggle password visibility",
+      "toggleConfirm": "Toggle confirm password visibility",
+      "submit": "Reset Password",
+      "backToLogin": "Back to Login",
+      "closeAria": "Close",
+      "imageAlt": "Reptile"
+    },
+    "logout": {
+      "message": "Logging out..."
+    },
+    "volunteeringAdmin": {
+      "title": "Volunteering Opportunities",
+      "columns": {
+        "id": "ID",
+        "date": "Date",
+        "category": "Category",
+        "description": "Description",
+        "schedules": "Schedules",
+        "slots": "Slots"
+      },
+      "newOpportunity": {
+        "title": "New Volunteering Opportunity",
+        "saving": "Saving...",
+        "success": "Volunteering opportunity created successfully!",
+        "failed": "Failed to create volunteering opportunity.",
+        "alerts": {
+          "successTitle": "Success",
+          "errorTitle": "Error"
+        },
+        "categoryLabel": "Category:",
+        "categoryPlaceholder": "Select Category",
+        "descriptionTitle": "Description",
+        "descriptionPlaceholder": "Describe the volunteering opportunity...",
+        "schedulesTitle": "Schedules",
+        "labels": {
+          "date": "Date",
+          "startTime": "Start Time",
+          "endTime": "End Time",
+          "slots": "Slots"
+        },
+        "save": "Save",
+        "reset": "Reset"
+      }
+    },
+    "tripadvisor": {
+      "title": "Customer Highlights",
+      "subtitle": "A quick snapshot of what visitors love. For full reviews and ratings, visit Tripadvisor.",
+      "readReviews": "Read Reviews on Tripadvisor",
+      "prevAria": "Previous highlight",
+      "nextAria": "Next highlight",
+      "starsAria": "{{count}} out of 5",
+      "items": {
+        "h1": {
+          "title": "A Wild Adventure at The Reptile Zoo!",
+          "quote": "The Reptile Zoo is definitely a spot for curious minds and animal lovers alike! Walking through the exhibits, I was genuinely amazed by the incredible creatures they have, especially the albino crocodile that seemed to glow under the lights and the truly fascinating two-headed snake, which felt like something out of a nature documentary come to life.",
+          "meta": "Beyond Borders • London, United Kingdom"
+        },
+        "h2": {
+          "title": "LOVED the Reptile Zoo",
+          "quote": "My 13-yr old son is a reptile lover. We were on our way to Wenatchee and saw the Reptile Zoo sign, and pulled over to visit. It was a GEM!!! The diversity of reptiles, the ambience, and the wonderful staff who talked to us about owning reptiles - unbeatable!!! On our way back to Seattle, my kids said stopping by AGAIN was a must - and we went by for a second time for a longer visit, and loved the Reptile Zoo even more. Highly recommended!!!",
+          "meta": "Valerie P • Lima, Peru"
+        },
+        "h3": {
+          "title": "Informative",
+          "quote": "This place is fascinating with so many different creatures to see and learn about. There are lizards, a crocodile, an alligator, turtles, spiders, and lots of snakes. I was impressed with the large number of different types of snakes and the information posted about each. My 4 year old grandson loved being able to see so many different creatures up close. If your child has ever talked about the reptile man coming to their school, this is the guy and these are the reptiles (some of them at least) that he brings.",
+          "meta": "Susana H • Tacoma, Washington"
+        },
+        "h4": {
+          "title": "Loved this place",
+          "quote": "Grandkids loved this place; it was clean and kids got to explore and read about each reptile. The plexiglass was great, they were able to view and find without any problems, love that they named each reptile.",
+          "meta": "mo'opuna's • 1 contribution"
+        }
+      }
+    },
+    "staff": {
+      "title": "Staff Directory",
+      "subtitle": "Questions about visits, events, or volunteering? We're happy to help.",
+      "search": "Search name",
+      "department": "Department",
+      "departments": {
+        "all": "All",
+        "animals": "Animals",
+        "education": "Education",
+        "guestServices": "Guest Services",
+        "management": "Management",
+        "maintenance": "Maintenance",
+        "eventAssistance": "Event Assistance"
+      }
+    },
+    "videos": {
+      "subscribe": "Subscribe to The Reptile Zoo",
+      "empty": "Looks like this gallery doesn't have any videos yet",
+      "items": {
+        "1": {
+          "title": "Black Mamba",
+          "description": "The fastest and deadliest snake in the world, the black mamba"
+        },
+        "2": {
+          "title": "King Cobra",
+          "description": "The largest cobra in the world, the king cobra"
+        },
+        "3": {
+          "title": "Rattlesnakes",
+          "description": "Eastern Diamondback rattlesnake and Northern Pacific rattlesnake"
+        },
+        "4": {
+          "title": "Black Mamba",
+          "description": "Black mamba strikes in slow motion"
+        },
+        "5": {
+          "title": "Albino Alligator",
+          "description": "The Reptile Zoo staff moves the rare albino American alligator, Baskar, to his new exhibit!"
+        },
+        "6": {
+          "title": "Gaboon Viper",
+          "description": "Watch the #2 deadliest snake -- with the largest fangs in the world, the Gaboon Viper, swallow his lunch..."
+        },
+        "7": {
+          "title": "Black Mamba",
+          "description": "The #1 deadliest snake in the world dispays his fangs!"
+        },
+        "8": {
+          "title": "Rattlesnake",
+          "description": "The Reptile Man gets up close to one of the only rattlesnakes native to the Pacific Northwest!"
+        },
+        "9": {
+          "title": "American Alligator",
+          "description": "The Reptile Man brushes Barnabus' teeth and then feeds him a treat..."
+        },
+        "10": {
+          "title": "Baskar Bellows",
+          "description": "American alligators, Baskar and Barnabus, bellow at one another before feeding on rodents"
+        },
+        "11": {
+          "title": "Green Anaconda",
+          "description": "The Reptile Zoo staff moves the massive anaconda to her new exhibit"
+        }
+      }
+    }
+  }
+}

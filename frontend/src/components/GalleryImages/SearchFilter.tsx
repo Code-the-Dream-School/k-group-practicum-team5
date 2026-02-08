@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
+import { useTranslation } from "react-i18next";
 
 type SearchFilterProps = {
   initialQuery?: string;
@@ -19,12 +20,14 @@ type SearchFilterProps = {
 
 export function SearchFilter({
   initialQuery = "",
-  placeholder = "Search images",
+  placeholder,
   isLoading = false,
   onSearch,
   onClear,
 }: SearchFilterProps) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState(initialQuery);
+  const resolvedPlaceholder = placeholder ?? t("searchFilter.placeholder");
 
   useEffect(() => {
     setQuery(initialQuery);
@@ -58,7 +61,7 @@ export function SearchFilter({
         fullWidth
         size="small"
         value={query}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         onChange={(e) => setQuery(e.target.value)}
         slotProps={{
           input: {
@@ -70,7 +73,7 @@ export function SearchFilter({
             endAdornment: query ? (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label="clear search"
+                  aria-label={t("searchFilter.clear")}
                   size="small"
                   onClick={handleClear}
                 >
@@ -87,7 +90,7 @@ export function SearchFilter({
         disabled={isLoading}
         sx={{ whiteSpace: "nowrap", minWidth: 100 }}
       >
-        {isLoading ? "Searching..." : "Search"}
+        {isLoading ? t("searchFilter.searching") : t("searchFilter.search")}
       </Button>
     </Box>
   );
