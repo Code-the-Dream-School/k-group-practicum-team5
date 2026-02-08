@@ -13,6 +13,6 @@ const {
 router.post("/", createMessage);       // submit form
 router.get("/", admin, getMessages);          // admin list
 router.get("/:id", getMessageById);    // single
-router.delete("/:id", deleteMessage);  // admin delete
+router.delete("/:id", admin, deleteMessage);  // admin delete
 
 module.exports = router;
