@@ -1,83 +1,76 @@
 import { Box } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import type { Video } from "@/types";
 import VideoList from "@/components/VideoList";
 import { LinkText } from "@/components/shared";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 
-const videos: Video[] = [
+const videoItems = [
   {
     id: "1",
-    title: "Black Mamba",
     url: "https://www.youtube.com/embed/7rc4-8BxlFw",
-    description:
-      "The fastest and deadliest snake in the world, the black mamba",
+    titleKey: "videos.items.1.title",
+    descriptionKey: "videos.items.1.description",
   },
   {
     id: "2",
-    title: "King Cobra",
     url: "https://www.youtube.com/embed/WdKLdPYsjf4",
-    description: "The largest cobra in the world, the king cobra",
+    titleKey: "videos.items.2.title",
+    descriptionKey: "videos.items.2.description",
   },
   {
     id: "3",
-    title: "Rattlesnakes",
     url: "https://www.youtube.com/embed/bq4wM7bNQiU",
-    description:
-      "Eastern Diamondback rattlesnake and Northern Pacific rattlesnake",
+    titleKey: "videos.items.3.title",
+    descriptionKey: "videos.items.3.description",
   },
   {
     id: "4",
-    title: "Black Mamba",
     url: "https://www.youtube.com/embed/hDFNzZ7eIJM",
-    description: "Black mamba strikes in slow motion",
+    titleKey: "videos.items.4.title",
+    descriptionKey: "videos.items.4.description",
   },
   {
     id: "5",
-    title: "Albino Alligator",
     url: "https://www.youtube.com/embed/7HWjm-Go3vg",
-    description:
-      "The Reptile Zoo staff moves the rare albino American alligator, Baskar, to his new exhibit!",
+    titleKey: "videos.items.5.title",
+    descriptionKey: "videos.items.5.description",
   },
   {
     id: "6",
-    title: "Gaboon Viper",
     url: "https://www.youtube.com/embed/NexhngpTyZE",
-    description:
-      "Watch the #2 deadliest snake -- with the largest fangs in the world, the Gaboon Viper, swallow his lunch...",
+    titleKey: "videos.items.6.title",
+    descriptionKey: "videos.items.6.description",
   },
   {
     id: "7",
-    title: "Black Mamba",
     url: "https://www.youtube.com/embed/dPd6-VvfIXA",
-    description: "The #1 deadliest snake in the world dispays his fangs!",
+    titleKey: "videos.items.7.title",
+    descriptionKey: "videos.items.7.description",
   },
   {
     id: "8",
-    title: "Rattlesnake",
     url: "https://www.youtube.com/embed/ghl4qsTxIHA",
-    description:
-      "The Reptile Man gets up close to one of the only rattlesnakes native to the Pacific Northwest!",
+    titleKey: "videos.items.8.title",
+    descriptionKey: "videos.items.8.description",
   },
   {
     id: "9",
-    title: "American Alligator",
     url: "https://www.youtube.com/embed/GroeI215PW8",
-    description:
-      "The Reptile Man brushes Barnabus' teeth and then feeds him a treat...",
+    titleKey: "videos.items.9.title",
+    descriptionKey: "videos.items.9.description",
   },
   {
     id: "10",
-    title: "Baskar Bellows",
     url: "https://www.youtube.com/embed/bRQCiyS47j8",
-    description:
-      "American alligators, Baskar and Barnabus, bellow at one another before feeding on rodents",
+    titleKey: "videos.items.10.title",
+    descriptionKey: "videos.items.10.description",
   },
   {
     id: "11",
-    title: "Green Anaconda",
     url: "https://www.youtube.com/embed/qRHeaBsR6aU",
-    description:
-      "The Reptile Zoo staff moves the massive anaconda to her new exhibit",
+    titleKey: "videos.items.11.title",
+    descriptionKey: "videos.items.11.description",
   },
 ];
 
@@ -85,6 +78,14 @@ const youtubeLink =
   "https://www.youtube.com/channel/UC6bmf-pkOksBR8RPddomb8w?sub_confirmation=1";
 
 function VideoListPage() {
+  const { t } = useTranslation();
+  const videos: Video[] = videoItems.map((item) => ({
+    id: item.id,
+    url: item.url,
+    title: t(item.titleKey),
+    description: t(item.descriptionKey),
+  }));
+
   return (
     <Box
       sx={{
@@ -100,7 +101,7 @@ function VideoListPage() {
     >
       <LinkText
         link={youtubeLink}
-        text="Subscribe to The Reptile Zoo"
+        text={t("videos.subscribe")}
         icon={<YouTubeIcon color="error" />}
       />
       <VideoList videos={videos} />

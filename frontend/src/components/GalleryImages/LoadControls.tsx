@@ -1,5 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { SmallZooLoader } from "@/components/shared";
+import { useTranslation } from "react-i18next";
 
 type LoadControlsProps = {
   isLoading: boolean;
@@ -14,6 +15,8 @@ export function LoadControls({
   onLoadMore,
   onLoadAll,
 }: LoadControlsProps) {
+  const { t } = useTranslation();
+
   if (!nextCursor) return null;
 
   return (
@@ -31,7 +34,7 @@ export function LoadControls({
         disabled={isLoading || !nextCursor}
         sx={{ minWidth: 150 }}
       >
-        {isLoading ? <SmallZooLoader /> : "Load More"}
+        {isLoading ? <SmallZooLoader /> : t("loadControls.loadMore")}
       </Button>
       <Button
         variant="outlined"
@@ -39,7 +42,7 @@ export function LoadControls({
         disabled={isLoading || !nextCursor}
         sx={{ minWidth: 150 }}
       >
-        Load All
+        {t("loadControls.loadAll")}
       </Button>
     </Box>
   );

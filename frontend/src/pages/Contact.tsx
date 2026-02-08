@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import ContactInfo from "../components/ContactInfo";
 import SuccessAlert from "../components/alert/SuccessAlert";
 import { sendContactMessage } from "@/api/contact";
 import type { ContactFormData } from "@/types/contact";
 
 export default function Contact() {
+  const { t } = useTranslation();
   const [showSuccess, setShowSuccess] = useState(false);
   const [errors, setErrors]= useState<Record<string, string>>({});
   const [serverError, setServerError]= useState("");
@@ -13,14 +15,14 @@ const [isSubmitting, setIsSubmitting]= useState(false);
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
-    category: "General",
+    category: "general",
     message: "",
   });
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -56,7 +58,7 @@ const [isSubmitting, setIsSubmitting]= useState(false);
     setFormData({
       name: "",
       email: "",
-      category: "General",
+      category: "general",
       message: "",
     });
 
@@ -76,20 +78,20 @@ const [isSubmitting, setIsSubmitting]= useState(false);
     <div className="min-h-screen bg-zooGreen/80 flex items-center justify-center px-4 py-12">
       <div className="bg-white rounded-2xl shadow-xl max-w-xl w-full p-10">
         <h1 className="text-3xl font-bold text-zooGreen text-center">
-          Contact Us
+          {t("contact.title")}
         </h1>
 
         <p className="text-center text-gray-600 mt-2 mb-8">
-          Questions about visits, events, or volunteering? We’re happy to help.
+          {t("contact.subtitle")}
         </p>
             <div className="mt-8">
                <ContactInfo />
             </div>
-          {showSuccess && (
+        {showSuccess && (
             <div className="mb-6">
-              <SuccessAlert message= "Message sent successfully!"/>
+              <SuccessAlert message={t("contact.success")} />
             </div>
-          )} 
+          )}
           { serverError && (
             <div className="text-red-600 text-center font-medium mb-4">
               {serverError}
@@ -101,7 +103,7 @@ const [isSubmitting, setIsSubmitting]= useState(false);
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Full Name"
+            placeholder={t("contact.fields.name")}
             className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-zooGreen"
           />
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
@@ -111,7 +113,7 @@ const [isSubmitting, setIsSubmitting]= useState(false);
             type="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Email Address"
+            placeholder={t("contact.fields.email")}
             className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-zooGreen"
           />
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
@@ -122,11 +124,15 @@ const [isSubmitting, setIsSubmitting]= useState(false);
             onChange={handleChange}
             className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-zooGreen"
           >
-            <option>General</option>
-            <option>Parties</option>
-            <option>Volunteers</option>
-            <option>Education</option>
-            <option>Other</option>
+            <option value="general">{t("contact.categories.general")}</option>
+            <option value="parties">{t("contact.categories.parties")}</option>
+            <option value="volunteers">
+              {t("contact.categories.volunteers")}
+            </option>
+            <option value="education">
+              {t("contact.categories.education")}
+            </option>
+            <option value="other">{t("contact.categories.other")}</option>
           </select>
 
           {/* Message */}
@@ -135,7 +141,7 @@ const [isSubmitting, setIsSubmitting]= useState(false);
             value={formData.message}
             onChange={handleChange}
             rows={4}
-            placeholder="Your message..."
+            placeholder={t("contact.fields.message")}
             className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-zooGreen"
           />
           {errors.message && <p className="text-red-500 text-sm">{errors.message}</p>}

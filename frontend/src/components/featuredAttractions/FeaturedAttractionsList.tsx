@@ -3,8 +3,10 @@ import { useTheme } from "@mui/material/styles";
 import ImageList from "@mui/material/ImageList";
 import { FeaturedAttractionCard } from "./FeaturedAttractionCard";
 import { featuredAttractionsMock } from "@/data/featuredAttractionsMock";
+import { useTranslation } from "react-i18next";
 
 export function FeaturedAttractionsList() {
+  const { t } = useTranslation();
   const items = featuredAttractionsMock;
 
   const theme = useTheme();
@@ -18,14 +20,13 @@ export function FeaturedAttractionsList() {
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ textAlign: "center", mt: 4, mb: 2, px: 2 }}>
-        <Typography variant="h2">Featured Attractions</Typography>
+        <Typography variant="h2">{t("featuredAttractions.title")}</Typography>
         <Typography
           variant="body1"
           color="text.secondary"
           sx={{ mt: 1, maxWidth: 760, mx: "auto" }}
         >
-          Discover rare species, iconic favorites, and unforgettable exhibits
-          that define the Reptile Zoo experience.
+          {t("featuredAttractions.subtitle")}
         </Typography>
       </Box>
 

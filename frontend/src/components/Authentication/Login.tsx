@@ -14,6 +14,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { loginApi } from "@/api/apiLogin";
 import axios from "axios";
 import reptileImage from "@/assets/logo/reptile1.jpeg";
@@ -29,6 +30,7 @@ interface LoginForm {
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleClose = () => {
     navigate("/");
@@ -101,19 +103,19 @@ const Login = () => {
         res.token,
       );
       setAlert({
-        message: "Login successful ",
+        message: t("login.success"),
         severity: "success",
       });
       navigate("/");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setAlert({
-          message: err.response?.data?.error || "Invalid email or password",
+          message: err.response?.data?.error || t("login.invalid"),
           severity: "error",
         });
       } else {
         setAlert({
-          message: "Login failed",
+          message: t("login.failed"),
           severity: "error",
         });
       }
@@ -143,6 +145,7 @@ const Login = () => {
         <IconButton
           onClick={handleClose}
           sx={{ position: "absolute", top: 12, right: 12, zIndex: 1 }}
+          aria-label={t("login.closeAria")}
         >
           <CloseIcon />
         </IconButton>
@@ -157,17 +160,17 @@ const Login = () => {
           }}
         >
           <Typography variant="h4" color="primary" mb={2}>
-            Login
+            {t("login.title")}
           </Typography>
           <Typography variant="h5" color="primary" mb={2}>
-            Not a member?{" "}
+            {t("login.prompt")}{" "}
             <Link
               component={RouterLink}
               to="/signup"
               color="secondary"
               sx={{ fontWeight: 600 }}
             >
-              Create an account
+              {t("login.createAccount")}
             </Link>
           </Typography>
 
@@ -177,7 +180,7 @@ const Login = () => {
 
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
-              label="Email"
+              label={t("login.fields.email")}
               name="email"
               type="email"
               fullWidth
@@ -187,11 +190,11 @@ const Login = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.email}
-              helperText={errors.email && "Enter a valid email address"}
+              helperText={errors.email && t("login.errors.email")}
             />
 
             <TextField
-              label="Password"
+              label={t("login.fields.password")}
               name="password"
               type={showPassword ? "text" : "password"}
               fullWidth
@@ -201,9 +204,7 @@ const Login = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.password}
-              helperText={
-                errors.password && "Password must be at least 6 characters"
-              }
+              helperText={errors.password && t("login.errors.password")}
               slotProps={{
                 input: {
                   endAdornment: (
@@ -211,6 +212,7 @@ const Login = () => {
                       <IconButton
                         onClick={() => setShowPassword((prev) => !prev)}
                         edge="end"
+                        aria-label={t("login.togglePassword")}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -226,7 +228,7 @@ const Login = () => {
                 color="secondary"
                 sx={{ fontWeight: 600 }}
               >
-                Forgot password?
+                {t("login.forgotPassword")}
               </Link>
             </Typography>
 
@@ -238,7 +240,7 @@ const Login = () => {
               sx={{ mt: 3 }}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={22} /> : "Login"}
+              {loading ? <CircularProgress size={22} /> : t("login.submit")}
             </Button>
           </Box>
         </CardContent>
@@ -254,7 +256,7 @@ const Login = () => {
           <Box
             component="img"
             src={reptileImage}
-            alt="Reptile"
+            alt={t("login.imageAlt")}
             sx={{
               width: "100%",
               height: "100%",
