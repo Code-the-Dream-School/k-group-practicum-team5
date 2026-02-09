@@ -137,7 +137,7 @@ const ViewOpportunities = () => {
                           alignItems='center'
                           sx={{ ":hover": { bgcolor: "background.default" } }}
                         >
-                          <Typography variant='body2' fontWeight={600} minWidth={205} width={"18%"}>
+                          <Typography variant='body2' fontWeight={600}>
                             <EventIcon
                               fontSize='small'
                               sx={{ verticalAlign: "middle", mr: 0.5, color: "primary.main" }}
