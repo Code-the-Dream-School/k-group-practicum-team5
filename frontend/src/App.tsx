@@ -15,8 +15,6 @@ import Calendar from "./components/Calendar";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
 import StaffDirectory from "./pages/StaffDirectory";
-;
-
 import Login from "./components/Authentication/Login";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
@@ -33,23 +31,23 @@ function App() {
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
-            <Route path="calendar" element={<Calendar />} />
             <Route path="signup" element={<Signup />} />
-            <Route path='staff' element={<StaffDirectory/>}/>
+            <Route path="staff" element={<StaffDirectory />} />
             <Route path="login" element={<Login />} />
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password/:token" element={<ResetPassword />} />
-            <Route
-              path="volunteering/opportunities/admin/new"
-              element={<NewVolunteeringOpportunity />}
-            />
-            <Route
-              path="volunteering/opportunities/admin/view"
-              element={<ViewOpportunitiesAdmin />}
-            />
             <Route element={<ProtectedRoute />}>
               <Route path="gallery/manage" element={<ManageGalleryPage />} />
+              <Route path="calendar" element={<Calendar />} />
+              <Route
+                path="volunteering/opportunities/admin/new"
+                element={<NewVolunteeringOpportunity />}
+              />
+              <Route
+                path="volunteering/opportunities/admin/view"
+                element={<ViewOpportunitiesAdmin />}
+              />
             </Route>
             <Route path="*" element={<p>Page Not Found</p>} />
           </Route>
