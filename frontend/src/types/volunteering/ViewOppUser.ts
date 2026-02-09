@@ -1,5 +1,6 @@
 export interface GetOpportunitiesParams {
-  userId: string | null;
+  cursor?: string | null;
+  limit?: number | null;
 }
 
 export interface GetOpportunitiesResponse {
@@ -14,19 +15,16 @@ interface Opportunity {
   description: string;
   createdAt: string;
   schedules: OpportunitySchedule[];
-  applicants: OpportunityApplicant[];
+  schedulesCount: number;
+  slotsAvailableCount: number;
+  applicantsCount: number;
 }
 interface OpportunitySchedule {
+  _id: string;
   date: string;
   timeFrom: string;
   timeTo: string;
   slotsAvailable: number;
-  applicants: OpportunityApplicant[];
-  _id: string;
-}
-
-interface OpportunityApplicant {
-  userId: string;
-  scheduleId: string;
-  status: string;
+  applicants: unknown[];
+  applicantsCount: number;
 }

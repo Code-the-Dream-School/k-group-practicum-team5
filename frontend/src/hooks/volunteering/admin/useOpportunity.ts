@@ -7,8 +7,8 @@ export const useOpportunity = () => {
   const { run, isLoading, isError, error } = useRequest();
 
   const getOpportunities = useCallback(
-    ({ cursor, limit }: GetOpportunitiesParams) => {
-      return run<GetOpportunitiesResponse>(() => getOpportunitiesData({ cursor, limit }));
+    ({ userId }: GetOpportunitiesParams) => {
+      return run<GetOpportunitiesResponse>(() => getOpportunitiesData({ userId }));
     },
     [run],
   );

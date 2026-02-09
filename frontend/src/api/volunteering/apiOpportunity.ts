@@ -1,9 +1,8 @@
 import { apiCall } from "../axios";
 import type { GetOpportunitiesParams, GetOpportunitiesResponse } from "@/types/volunteering/ViewOppUser.type";
 
-export const getOpportunitiesData = ({ limit, cursor }: GetOpportunitiesParams) => {
+export const getOpportunitiesData = ({ userId }: GetOpportunitiesParams) => {
   return apiCall<GetOpportunitiesResponse>("get", "/volunteering/opportunities/full", {
-    limit,
-    ...(cursor && { cursor }),
+      userId,
   });
 };

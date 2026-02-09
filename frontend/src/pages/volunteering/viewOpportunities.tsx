@@ -3,6 +3,7 @@ import { useOpportunity } from "@/hooks/volunteering/admin/useOpportunity";
 import { Accordion, AccordionSummary, AccordionDetails, Box, Typography, Chip, Paper } from "@mui/material";
 import type { GetOpportunitiesResponse } from "@/types/volunteering/ViewOppUser.type";
 import { SectionHeading } from "@/components/GalleryImages";
+import { apiCall } from "@/api/axios";
 
 // Mui Icons
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -24,13 +25,57 @@ const ViewOpportunities = () => {
 
   useEffect(() => {
     const fetchOpportunities = async () => {
-      const res = await getOpportunities({ limit });
-      console.log(res);
-
-      setOpportunities(res?.opportunities);
+      try {
+        const storedUser = localStorage.getItem("user");
+        const userData = storedUser ? JSON.parse(storedUser) : undefined;
+        const res = await getOpportunities({ userId: userData?.id });
+        setOpportunities(res?.opportunities ?? []);
+        console.log(res?.opportunities);
+      } catch (err) {
+        console.error(err);
+      }
     };
     fetchOpportunities();
   }, [limit, getOpportunities]);
+
+  const storedUser = localStorage.getItem("user");
+  const userData = storedUser ? JSON.parse(storedUser) : undefined;
+  const currentUserId = String(userData?.id ?? userData?._id ?? "");
+
+  const addApplicantToSchedule = async (opportunityId: string, scheduleId: string) => {
+    try {
+      if (currentUserId) {
+        const response = await apiCall("post", "/volunteering/opportunity/addApplicant", {
+          opportunityId,
+          scheduleId,
+          userId: currentUserId,
+        });
+        console.log(response);
+
+        setOpportunities((prev) =>
+          prev.map((opportunity) => {
+            if (opportunity._id !== opportunityId) return opportunity;
+            return {
+              ...opportunity,
+              schedules: opportunity.schedules.map((schedule) => {
+                if (schedule._id !== scheduleId) return schedule;
+                const hasApplied = schedule.applicants.some(
+                  (applicant) => String(applicant.userId) === String(currentUserId),
+                );
+                if (hasApplied) return schedule;
+                return {
+                  ...schedule,
+                  applicants: [...schedule.applicants, { userId: currentUserId, scheduleId, status: "Pending" }],
+                };
+              }),
+            };
+          }),
+        );
+      }
+    } catch (err) {
+      console.error("Error adding applicant:", err);
+    }
+  };
 
   return (
     <Box className='min-h-screen flex flex-col px-4 py-1' bgcolor={"background.default"} sx={{ borderRadius: 0 }}>
@@ -47,31 +92,26 @@ const ViewOpportunities = () => {
       )}
 
       {!isLoading && !isError && opportunities.length === 0 && (
-        <Typography variant='body1'>No opportunities found.</Typography>
+        <Typography variant='body1'>No opportunities found, please try again later.</Typography>
       )}
 
       <Box display='flex' flexDirection='column' borderRadius={1} border={1.5} borderColor='primary.light'>
         {opportunities.map((opportunity) => (
-          <Accordion key={opportunity._id} sx={{ boxShadow: 20, paddingBottom: 1 }}>
+          <Accordion key={opportunity._id} sx={{ boxShadow: 20, paddingY: 0.5 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Box display='flex' flexDirection='column' width='100%' gap={0.5}>
+              <Box display='flex' flexDirection='row' alignItems={"center"} gap={1.5}>
                 <Typography variant='subtitle1' fontWeight={700} color='primary.main'>
                   {opportunity.category}
                 </Typography>
-                <Box display='flex' alignItems='center' gap={2}>
-                  <Typography variant='body2' color='text.secondary'>
-                    Posted {new Date(opportunity.createdAt).toLocaleDateString()}
-                  </Typography>
-                  <Chip
-                    size='small'
-                    label={`${opportunity.slotsAvailableCount - opportunity.applicantsCount} Available slots`}
-                    sx={{ backgroundColor: "primary.light", color: "primary.contrastText", fontWeight: 500 }}
-                  />
-                </Box>
+                <Chip
+                  size='small'
+                  label={`${opportunity.schedules.length} Schedule Available`}
+                  sx={{ backgroundColor: "primary.light", color: "primary.contrastText", fontWeight: 500 }}
+                />
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant='body1' mb={2}>
+              <Typography variant='body1' mb={3}>
                 {opportunity.description || "No description provided."}
               </Typography>
 
@@ -84,58 +124,72 @@ const ViewOpportunities = () => {
                   gap={1}
                   sx={{ borderStyle: "solid", borderTop: 1, pt: 2, borderColor: "primary.light" }}
                 >
-                  {opportunity.schedules.map((schedule) => (
-                    <Box key={schedule._id}>
-                      <Box
-                        display='flex'
-                        gap={1.5}
-                        alignItems='center'
-                        sx={{ ":hover": { bgcolor: "background.default" } }}
-                      >
-                        <Typography variant='body2' fontWeight={600} minWidth={205}>
-                          <EventIcon
-                            fontSize='small'
-                            sx={{ verticalAlign: "middle", mr: 0.5, color: "primary.main" }}
-                          />
-                          {new Date(schedule.date).toLocaleDateString("en-US", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "2-digit",
-                          })}
-                        </Typography>
-                        <Typography variant='body2'>
-                          <AccessTimeFilledIcon
-                            fontSize='small'
-                            sx={{ verticalAlign: "middle", mx: 0.5, color: "primary.main" }}
-                          />{" "}
-                          {new Date(schedule.timeFrom).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}{" "}
-                          -{" "}
-                          {new Date(schedule.timeTo).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </Typography>
-                        <Chip size='small' label={`${schedule.slotsAvailable - schedule.applicantsCount} slots`} />
-                        <Button
-                          variant='contained'
-                          sx={{ paddingY: 0, boxShadow: "1px 3px 10px rgba(0,0,0,0.2)", borderRadius: 0.5 }}
-                          color='primary'
-                          size='small'
+                  {opportunity.schedules.map((schedule) => {
+                    const hasApplied =
+                      !!currentUserId &&
+                      schedule.applicants.some((applicant) => String(applicant.userId) === String(currentUserId));
+
+                    return (
+                      <Box key={`${schedule.timeFrom}-${schedule.timeTo}`}>
+                        <Box
+                          display='flex'
+                          gap={1.5}
+                          alignItems='center'
+                          sx={{ ":hover": { bgcolor: "background.default" } }}
                         >
-                          👋 Apply
-                        </Button>
+                          <Typography variant='body2' fontWeight={600} minWidth={205} width={"18%"}>
+                            <EventIcon
+                              fontSize='small'
+                              sx={{ verticalAlign: "middle", mr: 0.5, color: "primary.main" }}
+                            />
+                            {new Date(schedule.timeFrom).toLocaleDateString("en-US", {
+                              weekday: "long",
+                              year: "numeric",
+                              month: "long",
+                              day: "2-digit",
+                            })}
+                          </Typography>
+                          <Typography variant='body2'>
+                            <AccessTimeFilledIcon
+                              fontSize='small'
+                              sx={{ verticalAlign: "middle", mx: 0.5, color: "primary.main" }}
+                            />
+                            {new Date(schedule.timeFrom).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                            -{" "}
+                            {new Date(schedule.timeTo).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </Typography>
+                          <Chip
+                            size='small'
+                            label={`${schedule.slotsAvailable - schedule.applicants.filter((a) => a.status === "Approved").length} slots`}
+                          />
+                          {!hasApplied ? (
+                            <Button
+                              onClick={() => {
+                                if (hasApplied) return;
+                                addApplicantToSchedule(opportunity._id, schedule._id);
+                              }}
+                              variant='contained'
+                              sx={{ paddingY: 0, boxShadow: "1px 3px 10px rgba(0,0,0,0.2)", borderRadius: 0.5 }}
+                              color='primary'
+                              size='small'
+                            >
+                              {hasApplied ? "Applied" : "💚 Apply"}
+                            </Button>
+                          ) : (
+                            <Typography variant='body2' color='text.primary' ml={1.8}>
+                              👍🏻 Applied
+                            </Typography>
+                          )}
+                        </Box>
                       </Box>
-                      {schedule.applicants.length > 0 && (
-                        <Typography variant='caption' color='text.secondary'>
-                          Applicants loaded: {schedule.applicants.length}
-                        </Typography>
-                      )}
-                    </Box>
-                  ))}
+                    );
+                  })}
                 </Box>
               )}
             </AccordionDetails>
@@ -149,12 +203,12 @@ const ViewOpportunities = () => {
           color='text.secondary'
           align='left'
           mt={5}
-          mb={1}
+          mb={3}
           sx={{ color: "primary.main" }}
         >
-          Didn't find an opportunity that fits you?
+          Didn't find an opportunity that fits you, or are you interested in future opportunities?
         </Typography>
-        <Typography variant='h5' color='text.secondary' align='left' mb={3}>
+        <Typography variant='h5' color='text.secondary' align='left' mb={6}>
           Kindly inform us of your interest in future volunteering opportunities so that we can expand our offerings
           based on the number of interested individuals.
         </Typography>

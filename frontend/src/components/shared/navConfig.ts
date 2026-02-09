@@ -14,7 +14,7 @@ export const LoggedNavItems = [
   { label: "Media", path: "/video" },
   { label: "Gallery", path: "/gallery" },
   { label: "Calendar", path: "/calendar" },
-  { label: "Join as a Volunteer", path: "/volunteering/opportunities/apply" },
+  { label: "Join as a Volunteer", path: "/volunteering/opportunities/view" },
   { label: "Our Staff", path: "/staff" },
   { label: "Contact", path: "/contact" },
   { label: "Map", path: "/map" },
