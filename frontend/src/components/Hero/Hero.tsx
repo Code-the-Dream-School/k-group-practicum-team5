@@ -77,7 +77,7 @@ export default function Hero() {
           {t("hero.subtitle")}
         </Typography>
 
-        <Button
+        {/* <Button
           component={Link}
           to="/book-tickets"
           variant="contained"
@@ -85,7 +85,7 @@ export default function Hero() {
           size="large"
         >
           Purchase Tickets
-        </Button>
+        </Button> */}
         <Box
           sx={{
             display: "flex",
@@ -96,7 +96,13 @@ export default function Hero() {
         >
           <BusinessHoursPanel />
 
-          <Button variant="contained" color="secondary" size="large">
+          <Button
+            component={Link}
+            to="/book-tickets"
+            variant="contained"
+            color="secondary"
+            size="large"
+          >
             {t("hero.cta")}
           </Button>
         </Box>
