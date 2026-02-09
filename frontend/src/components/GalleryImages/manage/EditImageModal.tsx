@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import type { Image } from "@/types";
 import { SuccessAlert, ErrorAlert } from "@/components/alert";
 import { useGallery } from "@/hooks";
+import { useTranslation } from "react-i18next";
 
 type EditImageModalProps = {
   open: boolean;
@@ -21,6 +22,7 @@ export default function EditImageModal({
   onClose,
   onSave,
 }: EditImageModalProps) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState<{
@@ -60,7 +62,7 @@ export default function EditImageModal({
         title: title.trim(),
         description: description.trim(),
       });
-      showMessage("Image updated successfully");
+      showMessage(t("editImage.success"));
       setTimeout(() => {
         resetForm();
         onClose();
@@ -68,7 +70,7 @@ export default function EditImageModal({
       }, MESSAGE_DURATION);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to save changes";
+        err instanceof Error ? err.message : t("editImage.saveFailed");
       showMessage(errorMessage, true);
     }
   };
@@ -133,7 +135,7 @@ export default function EditImageModal({
             zIndex: 1,
             color: "primary.main",
           }}
-          aria-label="Close"
+          aria-label={t("editImage.closeAria")}
         >
           <CloseIcon />
         </IconButton>
@@ -180,19 +182,19 @@ export default function EditImageModal({
           >
             <TextField
               fullWidth
-              label="Title"
+              label={t("editImage.fields.title")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter image title"
+              placeholder={t("editImage.placeholders.title")}
               sx={{ mb: 2 }}
             />
 
             <TextField
               fullWidth
-              label="Description"
+              label={t("editImage.fields.description")}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter image description"
+              placeholder={t("editImage.placeholders.description")}
               multiline
               rows={6}
               sx={{ mb: 3, flex: 1 }}
@@ -207,14 +209,14 @@ export default function EditImageModal({
               }}
             >
               <Button onClick={handleClose} variant="outlined">
-                Cancel
+                {t("editImage.cancel")}
               </Button>
               <Button
                 onClick={handleSave}
                 variant="contained"
                 disabled={!hasChanges || !title.trim()}
               >
-                Save Changes
+                {t("editImage.save")}
               </Button>
             </Box>
           </Box>

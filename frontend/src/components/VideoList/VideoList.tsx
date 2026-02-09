@@ -2,12 +2,14 @@ import { Grid, Box } from "@mui/material";
 import VideoCard from "@/components/VideoCard";
 import type { Video } from "@/types";
 import { InfoAlert } from "@/components/alert";
+import { useTranslation } from "react-i18next";
 
 interface VideoListProps {
   videos: Video[];
 }
 
 function VideoList({ videos }: VideoListProps) {
+  const { t } = useTranslation();
   const isEmptyVideos = !videos || videos.length === 0;
 
   return (
@@ -25,7 +27,7 @@ function VideoList({ videos }: VideoListProps) {
         marginBottom={2}
       >
         {isEmptyVideos ? (
-          <InfoAlert message="Looks like this gallery doesn’t have any videos yet" />
+          <InfoAlert message={t("videos.empty")} />
         ) : (
           videos.map((video: Video) => (
             <Grid key={video.id} size={{ xs: 3, sm: 4, md: 4 }}>

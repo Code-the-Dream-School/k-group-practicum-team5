@@ -3,17 +3,19 @@ import { Box, Typography } from "@mui/material";
 import { navItems, LoggedNavItems, adminNavItems } from "./navConfig";
 import { useAuth } from "@/hooks/useAuth";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Navigation: React.FC = () => {
   const { user, isAdmin } = useAuth();
+  const { t } = useTranslation();
   const items =
     user && isAdmin ? adminNavItems : user ? LoggedNavItems : navItems;
 
   return (
     <Box sx={{ display: "flex", gap: 3 }}>
-      {items.map(({ label, path }) => (
+      {items.map(({ labelKey, path }) => (
         <Typography
-          key={label}
+          key={labelKey}
           component={NavLink}
           to={path}
           variant="body2"
@@ -27,7 +29,7 @@ const Navigation: React.FC = () => {
             "&.active": { opacity: 1, fontWeight: 700 },
           }}
         >
-          {label}
+          {t(labelKey)}
         </Typography>
       ))}
     </Box>

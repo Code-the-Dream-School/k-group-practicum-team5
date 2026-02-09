@@ -5,6 +5,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface DeleteImageDialogProps {
   open: boolean;
@@ -18,6 +19,7 @@ const DeleteImageDialog = ({
   onConfirm,
 }: DeleteImageDialogProps) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   return (
     <Dialog
       open={open}
@@ -47,18 +49,16 @@ const DeleteImageDialog = ({
         ),
       }}
     >
-      <DialogTitle>Delete Image</DialogTitle>
+      <DialogTitle>{t("deleteImage.title")}</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Are you sure you want to delete this image?
-        </DialogContentText>
+        <DialogContentText>{t("deleteImage.message")}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel} color="primary">
-          Cancel
+          {t("deleteImage.cancel")}
         </Button>
         <Button onClick={onConfirm} color="error" autoFocus>
-          Delete
+          {t("deleteImage.confirm")}
         </Button>
       </DialogActions>
     </Dialog>

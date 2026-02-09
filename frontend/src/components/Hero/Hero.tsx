@@ -1,8 +1,14 @@
 import { Box, Typography, Button } from "@mui/material";
 import HeroMedia from "./HeroMedia";
 import { heroMediaMock } from "../../data/heroMediaMock";
+import { Link } from "react-router-dom";
+
+import BusinessHoursPanel from "@/components/BusinessHoursPanel";
+import { useTranslation } from "react-i18next";
 
 export default function Hero() {
+  const { t } = useTranslation();
+
   return (
     <Box
       component="section"
@@ -43,7 +49,7 @@ export default function Hero() {
             mb: 1,
           }}
         >
-          Monroe, Washington
+          {t("hero.location")}
         </Typography>
 
         <Box
@@ -57,7 +63,7 @@ export default function Hero() {
         />
 
         <Typography variant="h3" sx={{ mb: 1 }}>
-          A Closer Look at Nature’s Most Fascinating Creatures
+          {t("hero.title")}
         </Typography>
 
         <Typography
@@ -68,13 +74,38 @@ export default function Hero() {
             mb: 3,
           }}
         >
-          Come face-to-face with extraordinary reptiles through immersive,
-          hands-on experiences.
+          {t("hero.subtitle")}
         </Typography>
 
-        <Button variant="contained" color="secondary" size="large">
+        {/* <Button
+          component={Link}
+          to="/book-tickets"
+          variant="contained"
+          color="secondary"
+          size="large"
+        >
           Purchase Tickets
-        </Button>
+        </Button> */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 3,
+            mt: 2,
+          }}
+        >
+          <BusinessHoursPanel />
+
+          <Button
+            component={Link}
+            to="/book-tickets"
+            variant="contained"
+            color="secondary"
+            size="large"
+          >
+            {t("hero.cta")}
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

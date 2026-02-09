@@ -10,12 +10,14 @@ import { GalleryImageCard } from "./GalleryImageCard";
 import { LoadControls } from "./LoadControls";
 import { useGallery } from "@/hooks";
 import type { Image } from "@/types";
+import { useTranslation } from "react-i18next";
 
 type ImageListProps = {
   searchQuery?: string;
 };
 
 export function ImagesList({ searchQuery = "" }: ImageListProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [activeImage, setActiveImage] = useState<Image | null>(null);
   const [images, setImages] = useState<Image[]>([]);
@@ -162,9 +164,7 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
           minHeight: "calc(100vh - 200px)",
         }}
       >
-        <ErrorAlert
-          message={error || "An error occurred while loading images."}
-        />
+        <ErrorAlert message={error || t("imagesList.loadError")} />
       </Box>
     );
   }
@@ -217,7 +217,7 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
             alignItems: "center",
           }}
         >
-          <InfoAlert message="No more images matching filter" />
+          <InfoAlert message={t("imagesList.noMoreMatches")} />
         </Box>
       )}
 
@@ -229,7 +229,7 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
             alignItems: "center",
           }}
         >
-          <InfoAlert message="No more images to load" />
+          <InfoAlert message={t("imagesList.noMore")} />
         </Box>
       )}
 
@@ -243,7 +243,7 @@ export function ImagesList({ searchQuery = "" }: ImageListProps) {
             p: 3,
           }}
         >
-          <InfoAlert message="No images found" />
+          <InfoAlert message={t("imagesList.noImages")} />
         </Box>
       )}
 

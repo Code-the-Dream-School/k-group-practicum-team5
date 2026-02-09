@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import { Select, Typography, Box, TextField, InputAdornment, Stack, Button } from "@mui/material";
+import {
+  Select,
+  Typography,
+  Box,
+  TextField,
+  InputAdornment,
+  Stack,
+  Button,
+} from "@mui/material";
 import { apiCall } from "../../../api/axios";
 import Schedule from "@/pages/volunteering/admin/Schedule";
 import { SectionHeading } from "@/components/GalleryImages";
@@ -10,6 +18,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Slide from "@mui/material/Slide";
 import Backdrop from "@mui/material/Backdrop";
+import { useTranslation } from "react-i18next";
 
 // Icons
 import CategoryIcon from "@mui/icons-material/Category";
@@ -32,12 +41,12 @@ type Opportunity = {
 };
 
 export default function NewVolunteeringOpportunity() {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<string>("");
-  const [opportunity, setOpportunity] = useState<Opportunity>({
-    category: null,
-    description: null,
-    schedules: [],
+  const [opportunity, setOpportunity] = useState({
+    category: "",
+    description: "",
   });
   const [schedules, setSchedules] = useState<AvailabilityFormValue[]>([
     {
@@ -82,9 +91,28 @@ export default function NewVolunteeringOpportunity() {
 
     try {
       setIsSaving(true);
-      await apiCall("post", `${import.meta.env.VITE_API_BASE_URL}/volunteering/new`, opportunityData);
+      const response = await apiCall<{ data: { id: string } }>(
+        "post",
+        `${import.meta.env.VITE_API_BASE_URL}/volunteering/new`,
+        opportunityData,
+      );
 
-      setSuccessMessage("Volunteering opportunity created successfully!");
+      const volunteeringId = response.data.id;
+      // Create schedules
+      for (const schedule of schedules) {
+        await apiCall(
+          "post",
+          `${import.meta.env.VITE_API_BASE_URL}/volunteeringSchedule/${volunteeringId}/schedules`,
+          {
+            volunteeringId,
+            date: schedule.date,
+            timeFrom: schedule.timeFrom,
+            timeTo: schedule.timeTo,
+            slotsAvailable: schedule.slotsAvailable,
+          },
+        );
+      }
+      setSuccessMessage(t("volunteeringAdmin.newOpportunity.success"));
       setErrorMessage(null);
       setTimeout(() => {
         setSuccessMessage(null);
@@ -127,16 +155,29 @@ export default function NewVolunteeringOpportunity() {
   };
 
   return (
-    <Box className='min-h-screen flex flex-col px-4' bgcolor={"background.default"}>
+    <Box
+      className="min-h-screen flex flex-col px-4"
+      bgcolor={"background.default"}
+    >
       {/* Loader */}
-      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isSaving}>
-        <CircularProgress color='inherit' />
-        <Typography variant='h6'>&nbsp;Saving...</Typography>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isSaving}
+      >
+        <CircularProgress color="inherit" />
+        <Typography variant="h6">
+          &nbsp;{t("volunteeringAdmin.newOpportunity.saving")}
+        </Typography>
       </Backdrop>
 
       {/* Alerts */}
       {successMessage && (
-        <Slide direction='down' in={!!successMessage} mountOnEnter unmountOnExit>
+        <Slide
+          direction="down"
+          in={!!successMessage}
+          mountOnEnter
+          unmountOnExit
+        >
           <Box
             mt={2}
             position={"absolute"}
@@ -147,12 +188,19 @@ export default function NewVolunteeringOpportunity() {
             zIndex={100}
           >
             <Alert
-              severity='success'
-              variant='filled'
-              sx={{ paddingRight: 5, borderRadius: 0.5, bgcolor: "primary.main", boxShadow: 10 }}
+              severity="success"
+              variant="filled"
+              sx={{
+                paddingRight: 5,
+                borderRadius: 0.5,
+                bgcolor: "primary.main",
+                boxShadow: 10,
+              }}
             >
               <AlertTitle>
-                <strong>Success</strong>
+                <strong>
+                  {t("volunteeringAdmin.newOpportunity.alerts.successTitle")}
+                </strong>
               </AlertTitle>
               {successMessage}
             </Alert>
@@ -160,7 +208,7 @@ export default function NewVolunteeringOpportunity() {
         </Slide>
       )}
       {errorMessage && (
-        <Slide direction='down' in={!!errorMessage} mountOnEnter unmountOnExit>
+        <Slide direction="down" in={!!errorMessage} mountOnEnter unmountOnExit>
           <Box
             mt={2}
             position={"absolute"}
@@ -174,12 +222,19 @@ export default function NewVolunteeringOpportunity() {
               onClose={() => {
                 setErrorMessage(null);
               }}
-              severity='error'
-              variant='filled'
-              sx={{ paddingRight: 3, borderRadius: 0.5, bgcolor: "error.dark", boxShadow: 10 }}
+              severity="error"
+              variant="filled"
+              sx={{
+                paddingRight: 3,
+                borderRadius: 0.5,
+                bgcolor: "error.dark",
+                boxShadow: 10,
+              }}
             >
               <AlertTitle>
-                <strong>Error</strong>
+                <strong>
+                  {t("volunteeringAdmin.newOpportunity.alerts.errorTitle")}
+                </strong>
               </AlertTitle>
               {errorMessage}
             </Alert>
@@ -189,15 +244,24 @@ export default function NewVolunteeringOpportunity() {
 
       {/* Header */}
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 1 }}>
-        <SectionHeading title='New Volunteering Opportunity' fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }} />
+        <SectionHeading
+          title={t("volunteeringAdmin.newOpportunity.title")}
+          fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }}
+        />
       </Box>
 
       {/* Form */}
       <form onSubmit={handleSubmit}>
-        <Box border={0.1} borderColor={"primary.light"} borderRadius={1} padding={4} boxShadow={1}>
+        <Box
+          border={0.1}
+          borderColor={"primary.light"}
+          borderRadius={1}
+          padding={4}
+          boxShadow={1}
+        >
           {/* Select Category */}
           <Box display={"flex"} border={0} alignItems={"end"}>
-            <FormControl size='small'>
+            <FormControl size="small">
               <Select
                 value={category}
                 onChange={(e) => {
@@ -205,14 +269,26 @@ export default function NewVolunteeringOpportunity() {
                   setOpportunity({ ...opportunity, category: e.target.value });
                 }}
                 startAdornment={
-                  <InputAdornment position='start'>
-                    <CategoryIcon fontSize='small' />
-                    <Typography variant='body1' color='primary.main' ml={1} fontWeight={"bold"}>
-                      Category:
+                  <InputAdornment position="start">
+                    <CategoryIcon fontSize="small" />
+                    <Typography
+                      variant="body1"
+                      color="primary.main"
+                      ml={1}
+                      fontWeight={"bold"}
+                    >
+                      {t("volunteeringAdmin.newOpportunity.categoryLabel")}
                     </Typography>
                     {category === "" && (
-                      <Typography variant='body2' color='primary.main' ml={1} sx={{ opacity: 0.7 }}>
-                        Select Category
+                      <Typography
+                        variant="body2"
+                        color="primary.main"
+                        ml={1}
+                        sx={{ opacity: 0.7 }}
+                      >
+                        {t(
+                          "volunteeringAdmin.newOpportunity.categoryPlaceholder",
+                        )}
                       </Typography>
                     )}
                   </InputAdornment>
@@ -238,7 +314,7 @@ export default function NewVolunteeringOpportunity() {
               </Select>
             </FormControl>
             <Stack
-              direction='row'
+              direction="row"
               spacing={2}
               marginLeft={"auto"}
               position={"relative"}
@@ -247,9 +323,9 @@ export default function NewVolunteeringOpportunity() {
               display={{ xs: "none", sm: "flex" }}
             >
               <Button
-                variant='outlined'
-                size='medium'
-                type='button'
+                variant="outlined"
+                size="medium"
+                type="button"
                 sx={{ borderRadius: 0.8, width: 150 }}
                 startIcon={<CancelIcon />}
                 onClick={() => {
@@ -261,12 +337,12 @@ export default function NewVolunteeringOpportunity() {
                   (schedules.length === 1 && schedules[0].date === null)
                 }
               >
-                Reset
+                {t("volunteeringAdmin.newOpportunity.reset")}
               </Button>
               <Button
-                variant='contained'
-                size='medium'
-                type='submit'
+                variant="contained"
+                size="medium"
+                type="submit"
                 sx={{ borderRadius: 0.8, width: 150 }}
                 startIcon={<SaveIcon />}
                 disabled={
@@ -276,26 +352,46 @@ export default function NewVolunteeringOpportunity() {
                   isSaving
                 }
               >
-                Save
+                {t("volunteeringAdmin.newOpportunity.save")}
               </Button>
             </Stack>
           </Box>
 
           {/* Description */}
-          <Box border={1.5} marginTop={1} borderRadius={1} borderColor={"primary.main"}>
-            <Box bgcolor={"primary.light"} sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
-              <Typography color='white' marginLeft={1} fontWeight={"bold"} padding={1}>
+          <Box
+            border={1.5}
+            marginTop={1}
+            borderRadius={1}
+            borderColor={"primary.main"}
+          >
+            <Box
+              bgcolor={"primary.light"}
+              sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}
+            >
+              <Typography
+                color="white"
+                marginLeft={1}
+                fontWeight={"bold"}
+                padding={1}
+              >
                 <DescriptionIcon sx={{ marginRight: 0.7 }} />
-                Description
+                {t("volunteeringAdmin.newOpportunity.descriptionTitle")}
               </Typography>
             </Box>
             <TextField
               value={opportunity.description}
-              onChange={(e) => setOpportunity((prev) => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setOpportunity((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
               multiline
               rows={5}
               fullWidth
-              placeholder='Describe the volunteering opportunity...'
+              placeholder={t(
+                "volunteeringAdmin.newOpportunity.descriptionPlaceholder",
+              )}
               sx={{
                 "& .MuiOutlinedInput-notchedOutline": { border: "none" },
                 "& .MuiInputBase-inputMultiline": {
@@ -309,11 +405,19 @@ export default function NewVolunteeringOpportunity() {
           </Box>
 
           {/* Schedules */}
-          <Box border={1.5} marginTop={2} borderRadius={1} borderColor={"primary.main"}>
-            <Box bgcolor={"primary.light"} sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
-              <Typography color='white' fontWeight={"bold"} padding={1}>
+          <Box
+            border={1.5}
+            marginTop={2}
+            borderRadius={1}
+            borderColor={"primary.main"}
+          >
+            <Box
+              bgcolor={"primary.light"}
+              sx={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}
+            >
+              <Typography color="white" fontWeight={"bold"} padding={1}>
                 <EventIcon sx={{ marginRight: 0.7 }} />
-                Schedules
+                {t("volunteeringAdmin.newOpportunity.schedulesTitle")}
               </Typography>
             </Box>
 
@@ -323,22 +427,45 @@ export default function NewVolunteeringOpportunity() {
               paddingY={1.5}
               sx={{
                 display: { xs: "none", md: "grid" },
-                gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr 1fr 0.5fr 72px" },
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  md: "1.1fr 1fr 1fr 0.5fr 72px",
+                },
                 gap: 2,
                 alignItems: "center",
               }}
             >
-              <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
-                Date
+              <Typography
+                fontSize={"0.85rem"}
+                color="primary.main"
+                paddingLeft={1.5}
+                fontWeight={"bold"}
+              >
+                {t("volunteeringAdmin.newOpportunity.labels.date")}
               </Typography>
-              <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
-                Start Time
+              <Typography
+                fontSize={"0.85rem"}
+                color="primary.main"
+                paddingLeft={1.5}
+                fontWeight={"bold"}
+              >
+                {t("volunteeringAdmin.newOpportunity.labels.startTime")}
               </Typography>
-              <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
-                End Time
+              <Typography
+                fontSize={"0.85rem"}
+                color="primary.main"
+                paddingLeft={1.5}
+                fontWeight={"bold"}
+              >
+                {t("volunteeringAdmin.newOpportunity.labels.endTime")}
               </Typography>
-              <Typography fontSize={"0.85rem"} color='primary.main' paddingLeft={1.5} fontWeight={"bold"}>
-                Slots
+              <Typography
+                fontSize={"0.85rem"}
+                color="primary.main"
+                paddingLeft={1.5}
+                fontWeight={"bold"}
+              >
+                {t("volunteeringAdmin.newOpportunity.labels.slots")}
               </Typography>
             </Box>
 
@@ -347,7 +474,7 @@ export default function NewVolunteeringOpportunity() {
           </Box>
         </Box>
         <Stack
-          direction='row'
+          direction="row"
           spacing={2}
           marginY={2}
           marginLeft={"auto"}
@@ -355,9 +482,9 @@ export default function NewVolunteeringOpportunity() {
           display={{ xs: "flex", sm: "none" }}
         >
           <Button
-            variant='contained'
-            size='medium'
-            type='submit'
+            variant="contained"
+            size="medium"
+            type="submit"
             sx={{ borderRadius: 0.8, width: 150 }}
             startIcon={<SaveIcon />}
             disabled={
@@ -367,12 +494,12 @@ export default function NewVolunteeringOpportunity() {
               isSaving
             }
           >
-            Save
+            {t("volunteeringAdmin.newOpportunity.save")}
           </Button>
           <Button
-            variant='outlined'
-            size='medium'
-            type='button'
+            variant="outlined"
+            size="medium"
+            type="button"
             sx={{ borderRadius: 0.8, width: 150 }}
             startIcon={<CancelIcon />}
             onClick={() => {
@@ -384,7 +511,7 @@ export default function NewVolunteeringOpportunity() {
               (schedules.length === 1 && schedules[0].date === null)
             }
           >
-            Reset
+            {t("volunteeringAdmin.newOpportunity.reset")}
           </Button>
         </Stack>
       </form>

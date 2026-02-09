@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 type Hour = {
   day: string;
@@ -9,6 +10,7 @@ type Hour = {
 };
 
 export default function BusinessHours() {
+  const { t } = useTranslation();
   const [hours, setHours] = useState<Hour[]>([]);
 
   useEffect(() => {
@@ -20,12 +22,14 @@ export default function BusinessHours() {
 
   return (
     <div className="bg-zooGreen text-white p-6 rounded-xl space-y-2">
-      <h2 className="text-xl font-bold mb-3">Business Hours</h2>
+      <h2 className="text-xl font-bold mb-3">{t("businessHours.title")}</h2>
       {hours.map((h) => (
         <div key={h.day} className="flex justify-between">
-          <span>{h.day}</span>
+          <span>{t(`businessHours.days.${h.day.toLowerCase()}`, h.day)}</span>
           <span>
-            {h.isClosed ? "Closed" : `${h.openTime} - ${h.closeTime}`}
+            {h.isClosed
+              ? t("businessHours.status.closed")
+              : `${h.openTime} - ${h.closeTime}`}
           </span>
         </div>
       ))}
