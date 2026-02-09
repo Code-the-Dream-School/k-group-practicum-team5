@@ -1,6 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import HeroMedia from "./HeroMedia";
 import { heroMediaMock } from "../../data/heroMediaMock";
+import { Link } from "react-router-dom";
 
 import BusinessHoursPanel from "@/components/BusinessHoursPanel";
 import { useTranslation } from "react-i18next";
@@ -76,6 +77,15 @@ export default function Hero() {
           {t("hero.subtitle")}
         </Typography>
 
+        {/* <Button
+          component={Link}
+          to="/book-tickets"
+          variant="contained"
+          color="secondary"
+          size="large"
+        >
+          Purchase Tickets
+        </Button> */}
         <Box
           sx={{
             display: "flex",
@@ -86,7 +96,13 @@ export default function Hero() {
         >
           <BusinessHoursPanel />
 
-          <Button variant="contained" color="secondary" size="large">
+          <Button
+            component={Link}
+            to="/book-tickets"
+            variant="contained"
+            color="secondary"
+            size="large"
+          >
             {t("hero.cta")}
           </Button>
         </Box>

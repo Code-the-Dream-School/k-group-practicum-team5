@@ -8,6 +8,7 @@ import Navigation from "./shared/Navigation";
 import MobileNavigation from "./shared/MobileNavigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import lizardLogo from "src/assets/logo/rep-zoo-best.png";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -82,6 +83,8 @@ const Header = () => {
           <Navigation />
           {/* Get Tickets */}
           <Button
+            component={Link}
+            to="/book-tickets"
             variant="contained"
             color="secondary"
             sx={{
