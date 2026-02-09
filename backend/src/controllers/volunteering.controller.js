@@ -23,6 +23,51 @@ const getOpportunities = async (req, res) => {
                     slotsAvailableCount: {
                         $sum: "$schedules.slotsAvailable",
                     },
+                    applicants: {
+                        $sum: {
+                            $map: {
+                                input: "$schedules",
+                                as: "sch",
+                                in: {
+                                    $size: "$$sch.applicants",
+                                },
+                            },
+                        },
+                    },
+                    pendingApplicantsCount: {
+                        $sum: {
+                            $map: {
+                                input: "$schedules",
+                                as: "sch",
+                                in: {
+                                    $size: {
+                                        $filter: {
+                                            input: "$$sch.applicants",
+                                            as: "a",
+                                            cond: { $eq: ["$$a.status", "Pending"] },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    approvedApplicantsCount: {
+                        $sum: {
+                            $map: {
+                                input: "$schedules",
+                                as: "sch",
+                                in: {
+                                    $size: {
+                                        $filter: {
+                                            input: "$$sch.applicants",
+                                            as: "a",
+                                            cond: { $eq: ["$$a.status", "Approved"] },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             },
             { $sort: { createdAt: -1 } },

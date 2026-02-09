@@ -5,6 +5,9 @@ export type OpportunityRow = {
   description: string;
   schedulesCount: number;
   slotsAvailableCount: number;
+  pendingApplicantsCount: number;
+  approvedApplicantsCount: number;
+  applicants: number;
 };
 
 export type OpportunityApiItem = Omit<OpportunityRow, "id"> & {

@@ -105,7 +105,7 @@ const ViewOpportunities = () => {
                 </Typography>
                 <Chip
                   size='small'
-                  label={`${opportunity.schedules.length} Schedule Available`}
+                  label={`${opportunity.schedules.length} ${opportunity.schedules.length === 1 ? "Schedule" : "Schedules"} Available`}
                   sx={{ backgroundColor: "primary.light", color: "primary.contrastText", fontWeight: 500 }}
                 />
               </Box>

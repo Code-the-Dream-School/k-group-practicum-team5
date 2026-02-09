@@ -18,28 +18,50 @@ export default function ViewOpportunitiesAdmin() {
     {
       field: "category",
       headerName: "Category",
-      flex: 0.4,
+      flex: 0.6,
       renderCell: (params) => <strong>{params.value}</strong>,
     },
     {
       field: "createdAt",
       headerName: "Posted Date",
-      flex: 0.4,
-      valueFormatter: (value) => (value ? new Date(value).toLocaleDateString() : ""),
+      flex: 0.5,
+      valueFormatter: (value) =>
+        value ? new Date(value).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "",
     },
     {
       field: "schedulesCount",
       headerName: "Schedules",
-      flex: 0.4,
+      flex: 0.5,
       align: "center",
-      renderHeader: () => <Box sx={{ marginLeft: 10 }}>Schedules</Box>,
+      renderHeader: () => <Box sx={{ marginLeft: 5 }}>Schedules</Box>,
     },
     {
       field: "slotsAvailableCount",
       headerName: "Slots",
       flex: 0.5,
       align: "center",
-      renderHeader: () => <Box sx={{ marginLeft: 17.8 }}>Slots</Box>,
+      renderHeader: () => <Box sx={{ marginLeft: 8 }}>Slots</Box>,
+    },
+    {
+      field: "applicants",
+      headerName: "Applicants",
+      flex: 0.5,
+      align: "center",
+      renderHeader: () => <Box sx={{ marginLeft: 4 }}>Applicants</Box>,
+    },
+    {
+      field: "pendingApplicantsCount",
+      headerName: "Pending Applicants",
+      flex: 0.5,
+      align: "center",
+      renderHeader: () => <Box sx={{ marginLeft: 5.5 }}>Pending</Box>,
+    },
+    {
+      field: "approvedApplicantsCount",
+      headerName: "Approved Applicants",
+      flex: 0.5,
+      align: "center",
+      renderHeader: () => <Box sx={{ marginLeft: 4.5 }}>Approved</Box>,
     },
   ];
 
@@ -56,6 +78,9 @@ export default function ViewOpportunitiesAdmin() {
       description: o.description,
       schedulesCount: o.schedulesCount,
       slotsAvailableCount: o.slotsAvailableCount,
+      applicants: o.applicants,
+      pendingApplicantsCount: o.pendingApplicantsCount,
+      approvedApplicantsCount: o.approvedApplicantsCount,
     }));
   }, []);
 

@@ -88,9 +88,11 @@ export default function NewVolunteeringOpportunity() {
       setErrorMessage(null);
       setTimeout(() => {
         setSuccessMessage(null);
+        setIsSaving(false);
       }, 3000);
-      setIsSaving(false);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error("Error creating opportunity:", error);
       const axiosError = error as AxiosError<{ message?: string; errors?: string[]; data?: object; error?: string[]; }>;

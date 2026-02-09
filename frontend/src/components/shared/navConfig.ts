@@ -24,9 +24,8 @@ export const LoggedNavItems = [
 export const adminNavItems = [
   { label: "Home", path: "/" },
   { label: "Manage Gallery", path: "/gallery/manage" },
-  { label: "New Opportunity", path: "/volunteering/opportunities/admin/new" },
   {
-    label: "Volunteers Opportunities",
+    label: "Volunteers",
     path: "/volunteering/opportunities/admin/view",
   },
   { label: "Manage Calendar", path: "/calendar/manage" },
