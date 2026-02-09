@@ -2,6 +2,7 @@ import * as React from "react";
 import { Box, Typography, Button, IconButton } from "@mui/material";
 import ChevronLeftRounded from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRounded from "@mui/icons-material/ChevronRightRounded";
+import { useTranslation } from "react-i18next";
 
 type Highlight = {
   id: string;
@@ -11,47 +12,51 @@ type Highlight = {
   meta: string;
 };
 
-const highlights: Highlight[] = [
+type HighlightKey = {
+  id: string;
+  rating: number; // 1-5
+  titleKey: string;
+  quoteKey: string;
+  metaKey: string;
+};
+
+const highlightKeys: HighlightKey[] = [
   {
     id: "h1",
     rating: 4,
-    title: "A Wild Adventure at The Reptile Zoo!",
-    quote:
-      "The Reptile Zoo is definitely a spot for curious minds and animal lovers alike! Walking through the exhibits, I was genuinely amazed by the incredible creatures they hav especially the albino crocodile that seemed to glow under the lights and the truly fascinating two-headed snake, which felt like something out of a nature documentary come to life.",
-    meta: "Beyond Borders • London, United Kingdom",
+    titleKey: "tripadvisor.items.h1.title",
+    quoteKey: "tripadvisor.items.h1.quote",
+    metaKey: "tripadvisor.items.h1.meta",
   },
   {
     id: "h2",
     rating: 5,
-    title: "LOVED the Reptile Zoo",
-    quote:
-      "My 13-yr old son is a reptile lover. We were on our way to Wenatchee and saw the Reptile Zoo sign, and pulled over to visit. It was a GEM!!! The diversity of reptiles, the ambience, and the wonderful staff who talked to us about owning reptiles - unbeatable!!! On our way back to Seattle, my kids said stopping by AGAIN was a must - and we went by for a second time for a longer visit, and loved the Reptile Zoo even more. Highly recommended!!!",
-    meta: "Valerie P • Lima, Peru",
+    titleKey: "tripadvisor.items.h2.title",
+    quoteKey: "tripadvisor.items.h2.quote",
+    metaKey: "tripadvisor.items.h2.meta",
   },
   {
     id: "h3",
     rating: 4,
-    title: "Informative",
-    quote:
-      "This place is fascinating with so many different creatures to see and learn about. There are lizards, a crocodile, an alligator, turtles, spiders, and lots of snakes. I was impressed with the large number of different types of snakes and the information posted about each. My 4 year old grandson loved being able to see so many different creatures up close. If your child has ever talked about the reptile man coming to their school, this is the guy and these are the reptiles (some of them at least) that he brings.",
-    meta: "Susana H • Tacoma, Washington",
+    titleKey: "tripadvisor.items.h3.title",
+    quoteKey: "tripadvisor.items.h3.quote",
+    metaKey: "tripadvisor.items.h3.meta",
   },
   {
     id: "h4",
     rating: 5,
-    title: "Loved this place",
-    quote:
-      "grandkids loved this place, it was clean and kids got to explore and read about each reptile, the plexi glass was great, they were able to few and find without any problems, love that they named each reptile",
-    meta: "mo'opuna's • 1 contribution",
+    titleKey: "tripadvisor.items.h4.title",
+    quoteKey: "tripadvisor.items.h4.quote",
+    metaKey: "tripadvisor.items.h4.meta",
   },
 ];
 
-function Stars({ value }: { value: number }) {
+function Stars({ value, ariaLabel }: { value: number; ariaLabel: string }) {
   const full = Math.max(0, Math.min(5, Math.round(value)));
   return (
     <Box
       component="span"
-      aria-label={`${full} out of 5`}
+      aria-label={ariaLabel}
       sx={{ letterSpacing: 1, color: "secondary.main" }}
     >
       {"★★★★★".slice(0, full)}
@@ -63,7 +68,20 @@ function Stars({ value }: { value: number }) {
 }
 
 export default function TripadvisorHighlightsSection() {
+  const { t } = useTranslation();
   const [index, setIndex] = React.useState(0);
+
+  const highlights = React.useMemo<Highlight[]>(
+    () =>
+      highlightKeys.map((item) => ({
+        id: item.id,
+        rating: item.rating,
+        title: t(item.titleKey),
+        quote: t(item.quoteKey),
+        meta: t(item.metaKey),
+      })),
+    [t],
+  );
 
   const tripadvisorUrl =
     "https://www.tripadvisor.com/Attraction_Review-g58617-d4590565-Reviews-The_Reptile_Zoo-Monroe_Washington.html";
@@ -110,14 +128,13 @@ export default function TripadvisorHighlightsSection() {
         }}
       >
         <Box sx={{ position: "relative", textAlign: "center" }}>
-          <Typography variant="h3">Customer Highlights</Typography>
+          <Typography variant="h3">{t("tripadvisor.title")}</Typography>
           <Typography
             variant="body1"
             color="text.secondary"
             sx={{ mt: 1, maxWidth: 760, mx: "auto" }}
           >
-            A quick snapshot of what visitors love. For full reviews and
-            ratings, visit Tripadvisor.
+            {t("tripadvisor.subtitle")}
           </Typography>
         </Box>
 
@@ -164,7 +181,12 @@ export default function TripadvisorHighlightsSection() {
                   </Typography>
 
                   <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
-                    <Stars value={h.rating} />
+                    <Stars
+                      value={h.rating}
+                      ariaLabel={t("tripadvisor.starsAria", {
+                        count: Math.max(0, Math.min(5, Math.round(h.rating))),
+                      })}
+                    />
                   </Typography>
                 </Box>
 
@@ -205,7 +227,7 @@ export default function TripadvisorHighlightsSection() {
           }}
         >
           <IconButton
-            aria-label="Previous highlight"
+            aria-label={t("tripadvisor.prevAria")}
             onClick={() =>
               setIndex((i) => (i - 1 + highlights.length) % highlights.length)
             }
@@ -222,7 +244,7 @@ export default function TripadvisorHighlightsSection() {
           </Typography>
 
           <IconButton
-            aria-label="Next highlight"
+            aria-label={t("tripadvisor.nextAria")}
             onClick={() => setIndex((i) => (i + 1) % highlights.length)}
             sx={{
               border: "1px solid",
@@ -249,7 +271,7 @@ export default function TripadvisorHighlightsSection() {
             rel="noreferrer"
             disabled={tripadvisorUrl.includes("PASTE_")}
           >
-            Read Reviews on Tripadvisor
+            {t("tripadvisor.readReviews")}
           </Button>
         </Box>
       </Box>

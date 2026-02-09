@@ -8,9 +8,11 @@ import {
   SectionHeading,
   SearchFilter,
 } from "@/components/GalleryImages";
+import { useTranslation } from "react-i18next";
 
 function GalleryPage() {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
@@ -33,7 +35,7 @@ function GalleryPage() {
       }}
     >
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 2 }}>
-        <SectionHeading title="Gallery" />
+        <SectionHeading title={t("gallery.title")} />
       </Box>
 
       <Box
@@ -50,7 +52,7 @@ function GalleryPage() {
         {searchQuery.trim() && (
           <Chip
             icon={<FilterAltIcon />}
-            label={`Filter: "${searchQuery}"`}
+            label={t("gallery.filter", { query: searchQuery })}
             color="primary"
             variant="outlined"
             onDelete={handleClear}

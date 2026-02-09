@@ -1,6 +1,7 @@
 import ImageListItem from "@mui/material/ImageListItem";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import type { FeaturedAttraction } from "@/data/featuredAttractionsMock";
+import { useTranslation } from "react-i18next";
 
 type FeaturedAttractionCardProps = {
   attraction: FeaturedAttraction;
@@ -11,6 +12,7 @@ export function FeaturedAttractionCard({
   attraction,
   onClick,
 }: FeaturedAttractionCardProps) {
+  const { t } = useTranslation();
   return (
     <ImageListItem
       role="listitem"
@@ -38,7 +40,10 @@ export function FeaturedAttractionCard({
       <Box
         component="img"
         src={attraction.image || "/assets/featured/placeholder.jpg"}
-        alt={`${attraction.name} - ${attraction.species}`}
+        alt={t("featuredAttractions.imageAlt", {
+          name: attraction.name,
+          species: attraction.species,
+        })}
         sx={{
           width: "100%",
           height: "100%",
@@ -53,7 +58,7 @@ export function FeaturedAttractionCard({
 
       <Box sx={{ position: "absolute", top: 14, left: 14 }}>
         <Chip
-          label="Featured"
+          label={t("featuredAttractions.featured")}
           color="primary"
           size="small"
           sx={{ fontWeight: 800 }}
@@ -86,10 +91,18 @@ export function FeaturedAttractionCard({
             <Chip size="small" label={attraction.location} variant="outlined" />
           ) : null}
           {attraction.isEndangered ? (
-            <Chip size="small" label="Endangered" color="secondary" />
+            <Chip
+              size="small"
+              label={t("featuredAttractions.endangered")}
+              color="secondary"
+            />
           ) : null}
           {attraction.venomous ? (
-            <Chip size="small" label="Venomous" color="secondary" />
+            <Chip
+              size="small"
+              label={t("featuredAttractions.venomous")}
+              color="secondary"
+            />
           ) : null}
         </Stack>
       </Box>
