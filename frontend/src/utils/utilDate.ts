@@ -1,3 +1,11 @@
-import dayjs, { Dayjs } from "dayjs";
 
-export const formatDate = (d: Dayjs | string) => dayjs(d).format("YYYY-MM-DD");
+import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
+
+
+
+export const formatDate = (date: string | Date | Dayjs) => {
+  const parsed = dayjs.utc(date);
+  return parsed.isValid() ? parsed.format("YYYY-MM-DD") : "";
+};

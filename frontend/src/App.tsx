@@ -15,12 +15,11 @@ import Calendar from "./components/Calendar";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import Signup from "./components/Authentication/Signup";
 import StaffDirectory from "./pages/StaffDirectory";
-;
-
 import Login from "./components/Authentication/Login";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
 import Logout from "./components/Authentication/Logout";
+import ManageCalendar from "./pages/ManageCalendar";
 
 function App() {
   return (
@@ -40,6 +39,7 @@ function App() {
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password/:token" element={<ResetPassword />} />
+            
             <Route
               path="volunteering/opportunities/admin/new"
               element={<NewVolunteeringOpportunity />}
@@ -50,6 +50,8 @@ function App() {
             />
             <Route element={<ProtectedRoute />}>
               <Route path="gallery/manage" element={<ManageGalleryPage />} />
+              <Route path="admin/calendar" element={ <ManageCalendar /> } />
+             
             </Route>
             <Route path="*" element={<p>Page Not Found</p>} />
           </Route>

@@ -5,7 +5,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import type { PickersDayProps } from "@mui/x-date-pickers/PickersDay";
-import { Box, CircularProgress, Typography, Paper, Chip } from "@mui/material";
+import { Box, CircularProgress, Typography, Paper, Chip, Button} from "@mui/material";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { formatDate } from "../utils/utilDate";
@@ -14,7 +14,22 @@ import { useCalendar } from "../hooks/useCalendar";
 import type { MonthData, Event, OpeningDay } from "../types/calendar.types";
 import { ErrorAlert } from "./alert";
 
-export default function Calendar() {
+
+interface CalendarProps {
+  isAdmin?: boolean;
+  onEditEvent?: (event: Event) => void;
+  onCreateEvent?: (date: string) => void;
+  onDeleteEvent?: (eventId: string) => void;
+  events?: Event[];  
+}
+
+export default function Calendar({
+  isAdmin = false,
+  onEditEvent,
+  onCreateEvent,
+  onDeleteEvent,
+  events = [],
+}: CalendarProps) {
   const theme = useTheme();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
   const [monthData, setMonthData] = useState<MonthData>({
@@ -29,21 +44,23 @@ export default function Calendar() {
   const month = selectedDate.month() + 1;
 
   const { getMonthData, isLoading, isError, error } = useCalendar();
+  const eventSource = isAdmin ? events : monthData.events;
+
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getMonthData(year, month);
-      setMonthData(data);
+       setMonthData(data);
     };
     fetchData();
   }, [year, month, getMonthData]);
 
   const eventDaysSet = useMemo(() => {
-    if (!monthData) return new Set<string>();
-    return new Set(
-      monthData.events.map((event: Event) => formatDate(event.date)),
-    );
-  }, [monthData]);
+    const source = isAdmin ? events : monthData.events;
+    return new Set(source.map(e => formatDate(e.date)));
+
+  }, [isAdmin, events, monthData.events]);
+
 
   const hasEventsOnDay = (day: Dayjs): boolean => {
     if (!monthData) return false;
@@ -63,7 +80,7 @@ export default function Calendar() {
     if (!monthData) return false;
     const dayStr = formatDate(day);
     const openingDay = monthData.openingDays.find(
-      (od: OpeningDay) => formatDate(od.date) === dayStr,
+     (od: OpeningDay) => formatDate(od.date) === dayStr,
     );
     return openingDay?.specialHours ? true : false;
   };
@@ -92,7 +109,12 @@ export default function Calendar() {
       <PickersDay
         {...other}
         day={day}
-        disabled={isClosed}
+        onClick = {() => {
+          if(isAdmin && onCreateEvent ){
+            onCreateEvent(day.format("YYYY-MM-DD"));
+          }
+        }}
+        disabled={!isAdmin && isClosed}
         sx={{
           backgroundColor,
           fontWeight: hasEvents || isClosed || specialHours ? "bold" : "normal",
@@ -110,12 +132,14 @@ export default function Calendar() {
     );
   };
 
-  const eventsOnSelectedDay = (monthData?.events ?? []).filter(
-    (event) => formatDate(event.date) === formatDate(selectedDate),
+  const eventsOnSelectedDay = eventSource.filter(
+    event =>
+        formatDate(event.date) === formatDate(selectedDate)
   );
 
+
   const openingDayInfo = (monthData?.openingDays ?? []).find(
-    (od) => formatDate(od.date) === formatDate(selectedDate),
+     (od) => formatDate(od.date) === formatDate(selectedDate),
   );
 
   return (
@@ -242,6 +266,7 @@ export default function Calendar() {
               </Typography>
               {eventsOnSelectedDay.length > 0 ? (
                 eventsOnSelectedDay.map((event) => {
+                 
                   const handleAddToCalendar = () => {
                     const date = formatDate(selectedDate);
                     const start = event.startTime
@@ -308,7 +333,7 @@ export default function Calendar() {
                           color="info"
                           onClick={handleAddToCalendar}
                           sx={{ cursor: "pointer" }}
-                        />
+                        />-
                       </Box>
                       {event.image && (
                         <Box
@@ -324,7 +349,28 @@ export default function Calendar() {
                             mt: 2,
                           }}
                         />
-                      )}
+                      )} 
+                      {isAdmin && (
+                        
+                          <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => onEditEvent?.(event)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              size="small"
+                              color="error"
+                              variant="outlined"
+                              onClick={() => onDeleteEvent?.(event._id)}
+                            >
+                              Delete
+                            </Button>
+                          </Box>
+                        )}
+
                     </Paper>
                   );
                 })
@@ -340,3 +386,4 @@ export default function Calendar() {
     </LocalizationProvider>
   );
 }
+

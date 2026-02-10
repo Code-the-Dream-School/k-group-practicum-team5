@@ -51,6 +51,7 @@ exports.getEvents = async (req, res) => {
 // GET /api/calendar/month-data
 exports.getMonthData = async (req, res) => {
     try {
+        console.log("getMonthData called with query:", req.query);
         const { year, month } = req.query;
 
         if (!year || !month) {
@@ -69,6 +70,7 @@ exports.getMonthData = async (req, res) => {
         }
 
         const { startDate, endDate } = getMonthBoundaries(yearNum, monthNum);
+        console.log(`Calculated month boundaries for ${yearNum}-${monthNum}:`, { startDate, endDate });
 
         const [openingDays, events] = await Promise.all([
             OpeningDay.find({
@@ -79,7 +81,7 @@ exports.getMonthData = async (req, res) => {
                 date: { $gte: startDate, $lte: endDate }
             }).sort({ date: 1 })
         ]);
-
+        console.log(`Fetched ${openingDays.length} opening days and ${events.length} events for ${yearNum}-${monthNum}`);
         res.json({
             openingDays,
             events,

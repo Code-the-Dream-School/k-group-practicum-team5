@@ -17,6 +17,7 @@ const volunteeringRoutes = require('./routes/volunteering.routes');
 const volunteeringScheduleRoutes = require('./routes/volunteeringSchedule.routes');
 const businessHoursRoutes = require('./routes/businessHours.routes')
 const staffRoutes = require("./routes/staff.routes")
+const adminEventRoutes = require('./routes/adminEventRouter');
 
 
 const notFoundMiddleware = require('./middleware/not-found');
@@ -46,6 +47,7 @@ app.use(limiter);
 app.use('/api/hello', helloRoutes);
 
 app.use('/api/v1/calendar', calendarRoutes);
+app.use('/api/v1/admin/events', adminEventRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/admin', adminRoutes);

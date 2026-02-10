@@ -29,6 +29,6 @@ export const adminNavItems = [
     label: "Volunteers Opportunities",
     path: "/volunteering/opportunities/admin/view",
   },
-  { label: "Manage Calendar", path: "/calendar/manage" },
+  { label: "Manage Calendar", path: "/admin/calendar" },
   { label: "Logout", path: "/logout" },
 ];
