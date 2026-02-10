@@ -91,27 +91,12 @@ export default function NewVolunteeringOpportunity() {
 
     try {
       setIsSaving(true);
-      const response = await apiCall<{ data: { id: string } }>(
+      await apiCall<{ data: { id: string } }>(
         "post",
         `${import.meta.env.VITE_API_BASE_URL}/volunteering/new`,
         opportunityData,
       );
 
-      const volunteeringId = response.data.id;
-      // Create schedules
-      for (const schedule of schedules) {
-        await apiCall(
-          "post",
-          `${import.meta.env.VITE_API_BASE_URL}/volunteeringSchedule/${volunteeringId}/schedules`,
-          {
-            volunteeringId,
-            date: schedule.date,
-            timeFrom: schedule.timeFrom,
-            timeTo: schedule.timeTo,
-            slotsAvailable: schedule.slotsAvailable,
-          },
-        );
-      }
       setSuccessMessage(t("volunteeringAdmin.newOpportunity.success"));
       setErrorMessage(null);
       setTimeout(() => {
