@@ -14,7 +14,7 @@ export const LoggedNavItems = [
   { labelKey: "nav.media", path: "/video" },
   { labelKey: "nav.gallery", path: "/gallery" },
   { labelKey: "nav.calendar", path: "/calendar" },
-  { labelKey: "nav.joinVolunteer", path: "/volunteering/opportunities/apply" },
+  { labelKey: "nav.joinVolunteer", path: "/volunteering/opportunities/view" },
   { labelKey: "nav.staff", path: "/staff" },
   { labelKey: "nav.contact", path: "/contact" },
   { labelKey: "nav.map", path: "/map" },
