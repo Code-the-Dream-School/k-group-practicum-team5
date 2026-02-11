@@ -91,6 +91,8 @@ export default function Calendar({
     const isClosed = isClosedOnDay(day as Dayjs);
     const specialHours = hasSpecialHours(day as Dayjs);
 
+  
+
     let backgroundColor = "transparent";
     let hoverColor = "transparent";
 
@@ -104,6 +106,7 @@ export default function Calendar({
       backgroundColor = theme.palette.success.light;
       hoverColor = theme.palette.success.main;
     }
+  
 
     return (
       <PickersDay
@@ -145,10 +148,11 @@ export default function Calendar({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ p: 3 }}>
+        
         <Typography variant="h4" gutterBottom>
           Zoo Calendar
         </Typography>
-
+       
         {isError && <ErrorAlert message={error} />}
 
         <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>

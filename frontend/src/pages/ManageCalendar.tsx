@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Alert } from "@mui/material";
+import { Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Stack, Button, MenuItem, Alert,  Typography } from "@mui/material";
 import Calendar from "@/components/Calendar";
 import { useAdminCalendar } from "@/hooks/useAdminCalendar";
 import type { Event } from "@/types/calendar.types";
@@ -22,7 +22,7 @@ export default function ManageCalendar() {
   const { createEvent, updateEvent, deleteEvent } = useAdminCalendar();
   type EventForm = Partial<Omit<Event, "_id" | "createdAt">>;
 
-  const [form, setForm] = useState<EventForm>({});
+  const [form, setForm] = useState<EventForm >({});
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -96,13 +96,10 @@ export default function ManageCalendar() {
       return; 
     }
   
-    try {  
+    try {   
+        const payload : Partial<Event> = {...form };
+       
       if (editingEvent) {
-        
-        const payload : Partial<Event> = {
-          ...form
-          
-        };
         const updatedEvent = await updateEvent(editingEvent._id, payload);
         setEvents((prev) =>
           prev.map((event) => (event._id === editingEvent._id ? updatedEvent : event))
@@ -120,7 +117,6 @@ export default function ManageCalendar() {
       }
       
     }
-
   };
 
 
@@ -139,7 +135,7 @@ export default function ManageCalendar() {
         <DialogTitle >
           {editingEvent ? "Edit Event" : "Create Event"}
         </DialogTitle>
-
+        
         <DialogContent sx={{ display: "flex", gap: 3, flexDirection: "column",
          "& .MuiDialogContent-root": {
           paddingTop: "0",
@@ -154,6 +150,7 @@ export default function ManageCalendar() {
             required
             value={form.title || ""}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
+            
           />
           <TextField
             id="event-description"
@@ -162,65 +159,101 @@ export default function ManageCalendar() {
             required
             value={form.description || ""}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
+            
           />
-          <TextField
-              id="event-eventType"
-              select
-              label="Event Type"
-              required
-              value={form.eventType ?? ""}
-              onChange={(e) =>
-                setForm({ ...form, eventType: e.target.value as Event["eventType"] })
-              }
-            >
-              <MenuItem value="Show">Show</MenuItem>
-              <MenuItem value="Feeding">Feeding</MenuItem>
-              <MenuItem value="Workshop">Workshop</MenuItem>
-              <MenuItem value="Guided Tour">Guided Tour</MenuItem>
-              <MenuItem value="Education">Education</MenuItem>
-            </TextField>
+         
 
-          <TextField
-            id="event-date"
-            type="date"
-            label="Date"
-            required
-            value={form.date || ""}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
-          />
-          <TextField
-            id="event-startTime"
-            type="time"
-            value={form.startTime || ""}
-            onChange={handleTimeChange("startTime")}
-          />
-          <TextField
-            id="event-endTime"
-            type="time"
-            required
-            value={form.endTime || ""}
-            onChange={handleTimeChange("endTime")}
-          />
+          <Stack direction="row" spacing={3} alignItems="center" flexWrap="wrap">
+            {/* Event Type */}
+            <Stack direction="row" spacing={1} alignItems="center" flex={1} minWidth={150}>
+              <Typography variant="body1">Event Type:</Typography>
+              <TextField
+                select
+                value={form.eventType ?? ""}
+                onChange={(e) =>
+                  setForm({ ...form, eventType: e.target.value as Event["eventType"] })
+                }
+                size="small"
+                fullWidth
+              >
+                <MenuItem value="Show">Show</MenuItem>
+                <MenuItem value="Feeding">Feeding</MenuItem>
+                <MenuItem value="Workshop">Workshop</MenuItem>
+                <MenuItem value="Guided Tour">Guided Tour</MenuItem>
+                <MenuItem value="Education">Education</MenuItem>
+              </TextField>
+            </Stack>
 
-          <TextField
-            id ="event-capacity"
-            label="Capacity"
-            type="number"
-            value={form.capacity || ""}
-            onChange={(e) =>
-              setForm({  ...form, capacity: Number(e.target.value) })
-            }
-          />
+            {/* Date */}
+            <Stack direction="row" spacing={1} alignItems="center" flex={1} minWidth={150}>
+              <Typography variant="body1">Date:</Typography>
+              <TextField
+                type="date"
+                value={form.date || ""}
+                onChange={(e) => setForm({ ...form, date: e.target.value })}
+                size="small"
+                fullWidth
+               
+              />
+            </Stack>
+          </Stack>
 
-          <TextField
-            id="event-price"
-            label="Price"
-            type="number"
-            value={form.price || ""}
-            onChange={(e) =>
-              setForm({ ...form, price: Number(e.target.value) })
-            }
-          />
+         
+          <Stack direction="row" spacing={4} alignItems="center">
+ 
+              <Stack direction="row" spacing={1} alignItems="center" flex={1}>
+                <Typography variant="body1">Start Time:</Typography>
+                <TextField
+                  type="time"
+                  value={form.startTime || ""}
+                  onChange={handleTimeChange("startTime")}
+                  size="small"
+                  fullWidth
+                 
+                />
+              </Stack>
+
+          
+            <Stack direction="row" spacing={1} alignItems="center" flex={1}>
+              <Typography variant="body1">End Time:</Typography>
+              <TextField
+                type="time"
+                value={form.endTime || ""}
+                onChange={handleTimeChange("endTime")}
+                size="small"
+                fullWidth
+             
+              />
+            </Stack>
+         </Stack>
+          <Stack direction="row" spacing={3} alignItems="center" flexWrap="wrap">
+ 
+            <Stack direction="row" spacing={1} alignItems="center" flex={1} minWidth={120}>
+              <Typography variant="body1">Capacity:</Typography>
+              <TextField
+                type="number"
+                value={form.capacity || ""}
+                onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })}
+                size="small"
+                fullWidth
+            
+              />
+            </Stack>
+
+            <Stack direction="row" spacing={1} alignItems="center" flex={1} minWidth={120}>
+              <Typography variant="body1">Price:</Typography>
+              <TextField
+                type="number"
+                value={form.price || ""}
+                onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+                size="small"
+                fullWidth
+               
+              />
+            </Stack>
+          </Stack>
+          
+
         </DialogContent>
 
         <DialogActions>
