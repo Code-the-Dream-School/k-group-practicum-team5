@@ -22,6 +22,7 @@ interface OpportunitySchedule {
   timeTo: string;
   slotsAvailable: number;
   applicants: OpportunityApplicant[];
+  applicationStatus?: string;
   _id: string;
 }
 

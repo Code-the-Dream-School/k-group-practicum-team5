@@ -182,6 +182,90 @@ const getUserOpportunities = async (req, res) => {
     return res.status(200).json({ count: opportunities.length, opportunities });
 };
 
+const getUserAppliedOpportunities = async (req, res) => {
+    const userId = String(req.query.userId || "").trim();
+    if (!userId) {
+        return res.status(400).json({ message: "userId is required in query" });
+    }
+
+    const now = new Date();
+
+    const opportunities = await Volunteering.aggregate([
+        {
+            $addFields: {
+                schedules: {
+                    $map: {
+                        input: {
+                            $filter: {
+                                input: "$schedules",
+                                as: "sch",
+                                cond: {
+                                    $and: [
+                                        { $gte: ["$$sch.timeTo", now] },
+                                        {
+                                            $in: [
+                                                userId,
+                                                {
+                                                    $map: {
+                                                        input: "$$sch.applicants",
+                                                        as: "a",
+                                                        in: "$$a.userId",
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            },
+                        },
+                        as: "sch",
+                        in: {
+                            $mergeObjects: [
+                                "$$sch",
+                                {
+                                    applicationStatus: {
+                                        $let: {
+                                            vars: {
+                                                matchedApplicant: {
+                                                    $first: {
+                                                        $filter: {
+                                                            input: "$$sch.applicants",
+                                                            as: "a",
+                                                            cond: { $eq: ["$$a.userId", userId] },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            in: "$$matchedApplicant.status",
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+        },
+        {
+            $match: {
+                $expr: { $gt: [{ $size: "$schedules" }, 0] },
+            },
+        },
+        { $sort: { "schedules.timeFrom": 1 } },
+        {
+            $project: {
+                category: 1,
+                description: 1,
+                schedules: 1,
+                createdAt: 1,
+                updatedAt: 1,
+            },
+        },
+    ]);
+
+    return res.status(200).json({ count: opportunities.length, opportunities });
+};
+
 const addApplicantToSchedule = async (req, res) => {
     const { opportunityId, scheduleId, userId } = req.body;
     try {
@@ -210,5 +294,6 @@ module.exports = {
     getCategories,
     getOpportunities,
     getUserOpportunities,
+    getUserAppliedOpportunities,
     addApplicantToSchedule,
 }

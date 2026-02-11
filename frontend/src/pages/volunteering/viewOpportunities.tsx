@@ -14,8 +14,9 @@ import Button from "@mui/material/Button";
 const ViewOpportunities = () => {
   const limit = 10;
 
-  const { isLoading, isError, error, getOpportunities } = useOpportunity();
+  const { isLoading, isError, error, getOpportunities, getAppliedOpportunities } = useOpportunity();
   const [opportunities, setOpportunities] = useState<GetOpportunitiesResponse["opportunities"]>([]);
+  const [appliedOpportunities, setAppliedOpportunities] = useState<GetOpportunitiesResponse["opportunities"]>([]);
   const errorMessage =
     typeof error === "string"
       ? error
@@ -28,15 +29,19 @@ const ViewOpportunities = () => {
       try {
         const storedUser = localStorage.getItem("user");
         const userData = storedUser ? JSON.parse(storedUser) : undefined;
-        const res = await getOpportunities({ userId: userData?.id });
-        setOpportunities(res?.opportunities ?? []);
-        console.log(res?.opportunities);
+        const [availableRes, appliedRes] = await Promise.all([
+          getOpportunities({ userId: userData?.id }),
+          getAppliedOpportunities({ userId: userData?.id }),
+        ]);
+
+        setOpportunities(availableRes?.opportunities ?? []);
+        setAppliedOpportunities(appliedRes?.opportunities ?? []);
       } catch (err) {
         console.error(err);
       }
     };
     fetchOpportunities();
-  }, [limit, getOpportunities]);
+  }, [limit, getAppliedOpportunities, getOpportunities]);
 
   const storedUser = localStorage.getItem("user");
   const userData = storedUser ? JSON.parse(storedUser) : undefined;
@@ -45,31 +50,70 @@ const ViewOpportunities = () => {
   const addApplicantToSchedule = async (opportunityId: string, scheduleId: string) => {
     try {
       if (currentUserId) {
-        const response = await apiCall("post", "/volunteering/opportunity/addApplicant", {
+        await apiCall("post", "/volunteering/opportunity/addApplicant", {
           opportunityId,
           scheduleId,
           userId: currentUserId,
         });
-        console.log(response);
+
+        const selectedOpportunity = opportunities.find((o) => o._id === opportunityId);
+        const selectedSchedule = selectedOpportunity?.schedules.find((s) => s._id === scheduleId);
+        if (!selectedOpportunity || !selectedSchedule) return;
+
+        const updatedSchedule = {
+          ...selectedSchedule,
+          applicants: [
+            ...selectedSchedule.applicants,
+            { userId: currentUserId, scheduleId, status: "Pending" },
+          ],
+          applicationStatus: "Pending",
+        };
+
+        setAppliedOpportunities((prev) => {
+          const opportunityIndex = prev.findIndex((o) => o._id === selectedOpportunity._id);
+          if (opportunityIndex === -1) {
+            return [
+              ...prev,
+              {
+                ...selectedOpportunity,
+                schedules: [updatedSchedule],
+              },
+            ];
+          }
+
+          return prev.map((opportunity, idx) =>
+            idx !== opportunityIndex
+              ? opportunity
+              : {
+                  ...opportunity,
+                  schedules: opportunity.schedules.some((s) => s._id === updatedSchedule._id)
+                    ? opportunity.schedules
+                    : [...opportunity.schedules, updatedSchedule],
+                },
+          );
+        });
 
         setOpportunities((prev) =>
-          prev.map((opportunity) => {
-            if (opportunity._id !== opportunityId) return opportunity;
-            return {
-              ...opportunity,
-              schedules: opportunity.schedules.map((schedule) => {
-                if (schedule._id !== scheduleId) return schedule;
-                const hasApplied = schedule.applicants.some(
-                  (applicant) => String(applicant.userId) === String(currentUserId),
-                );
-                if (hasApplied) return schedule;
-                return {
-                  ...schedule,
-                  applicants: [...schedule.applicants, { userId: currentUserId, scheduleId, status: "Pending" }],
-                };
-              }),
-            };
-          }),
+          prev.map((opportunity) =>
+            opportunity._id !== opportunityId
+              ? opportunity
+              : {
+                  ...opportunity,
+                  schedules: opportunity.schedules.map((schedule) => {
+                    if (schedule._id !== scheduleId) return schedule;
+
+                    const alreadyApplied = schedule.applicants.some(
+                      (applicant) => String(applicant.userId) === String(currentUserId),
+                    );
+                    if (alreadyApplied) return schedule;
+
+                    return {
+                      ...schedule,
+                      applicants: [...schedule.applicants, { userId: currentUserId, scheduleId, status: "Pending" }],
+                    };
+                  }),
+                },
+          ),
         );
       }
     } catch (err) {
@@ -94,7 +138,9 @@ const ViewOpportunities = () => {
       {!isLoading && !isError && opportunities.length === 0 && (
         <Typography variant='body1'>No opportunities found, please try again later.</Typography>
       )}
-
+      <Typography variant='h6' fontWeight={700} mb={1} ml={1.5} color='primary.main'>
+        Available volunteer opportunities
+      </Typography>
       <Box display='flex' flexDirection='column' borderRadius={1} border={1.5} borderColor='primary.light'>
         {opportunities.map((opportunity) => (
           <Accordion key={opportunity._id} sx={{ boxShadow: 20, paddingY: 0.5 }}>
@@ -196,6 +242,71 @@ const ViewOpportunities = () => {
           </Accordion>
         ))}
       </Box>
+
+      {!isLoading && !isError && appliedOpportunities.length > 0 && (
+        <Box mt={5}>
+          <Typography variant='h6' fontWeight={700} mb={1} ml={1.5} color='primary.main'>
+            Your Applied Schedules
+          </Typography>
+          <Paper elevation={3} sx={{ p: 2, boxShadow: "1px 3px 10px rgba(0,0,0,0.2)", border: 1 }}>
+            <Box
+              display='flex'
+              flexDirection='column'
+              gap={1}
+              // border={1}
+              borderColor='primary.light'
+              borderRadius={1}
+              p={2}
+            >
+              {appliedOpportunities.map((opportunity) =>
+                opportunity.schedules.map((schedule) => (
+                  <Box
+                    key={`applied-${opportunity._id}-${schedule._id}`}
+                    display='flex'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    gap={1}
+                    sx={{ flexWrap: "wrap", p: 1, borderBottom: "1px solid", borderColor: "divider" }}
+                  >
+                    <Typography variant='body2' fontWeight={600}>
+                      <Typography variant='body2' fontWeight={600}>
+                        {opportunity.category}:{" "}
+                      </Typography>
+                      <Typography variant='body2'>{opportunity.description}</Typography>
+                      {new Date(schedule.timeFrom).toLocaleDateString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "2-digit",
+                      })}{" "}
+                      {new Date(schedule.timeFrom).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}{" "}
+                      -{" "}
+                      {new Date(schedule.timeTo).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </Typography>
+                    <Chip
+                      size='small'
+                      label={schedule.applicationStatus ?? "Pending"}
+                      color={
+                        schedule.applicationStatus === "Approved"
+                          ? "success"
+                          : schedule.applicationStatus === "Rejected"
+                            ? "error"
+                            : "warning"
+                      }
+                    />
+                  </Box>
+                )),
+              )}
+            </Box>
+          </Paper>
+        </Box>
+      )}
       <Paper elevation={3} sx={{ p: 3, mt: 4, bgcolor: "background.paper", borderRadius: 1, mb: 5 }}>
         <Typography
           variant='h5'
