@@ -7,14 +7,14 @@ const createVolunteeringSchedule = async (req, res) => {
     const { volunteeringId } = req.params; // e.g. POST /volunteering/:volunteeringId/schedules
     const { date, timeFrom, timeTo, slotsAvailable } = req.body;
 
-    // 1) Validate ObjectId format (avoid CastError)
+    // Validate ObjectId format (avoid CastError)
     if (!mongoose.Types.ObjectId.isValid(volunteeringId)) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             error: "Invalid volunteeringId",
         });
     }
 
-    // 2) Make sure parent exists
+    // Make sure parent exists
     const volunteering = await Volunteering.findById(volunteeringId).select("_id");
     if (!volunteering) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -22,7 +22,7 @@ const createVolunteeringSchedule = async (req, res) => {
         });
     }
 
-    // 3) Create schedule referencing the parent id
+    // Create schedule referencing the parent id
     const schedule = await VolunteeringSchedule.create({
         volunteeringId: volunteering._id, // or just volunteeringId
         date,

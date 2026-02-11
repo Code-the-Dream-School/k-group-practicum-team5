@@ -10,6 +10,8 @@ import ManageGalleryPage from "./pages/ManageGalleryPage";
 import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
+import ViewOpportunities from "@/pages/volunteering/viewOpportunities";
+// import { Box } from "@mui/material";
 import MapPage from "./pages/Map";
 import Calendar from "./components/Calendar";
 import ProtectedRoute from "@/routes/ProtectedRoute";
@@ -50,7 +52,10 @@ function App() {
             />
             <Route element={<ProtectedRoute />}>
               <Route path="gallery/manage" element={<ManageGalleryPage />} />
-            </Route>
+            </Route>            
+            <Route path="volunteering/opportunities/view"
+            element={<ViewOpportunities />} />
+
             <Route path="*" element={<p>Page Not Found</p>} />
           </Route>
         </Routes>

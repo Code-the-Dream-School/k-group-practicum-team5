@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box, Stack, TextField } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import RemoveIcon from "@mui/icons-material/Remove";
 import type { AvailabilityFormValue } from "@/types/volunteering/AvailabilityFormValue.type";
+import { useEffect } from "react";
 
 export default function Schedule({
   schedules,
@@ -24,6 +25,16 @@ export default function Schedule({
     return true; // If one of the times is null, consider it valid
   };
 
+  const alignTimeWithDate = (time: Dayjs | null, date: Dayjs | null) => {
+    if (!time || !date) return time;
+    return time.year(date.year()).month(date.month()).date(date.date());
+  };
+
+  useEffect(() => {
+    console.log(schedules);
+  }, [schedules]);
+    
+
   return (
     <>
       {schedules.map((val, index) => (
@@ -31,7 +42,7 @@ export default function Schedule({
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr 1fr 0.5fr 42px" },
+              gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr 1fr 0.5fr 85px" },
               gap: 2,
               alignItems: "center",
               marginBottom: 1,
@@ -46,7 +57,16 @@ export default function Schedule({
             <DatePicker
               value={val.date}
               onChange={(date) =>
-                setSchedules((p) => [...p.slice(0, index), { ...p[index], date }, ...p.slice(index + 1)])
+                setSchedules((p) => [
+                  ...p.slice(0, index),
+                  {
+                    ...p[index],
+                    date,
+                    timeFrom: alignTimeWithDate(p[index].timeFrom, date),
+                    timeTo: alignTimeWithDate(p[index].timeTo, date),
+                  },
+                  ...p.slice(index + 1),
+                ])
               }
               slotProps={{
                 textField: {
@@ -61,7 +81,11 @@ export default function Schedule({
             <TimePicker
               value={val.timeFrom}
               onChange={(timeFrom) =>
-                setSchedules((p) => [...p.slice(0, index), { ...p[index], timeFrom }, ...p.slice(index + 1)])
+                setSchedules((p) => [
+                  ...p.slice(0, index),
+                  { ...p[index], timeFrom: alignTimeWithDate(timeFrom, p[index].date) },
+                  ...p.slice(index + 1),
+                ])
               }
               slotProps={{
                 textField: {
@@ -76,7 +100,11 @@ export default function Schedule({
             <TimePicker
               value={val.timeTo}
               onChange={(timeTo) =>
-                setSchedules((p) => [...p.slice(0, index), { ...p[index], timeTo }, ...p.slice(index + 1)])
+                setSchedules((p) => [
+                  ...p.slice(0, index),
+                  { ...p[index], timeTo: alignTimeWithDate(timeTo, p[index].date) },
+                  ...p.slice(index + 1),
+                ])
               }
               slotProps={{
                 textField: {
@@ -112,14 +140,29 @@ export default function Schedule({
                 ]);
               }}
             />
-            {index === schedules.length - 1 && (
+            <Stack display={"flex"} justifyContent='center' direction='row'>
+              <IconButton
+                sx={{
+                  "&:hover": { color: "error.dark", backgroundColor: "transparent" },
+                  color: "error.main",
+                  visibility: schedules.length === 1 ? "hidden" : "visible",
+                  display: schedules.length === 1 ? "none" : "inline-flex",
+                }}
+              >
+                <RemoveIcon
+                  onClick={() => {
+                    setSchedules((p) => [...p.slice(0, index), ...p.slice(index + 1)]);
+                  }}
+                />
+              </IconButton>
               <IconButton
                 sx={{
                   "&:hover": { color: "primary.light", backgroundColor: "transparent" },
                   color: "primary.main",
-                  marginRight: 4,
+                  marginRight: schedules.length === 1 ? 4 : 2,
+                  visibility: index !== schedules.length - 1 ? "hidden" : "visible",
                 }}
-                >
+              >
                 <AddIcon
                   sx={{ fontWeight: "bold" }}
                   onClick={() => {
@@ -135,22 +178,7 @@ export default function Schedule({
                   }}
                 />
               </IconButton>
-            )}
-            {index !== schedules.length - 1 && (
-              <IconButton
-              sx={{
-                  "&:hover": { color: "error.dark", backgroundColor: "transparent" },
-                  color: "error.main",
-                  marginRight: 4,
-                }}
-              >
-                <RemoveIcon
-                  onClick={() => {
-                    setSchedules((p) => [...p.slice(0, index), ...p.slice(index + 1)]);
-                  }}
-                />
-              </IconButton>
-            )}
+            </Stack>
           </Box>
         </LocalizationProvider>
       ))}

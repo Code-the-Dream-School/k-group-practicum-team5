@@ -1,6 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 const Volunteering = require('../models/Volunteering');
-const VolunteeringSchedule = require('../models/VolunteeringSchedule');
 
 
 const getCategories = async (req, res) => {
@@ -16,35 +15,59 @@ const getCategories = async (req, res) => {
 }
 
 const getOpportunities = async (req, res) => {
-
-    const scheduleCollection = VolunteeringSchedule.collection.name;
-
     try {
         const opportunities = await Volunteering.aggregate([
             {
-                $lookup: {
-                    from: scheduleCollection,
-                    localField: "_id",
-                    foreignField: "volunteeringId",
-                    as: "schedules",
-                },
-            }, {
                 $addFields: {
                     schedulesCount: { $size: "$schedules" },
                     slotsAvailableCount: {
                         $sum: "$schedules.slotsAvailable",
                     },
-                },
-            },
-            
-            {
-                $project: {
-                    _id: 1,
-                    createdAt: 1,
-                    category: 1,
-                    description: 1,
-                    schedulesCount: 1,
-                    slotsAvailableCount: 1,
+                    applicants: {
+                        $sum: {
+                            $map: {
+                                input: "$schedules",
+                                as: "sch",
+                                in: {
+                                    $size: "$$sch.applicants",
+                                },
+                            },
+                        },
+                    },
+                    pendingApplicantsCount: {
+                        $sum: {
+                            $map: {
+                                input: "$schedules",
+                                as: "sch",
+                                in: {
+                                    $size: {
+                                        $filter: {
+                                            input: "$$sch.applicants",
+                                            as: "a",
+                                            cond: { $eq: ["$$a.status", "Pending"] },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    approvedApplicantsCount: {
+                        $sum: {
+                            $map: {
+                                input: "$schedules",
+                                as: "sch",
+                                in: {
+                                    $size: {
+                                        $filter: {
+                                            input: "$$sch.applicants",
+                                            as: "a",
+                                            cond: { $eq: ["$$a.status", "Approved"] },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             },
             { $sort: { createdAt: -1 } },
@@ -63,10 +86,9 @@ const createOpportunity = async (req, res) => {
         const volunteering = await Volunteering.create(req.body);
 
         res.status(StatusCodes.CREATED).json({
-            message: "Volunteering opportunity created successfully",
             data: {
-                id: volunteering._id,
-            },
+                message: "Volunteering opportunity created successfully",
+            }
         });
     } catch (error) {
         console.error(error);
@@ -81,8 +103,112 @@ const createOpportunity = async (req, res) => {
     }
 }
 
+const getUserOpportunities = async (req, res) => {
+    const userId = String(req.query.userId || "").trim();
+    if (!userId) {
+        return res.status(400).json({ message: "userId is required in query" });
+    }
+
+    const now = new Date();
+
+    const opportunities = await Volunteering.aggregate([
+        {
+            $addFields: {
+                schedules: {
+                    $filter: {
+                        input: "$schedules",
+                        as: "sch",
+                        cond: {
+                            $and: [
+                                { $gt: ["$$sch.timeFrom", now] },
+                                {
+                                    $not: {
+                                        $in: [
+                                            userId,
+                                            {
+                                                $map: {
+                                                    input: "$$sch.applicants",
+                                                    as: "a",
+                                                    in: "$$a.userId",
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    $gte: [
+                                        {
+                                            $subtract: [
+                                                "$$sch.slotsAvailable",
+                                                {
+                                                    $size: {
+                                                        $filter: {
+                                                            input: "$$sch.applicants",
+                                                            as: "a",
+                                                            cond: { $eq: ["$$a.status", "Approved"] }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        1
+                                    ]
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+        },
+
+        // Keep only volunteerings that still have at least 1 schedule
+        {
+            $match: {
+                $expr: { $gt: [{ $size: "$schedules" }, 0] },
+            },
+        },
+        { $sort: { "schedules.timeFrom": 1 } },
+        {
+            $project: {
+                category: 1,
+                description: 1,
+                schedules: 1,
+                createdAt: 1,
+                updatedAt: 1,
+            },
+        },
+    ]);
+
+    return res.status(200).json({ count: opportunities.length, opportunities });
+};
+
+const addApplicantToSchedule = async (req, res) => {
+    const { opportunityId, scheduleId, userId } = req.body;
+    try {
+        const volunteering = await Volunteering.findById(opportunityId);
+        if (!volunteering) {
+            return res.status(404).json({ message: "Volunteering opportunity not found" });
+        }
+
+        const scheduleIndex = volunteering.schedules.findIndex(s => s._id.toString() === scheduleId);
+        if (scheduleIndex === -1) {
+            return res.status(404).json({ message: "Schedule not found" });
+        }
+
+        volunteering.schedules[scheduleIndex].applicants.push({ userId, status: "Pending" });
+        await volunteering.save();
+
+        return res.status(200).json({ message: "Applicant added successfully" });
+    } catch (error) {
+        console.error("addApplicantToSchedule error:", error);
+        return res.status(500).json({ message: "Failed to add applicant" });
+    }
+};
+
 module.exports = {
     createOpportunity,
     getCategories,
     getOpportunities,
+    getUserOpportunities,
+    addApplicantToSchedule,
 }

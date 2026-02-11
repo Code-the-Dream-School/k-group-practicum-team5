@@ -29,14 +29,12 @@ const CommonTable = ({ fetchRows, columns }: CommonTableProps) => {
     <Paper>
       <DataGrid
         rows={rows}
-        // hideFooterPagination
         getRowId={(row) => row.id ?? row._id}
         columns={columns}
         initialState={{
           pagination: { paginationModel },
           columns: { columnVisibilityModel },
         }}
-        // initialState={{  columns: { columnVisibilityModel } }}
         pageSizeOptions={[5, 10, 25, 50]}
         disableRowSelectionOnClick
         slots={{
