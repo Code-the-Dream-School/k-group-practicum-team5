@@ -108,7 +108,12 @@ export default function NewVolunteeringOpportunity() {
       }, 1000);
     } catch (error) {
       console.error("Error creating opportunity:", error);
-      const axiosError = error as AxiosError<{ message?: string; errors?: string[]; data?: object; error?: string[]; }>;
+      const axiosError = error as AxiosError<{
+        message?: string;
+        errors?: string[];
+        data?: object;
+        error?: string[];
+      }>;
       const errorDetail =
         axiosError.response?.data.error ||
         axiosError.response?.data?.message ||

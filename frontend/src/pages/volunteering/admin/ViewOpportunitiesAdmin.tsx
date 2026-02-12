@@ -102,7 +102,10 @@ export default function ViewOpportunitiesAdmin() {
     >
       {/* Header */}
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, mt: 1 }}>
-        <SectionHeading title='Volunteering Opportunities' fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }} />
+        <SectionHeading
+          title="Volunteering Opportunities"
+          fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }}
+        />
       </Box>
       <Box pb={1}>
         <IconButton

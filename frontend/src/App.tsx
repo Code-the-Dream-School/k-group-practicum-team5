@@ -11,10 +11,10 @@ import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 import ViewOpportunities from "@/pages/volunteering/viewOpportunities";
-// import { Box } from "@mui/material";
 import MapPage from "./pages/Map";
 import Calendar from "./components/Calendar";
-import ProtectedRoute from "@/routes/ProtectedRoute";
+import AdminRoute from "@/routes/AdminRoute";
+import UserRoute from "./routes/UserRoute";
 import Signup from "./components/Authentication/Signup";
 import StaffDirectory from "./pages/StaffDirectory";
 import BookTicketsPage from "@/pages/BookTicketsPage";
@@ -34,7 +34,6 @@ function App() {
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
-            <Route path="calendar" element={<Calendar />} />
             <Route path="/book-tickets" element={<BookTicketsPage />} />
             <Route path="signup" element={<Signup />} />
             <Route path="staff" element={<StaffDirectory />} />
@@ -42,20 +41,24 @@ function App() {
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password/:token" element={<ResetPassword />} />
-            <Route
-              path="volunteering/opportunities/admin/new"
-              element={<NewVolunteeringOpportunity />}
-            />
-            <Route
-              path="volunteering/opportunities/admin/view"
-              element={<ViewOpportunitiesAdmin />}
-            />
-            <Route element={<ProtectedRoute />}>
+            <Route element={<UserRoute />}>
+              <Route path="calendar" element={<Calendar />} />
+              <Route
+                path="volunteering/opportunities/view"
+                element={<ViewOpportunities />}
+              />
+            </Route>
+            <Route element={<AdminRoute />}>
               <Route path="gallery/manage" element={<ManageGalleryPage />} />
-            </Route>            
-            <Route path="volunteering/opportunities/view"
-            element={<ViewOpportunities />} />
-
+              <Route
+                path="volunteering/opportunities/admin/new"
+                element={<NewVolunteeringOpportunity />}
+              />
+              <Route
+                path="volunteering/opportunities/admin/view"
+                element={<ViewOpportunitiesAdmin />}
+              />
+            </Route>
             <Route path="*" element={<p>Page Not Found</p>} />
           </Route>
         </Routes>
