@@ -10,12 +10,14 @@ import ManageGalleryPage from "./pages/ManageGalleryPage";
 import Contact from "@/pages/Contact";
 import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeringOpportunity";
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
+import ViewOpportunities from "@/pages/volunteering/viewOpportunities";
 import MapPage from "./pages/Map";
 import Calendar from "./components/Calendar";
 import AdminRoute from "@/routes/AdminRoute";
 import UserRoute from "./routes/UserRoute";
 import Signup from "./components/Authentication/Signup";
 import StaffDirectory from "./pages/StaffDirectory";
+import BookTicketsPage from "@/pages/BookTicketsPage";
 import Login from "./components/Authentication/Login";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
@@ -32,6 +34,7 @@ function App() {
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="/book-tickets" element={<BookTicketsPage />} />
             <Route path="signup" element={<Signup />} />
             <Route path="staff" element={<StaffDirectory />} />
             <Route path="login" element={<Login />} />
@@ -40,6 +43,10 @@ function App() {
             <Route path="reset-password/:token" element={<ResetPassword />} />
             <Route element={<UserRoute />}>
               <Route path="calendar" element={<Calendar />} />
+              <Route
+                path="volunteering/opportunities/view"
+                element={<ViewOpportunities />}
+              />
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="gallery/manage" element={<ManageGalleryPage />} />

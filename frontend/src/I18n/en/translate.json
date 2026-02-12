@@ -260,7 +260,7 @@
       "title": "Volunteering Opportunities",
       "columns": {
         "id": "ID",
-        "date": "Date",
+        "date": "Posted Date",
         "category": "Category",
         "description": "Description",
         "schedules": "Schedules",
