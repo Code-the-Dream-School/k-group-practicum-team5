@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { useTranslation } from "react-i18next";
 
 type DaySchedule = {
   day: string;
@@ -23,18 +24,19 @@ type BusinessHoursResponse = {
 };
 
 export default function BusinessHoursPanel() {
+  const { t } = useTranslation();
   const [data, setData] = useState<BusinessHoursResponse>({
     isClosed: false,
-    schedule:[],
+    schedule: [],
   });
 
   useEffect(() => {
     const fetchHours = async () => {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/business-hours`
+        `${import.meta.env.VITE_API_BASE_URL}/business-hours`,
       );
 
-      setData(res.data[0]); 
+      setData(res.data[0]);
     };
     fetchHours();
   }, []);
@@ -50,18 +52,19 @@ export default function BusinessHoursPanel() {
 
     if (index === -1) return data.schedule;
 
-    return [
-      ...data.schedule.slice(index),
-      ...data.schedule.slice(0, index),
-    ];
+    return [...data.schedule.slice(index), ...data.schedule.slice(0, index)];
   }, [data, today]);
 
   if (!data) return null;
 
   const todaySchedule = data.schedule.find((d) => d.day === today);
 
-  const isClosedToday =
-    todaySchedule?.open === "Closed" || data.isClosed;
+  const isClosedToday = todaySchedule?.open === "Closed" || data.isClosed;
+
+  const getDayLabel = (day: string) => {
+    const key = day.toLowerCase();
+    return t(`businessHours.days.${key}`, day);
+  };
 
   return (
     <Box sx={{ maxWidth: 240 }}>
@@ -69,21 +72,20 @@ export default function BusinessHoursPanel() {
         sx={{
           borderRadius: 3,
           boxShadow: 2,
-        //   bgcolor: "var(--zooLight)",
+          //   bgcolor: "var(--zooLight)",
         }}
       >
         {/* HEADER */}
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Box
-            display="flex"
-            gap={1}
-            alignItems="center"
-            width="100%"
-          >
+          <Box display="flex" gap={1} alignItems="center" width="100%">
             <AccessTimeIcon fontSize="small" />
 
             <Chip
-              label={isClosedToday ? "CLOSED" : "OPEN NOW"}
+              label={
+                isClosedToday
+                  ? t("businessHours.status.closedNow")
+                  : t("businessHours.status.openNow")
+              }
               color={isClosedToday ? "error" : "success"}
               size="small"
               sx={{ fontWeight: 700 }}
@@ -92,8 +94,8 @@ export default function BusinessHoursPanel() {
         </AccordionSummary>
 
         {/* DROPDOWN LIST */}
-        <AccordionDetails sx={{pt:0}}>
-            {orderedSchedule.map((item) => {
+        <AccordionDetails sx={{ pt: 0 }}>
+          {orderedSchedule.map((item) => {
             const isToday = item.day === today;
 
             return (
@@ -111,16 +113,16 @@ export default function BusinessHoursPanel() {
                 }}
               >
                 <Typography fontSize="inherit" fontWeight={isToday ? 700 : 400}>
-                  {item.day}
+                  {getDayLabel(item.day)}
                 </Typography>
 
                 <Typography fontSize="inherit" fontWeight={isToday ? 700 : 400}>
                   {item.open === "Closed"
-                    ? "Closed"
+                    ? t("businessHours.status.closed")
                     : `${item.open} – ${item.close}`}
-              </Typography>
-            </Box>
-            )
+                </Typography>
+              </Box>
+            );
           })}
         </AccordionDetails>
       </Accordion>

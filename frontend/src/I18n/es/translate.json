@@ -1,0 +1,389 @@
+{
+  "translations": {
+    "header": {
+      "siteTitle": "Reptile Zoo",
+      "home": "Inicio",
+      "education": "Educación",
+      "gallery": "Galería",
+      "volunteer": "Voluntariado",
+      "calendar": "Calendario",
+      "getTickets": "Comprar entradas"
+    },
+    "footer": {
+      "about": "Descubre el fascinante mundo de los reptiles. Educación, conservación y asombro en cada rincón.",
+      "quickLinks": "Enlaces rápidos",
+      "contact": "Contacto",
+      "hours": "Lun–Vie: 9:00 – 17:00",
+      "copyright": "© 2025 The Reptile Zoo. Todos los derechos reservados. Descubre lo salvaje en tu interior."
+    },
+    "map": {
+      "title": "Mapa del zoo",
+      "description": "Encuentra fácilmente el camino al Reptile Zoo usando el mapa interactivo a continuación.",
+      "interactive": {
+        "placeholder": "Introduce tu dirección",
+        "cta": "Cómo llegar",
+        "loading": "Cargando...",
+        "addressNotFound": "Dirección no encontrada.",
+        "fetchFailed": "No se pudo obtener la ubicación.",
+        "popup": "Reptile Zoo"
+      }
+    },
+    "nav": {
+      "home": "Inicio",
+      "media": "Multimedia",
+      "gallery": "Galería",
+      "staff": "Nuestro equipo",
+      "contact": "Contacto",
+      "map": "Mapa",
+      "signup": "Registro",
+      "login": "Iniciar sesión",
+      "calendar": "Calendario",
+      "joinVolunteer": "Hazte voluntario",
+      "logout": "Cerrar sesión",
+      "manageGallery": "Gestionar galería",
+      "newOpportunity": "Nueva oportunidad",
+      "volunteerOpportunities": "Oportunidades de voluntariado",
+      "manageCalendar": "Gestionar calendario"
+    },
+    "galleryManage": {
+      "title": "Gestionar galería",
+      "addAria": "Añadir nueva imagen",
+      "deleteAria": "Eliminar imagen",
+      "addFailed": "Error al añadir: {{error}}",
+      "addSuccess": "Imagen añadida correctamente",
+      "deleteFailed": "Error al eliminar: {{error}}",
+      "deleteSuccess": "Imagen eliminada correctamente",
+      "loadFailed": "No se pudieron cargar las imágenes",
+      "noImages": "No se encontraron imágenes",
+      "noMore": "No hay más imágenes para cargar"
+    },
+    "gallery": {
+      "title": "Galería",
+      "filter": "Filtro: \"{{query}}\""
+    },
+    "contact": {
+      "title": "Contacto",
+      "subtitle": "¿Tienes preguntas sobre visitas, eventos o voluntariado? Estaremos encantados de ayudarte.",
+      "success": "¡Mensaje enviado correctamente!",
+      "send": "Enviar mensaje",
+      "fields": {
+        "name": "Nombre completo",
+        "email": "Correo electrónico",
+        "message": "Tu mensaje..."
+      },
+      "categories": {
+        "general": "General",
+        "parties": "Fiestas",
+        "volunteers": "Voluntariado",
+        "education": "Educación",
+        "other": "Otro"
+      }
+    },
+    "calendar": {
+      "title": "Calendario del zoo",
+      "legend": "Leyenda",
+      "daysWithEvents": "Días con eventos",
+      "zooClosed": "Zoo cerrado",
+      "specialHours": "Horario especial",
+      "zooOpen": "Zoo abierto",
+      "events": "Eventos",
+      "available": "Disponibles",
+      "tbd": "Por confirmar",
+      "addToCalendar": "Añadir al calendario",
+      "noEvents": "No hay eventos programados para este día."
+    },
+    "businessHours": {
+      "title": "Horario",
+      "status": {
+        "openNow": "ABIERTO AHORA",
+        "closedNow": "CERRADO",
+        "closed": "Cerrado"
+      },
+      "days": {
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo"
+      }
+    },
+    "contactInfo": {
+      "loading": "Cargando...",
+      "phone": "Teléfono",
+      "email": "Correo electrónico",
+      "address": "Dirección"
+    },
+    "table": {
+      "errorLoading": "Error al cargar los datos",
+      "noRows": "Sin filas"
+    },
+    "searchFilter": {
+      "placeholder": "Buscar imágenes",
+      "search": "Buscar",
+      "searching": "Buscando...",
+      "clear": "Borrar búsqueda"
+    },
+    "loadControls": {
+      "loadMore": "Cargar más",
+      "loadAll": "Cargar todo"
+    },
+    "imagesList": {
+      "loadError": "Se produjo un error al cargar las imágenes.",
+      "noMoreMatches": "No hay más imágenes que coincidan con el filtro",
+      "noMore": "No hay más imágenes para cargar",
+      "noImages": "No se encontraron imágenes"
+    },
+    "deleteImage": {
+      "title": "Eliminar imagen",
+      "message": "¿Seguro que quieres eliminar esta imagen?",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
+    "editImage": {
+      "success": "Imagen actualizada correctamente",
+      "saveFailed": "No se pudieron guardar los cambios",
+      "closeAria": "Cerrar",
+      "fields": {
+        "title": "Titulo",
+        "description": "Descripcion"
+      },
+      "placeholders": {
+        "title": "Introduce el titulo de la imagen",
+        "description": "Introduce la descripcion de la imagen"
+      },
+      "cancel": "Cancelar",
+      "save": "Guardar cambios"
+    },
+    "heroMedia": {
+      "alt": "Imagen principal de Reptile Zoo"
+    },
+    "hero": {
+      "location": "Monroe, Washington",
+      "title": "Un vistazo mas cercano a las criaturas mas fascinantes de la naturaleza",
+      "subtitle": "Acercate a reptiles extraordinarios con experiencias inmersivas y practicas.",
+      "cta": "Comprar entradas"
+    },
+    "featuredAttractions": {
+      "title": "Atracciones destacadas",
+      "subtitle": "Descubre especies raras, favoritos emblematicos y exhibiciones inolvidables que definen la experiencia de Reptile Zoo.",
+      "featured": "Destacado",
+      "endangered": "En peligro",
+      "venomous": "Venenoso",
+      "imageAlt": "{{name}} - {{species}}"
+    },
+    "forgotPassword": {
+      "title": "Olvidaste tu contraseña",
+      "subtitle": "Introduce tu correo electrónico registrado y te enviaremos un enlace para restablecer la contraseña.",
+      "success": "Si este correo existe, se ha enviado un enlace de restablecimiento.",
+      "failed": "No se pudo enviar el enlace de restablecimiento",
+      "fields": {
+        "email": "Correo electrónico"
+      },
+      "errors": {
+        "email": "Introduce un correo electrónico válido"
+      },
+      "submit": "Enviar enlace de restablecimiento",
+      "remember": "¿Recuerdas tu contraseña?",
+      "login": "Iniciar sesión",
+      "closeAria": "Cerrar",
+      "imageAlt": "Reptil"
+    },
+    "login": {
+      "title": "Iniciar sesion",
+      "prompt": "¿No tienes cuenta?",
+      "createAccount": "Crear cuenta",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "fields": {
+        "email": "Correo electrónico",
+        "password": "Contraseña"
+      },
+      "errors": {
+        "email": "Introduce un correo electrónico válido",
+        "password": "La contraseña debe tener al menos 6 caracteres"
+      },
+      "togglePassword": "Mostrar u ocultar contraseña",
+      "submit": "Iniciar sesión",
+      "success": "Inicio de sesión correcto",
+      "invalid": "Correo o contraseña incorrectos",
+      "failed": "No se pudo iniciar sesión",
+      "closeAria": "Cerrar",
+      "imageAlt": "Reptil"
+    },
+    "signup": {
+      "title": "Crear cuenta",
+      "already": "¿Ya tienes una cuenta?",
+      "login": "Iniciar sesión",
+      "fields": {
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "email": "Correo electrónico",
+        "password": "Contraseña"
+      },
+      "errors": {
+        "email": "Introduce un correo electrónico válido",
+        "password": "La contraseña debe tener al menos 6 caracteres"
+      },
+      "togglePassword": "Mostrar u ocultar contraseña",
+      "submit": "Registrarse",
+      "success": "Cuenta creada correctamente",
+      "failed": "Error al registrarse",
+      "closeAria": "Cerrar",
+      "imageAlt": "Reptil"
+    },
+    "resetPassword": {
+      "title": "Restablecer contrasena",
+      "subtitle": "Introduce tu nueva contrasena a continuacion.",
+      "success": "Contrasena restablecida correctamente. Ya puedes iniciar sesion.",
+      "invalidLink": "El enlace de restablecimiento no es valido o ha caducado",
+      "failed": "No se pudo restablecer la contrasena",
+      "fields": {
+        "newPassword": "Nueva contrasena",
+        "confirmPassword": "Confirmar contrasena"
+      },
+      "errors": {
+        "min": "Minimo 6 caracteres",
+        "mismatch": "Las contrasenas no coinciden"
+      },
+      "togglePassword": "Mostrar u ocultar contrasena",
+      "toggleConfirm": "Mostrar u ocultar confirmacion",
+      "submit": "Restablecer contrasena",
+      "backToLogin": "Volver a iniciar sesion",
+      "closeAria": "Cerrar",
+      "imageAlt": "Reptil"
+    },
+    "logout": {
+      "message": "Cerrando sesion..."
+    },
+    "volunteeringAdmin": {
+      "title": "Oportunidades de voluntariado",
+      "columns": {
+        "id": "ID",
+        "date": "Fecha",
+        "category": "Categoria",
+        "description": "Descripcion",
+        "schedules": "Horarios",
+        "slots": "Cupos"
+      },
+      "newOpportunity": {
+        "title": "Nueva oportunidad de voluntariado",
+        "saving": "Guardando...",
+        "success": "Oportunidad de voluntariado creada correctamente.",
+        "failed": "No se pudo crear la oportunidad de voluntariado.",
+        "alerts": {
+          "successTitle": "Exito",
+          "errorTitle": "Error"
+        },
+        "categoryLabel": "Categoria:",
+        "categoryPlaceholder": "Seleccionar categoria",
+        "descriptionTitle": "Descripcion",
+        "descriptionPlaceholder": "Describe la oportunidad de voluntariado...",
+        "schedulesTitle": "Horarios",
+        "labels": {
+          "date": "Fecha",
+          "startTime": "Hora de inicio",
+          "endTime": "Hora de fin",
+          "slots": "Cupos"
+        },
+        "save": "Guardar",
+        "reset": "Restablecer"
+      }
+    },
+    "tripadvisor": {
+      "title": "Destacados de clientes",
+      "subtitle": "Un vistazo rápido a lo que más les gusta a los visitantes. Para ver reseñas y valoraciones completas, visita Tripadvisor.",
+      "readReviews": "Leer reseñas en Tripadvisor",
+      "prevAria": "Reseña anterior",
+      "nextAria": "Siguiente reseña",
+      "starsAria": "{{count}} de 5",
+      "items": {
+        "h1": {
+          "title": "¡Una aventura salvaje en The Reptile Zoo!",
+          "quote": "The Reptile Zoo es, sin duda, un lugar para mentes curiosas y amantes de los animales. Al recorrer las exhibiciones, me sorprendieron las criaturas increíbles que tienen, especialmente el cocodrilo albino que parecía brillar bajo las luces y la fascinante serpiente de dos cabezas, que parecía salida de un documental de naturaleza.",
+          "meta": "Beyond Borders • Londres, Reino Unido"
+        },
+        "h2": {
+          "title": "Me ENCANTÓ The Reptile Zoo",
+          "quote": "Mi hijo de 13 años es un amante de los reptiles. Íbamos camino a Wenatchee y vimos el letrero de The Reptile Zoo, así que paramos a visitar. ¡Fue una JOYA! La diversidad de reptiles, el ambiente y el personal maravilloso que nos habló sobre tener reptiles, ¡insuperable! De vuelta a Seattle, mis hijos dijeron que volver a parar era imprescindible, y pasamos una segunda vez para una visita más larga. Nos gustó aún más. ¡Muy recomendable!",
+          "meta": "Valerie P • Lima, Perú"
+        },
+        "h3": {
+          "title": "Muy informativo",
+          "quote": "Este lugar es fascinante, con muchísimas criaturas diferentes para ver y aprender. Hay lagartos, un cocodrilo, un aligátor, tortugas, arañas y muchas serpientes. Me impresionó la gran cantidad de tipos de serpientes y la información sobre cada una. A mi nieto de 4 años le encantó poder ver tantas criaturas de cerca. Si tu hijo ha hablado alguna vez del hombre de los reptiles que va a su colegio, este es el tipo y estos son los reptiles (al menos algunos) que lleva.",
+          "meta": "Susana H • Tacoma, Washington"
+        },
+        "h4": {
+          "title": "Nos encantó este lugar",
+          "quote": "A los nietos les encantó este lugar; estaba limpio y los niños pudieron explorar y leer sobre cada reptil. El plexiglás era estupendo, podían ver sin problemas, y me encanta que pusieran nombre a cada reptil.",
+          "meta": "mo'opuna's • 1 contribución"
+        }
+      }
+    },
+    "staff": {
+      "title": "Directorio del personal",
+      "subtitle": "¿Tienes preguntas sobre visitas, eventos o voluntariado? Estaremos encantados de ayudarte.",
+      "search": "Buscar por nombre",
+      "department": "Departamento",
+      "departments": {
+        "all": "Todos",
+        "animals": "Animales",
+        "education": "Educación",
+        "guestServices": "Atención al visitante",
+        "management": "Dirección",
+        "maintenance": "Mantenimiento",
+        "eventAssistance": "Asistencia en eventos"
+      }
+    },
+    "videos": {
+      "subscribe": "Suscríbete a The Reptile Zoo",
+      "empty": "Parece que esta galería aún no tiene vídeos",
+      "items": {
+        "1": {
+          "title": "Mamba negra",
+          "description": "La serpiente más rápida y mortal del mundo, la mamba negra"
+        },
+        "2": {
+          "title": "Cobra real",
+          "description": "La cobra más grande del mundo, la cobra real"
+        },
+        "3": {
+          "title": "Serpientes de cascabel",
+          "description": "Serpiente de cascabel diamante oriental y serpiente de cascabel del Pacífico norte"
+        },
+        "4": {
+          "title": "Mamba negra",
+          "description": "La mamba negra ataca a cámara lenta"
+        },
+        "5": {
+          "title": "Aligátor albino",
+          "description": "El equipo de Reptile Zoo traslada al raro aligátor americano albino, Baskar, a su nuevo recinto."
+        },
+        "6": {
+          "title": "Víbora gabón",
+          "description": "Mira a la #2 serpiente más mortal, con los colmillos más grandes del mundo, la víbora gabón, tragarse su comida..."
+        },
+        "7": {
+          "title": "Mamba negra",
+          "description": "La serpiente más mortal del mundo muestra sus colmillos."
+        },
+        "8": {
+          "title": "Serpiente de cascabel",
+          "description": "The Reptile Man se acerca a una de las pocas serpientes de cascabel nativas del noroeste del Pacífico."
+        },
+        "9": {
+          "title": "Aligátor americano",
+          "description": "The Reptile Man le cepilla los dientes a Barnabus y luego le da un premio..."
+        },
+        "10": {
+          "title": "Baskar brama",
+          "description": "Los aligátores americanos, Baskar y Barnabus, braman el uno al otro antes de alimentarse de roedores."
+        },
+        "11": {
+          "title": "Anaconda verde",
+          "description": "El equipo de Reptile Zoo traslada a la enorme anaconda a su nuevo recinto."
+        }
+      }
+    }
+  }
+}

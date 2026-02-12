@@ -1,17 +1,20 @@
 import { Box, Typography } from "@mui/material";
-import { navItems, adminNavItems } from "./navConfig";
+import { navItems, adminNavItems, LoggedNavItems } from "./navConfig";
 import { useAuth } from "@/hooks/useAuth";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function QuickLinks() {
-  const { isAdmin } = useAuth();
-  const items = isAdmin ? adminNavItems : navItems;
+  const { user, isAdmin } = useAuth();
+  const { t } = useTranslation();
+  const items =
+    user && isAdmin ? adminNavItems : user ? LoggedNavItems : navItems;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-      {items.map(({ label, path }) => (
+      {items.map(({ labelKey, path }) => (
         <Typography
-          key={label}
+          key={labelKey}
           component={NavLink}
           to={path}
           variant="body2"
@@ -24,7 +27,7 @@ function QuickLinks() {
             "&.active": { fontWeight: 700, opacity: 1 },
           }}
         >
-          {label}
+          {t(labelKey)}
         </Typography>
       ))}
     </Box>

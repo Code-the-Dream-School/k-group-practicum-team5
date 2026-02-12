@@ -19,12 +19,14 @@ import DeleteImageDialog from "../components/GalleryImages/DeleteImageDialog";
 import EditImageModal from "../components/GalleryImages/manage/EditImageModal";
 import { useGallery } from "../hooks";
 import type { Image } from "@/types";
+import { useTranslation } from "react-i18next";
 
 const ITEMS_PER_PAGE = 12;
 const BATCH_SIZE = 100;
 const MESSAGE_DURATION = 2000;
 
 const ManageGalleryPage = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -99,9 +101,9 @@ const ManageGalleryPage = () => {
     await addImage(formData);
 
     if (addError) {
-      showMessage(`Add failed: ${addError}`, true);
+      showMessage(t("galleryManage.addFailed", { error: addError }), true);
     } else {
-      showMessage("Image added successfully");
+      showMessage(t("galleryManage.addSuccess"));
       loadImages();
     }
 
@@ -116,9 +118,12 @@ const ManageGalleryPage = () => {
     await removeImage(deleteTargetId);
 
     if (removeError) {
-      showMessage(`Delete failed: ${removeError}`, true);
+      showMessage(
+        t("galleryManage.deleteFailed", { error: removeError }),
+        true,
+      );
     } else {
-      showMessage("Image deleted successfully");
+      showMessage(t("galleryManage.deleteSuccess"));
       loadImages();
     }
 
@@ -135,7 +140,7 @@ const ManageGalleryPage = () => {
   }
 
   if (isError) {
-    return <ErrorAlert message={error || "Failed to load images"} />;
+    return <ErrorAlert message={error || t("galleryManage.loadFailed")} />;
   }
 
   return (
@@ -149,7 +154,7 @@ const ManageGalleryPage = () => {
       }}
     >
       <Box sx={{ textAlign: { xs: "left", sm: "center" }, my: 2 }}>
-        <SectionHeading title="Manage Gallery" />
+        <SectionHeading title={t("galleryManage.title")} />
       </Box>
 
       <input
@@ -176,7 +181,7 @@ const ManageGalleryPage = () => {
           },
         }}
         onClick={() => fileInputRef.current?.click()}
-        aria-label="Add new image"
+        aria-label={t("galleryManage.addAria")}
       >
         <AddPhotoAlternateIcon fontSize="large" />
       </IconButton>
@@ -215,7 +220,7 @@ const ManageGalleryPage = () => {
               p: 3,
             }}
           >
-            <InfoAlert message="No images found" />
+            <InfoAlert message={t("galleryManage.noImages")} />
           </Box>
         ) : (
           <>
@@ -256,7 +261,7 @@ const ManageGalleryPage = () => {
                       e.stopPropagation(); //not trigger parent onClick event
                       setDeleteTargetId(image.publicId);
                     }}
-                    aria-label="Delete image"
+                    aria-label={t("galleryManage.deleteAria")}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -275,7 +280,7 @@ const ManageGalleryPage = () => {
 
             {!hasMoreImages && (
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <InfoAlert message="No more images to load" />
+                <InfoAlert message={t("galleryManage.noMore")} />
               </Box>
             )}
           </>

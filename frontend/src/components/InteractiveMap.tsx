@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import { useTranslation } from "react-i18next";
 
 const ZOO_LOCATION: [number, number] = [47.8554, -121.9706];
 
@@ -30,6 +31,7 @@ function Routing({ destination }: { destination: [number, number] | null }) {
 }
 
 export default function InteractiveMap() {
+  const { t } = useTranslation();
   const [address, setAddress] = useState("");
   const [destination, setDestination] = useState<[number, number] | null>(null);
   const [loading, setLoading] = useState(false);
@@ -44,18 +46,18 @@ export default function InteractiveMap() {
 
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          address
-        )}`
+          address,
+        )}`,
       );
       const data = await res.json();
 
       if (data.length > 0) {
         setDestination([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
       } else {
-        setError("Address not found.");
+        setError(t("map.interactive.addressNotFound"));
       }
     } catch {
-      setError("Failed to fetch location.");
+      setError(t("map.interactive.fetchFailed"));
     } finally {
       setLoading(false);
     }
@@ -66,7 +68,7 @@ export default function InteractiveMap() {
       <div className="flex gap-2">
         <input
           type="text"
-          placeholder="Enter your address"
+          placeholder={t("map.interactive.placeholder")}
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           className="border p-2 rounded w-full"
@@ -75,7 +77,7 @@ export default function InteractiveMap() {
           onClick={geocodeAddress}
           className="bg-zooGreen text-white px-4 py-2 rounded"
         >
-          {loading ? "Loading..." : "Get Directions"}
+          {loading ? t("map.interactive.loading") : t("map.interactive.cta")}
         </button>
       </div>
 
@@ -93,7 +95,7 @@ export default function InteractiveMap() {
         />
 
         <Marker position={ZOO_LOCATION}>
-          <Popup>Reptile Zoo</Popup>
+          <Popup>{t("map.interactive.popup")}</Popup>
         </Marker>
 
         {destination && <Routing destination={destination} />}

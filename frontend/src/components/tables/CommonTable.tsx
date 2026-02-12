@@ -3,8 +3,10 @@ import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import type { CommonTableProps } from "@/types/volunteering/CommonTableProps.type";
 import { commonTableSx } from "./CommonTable.styles.ts";
+import { useTranslation } from "react-i18next";
 
 const CommonTable = ({ fetchRows, columns }: CommonTableProps) => {
+  const { t } = useTranslation();
   const [rows, setRows] = useState<object[]>([]);
   const [fetchError, setFetchError] = useState(false);
 
@@ -27,17 +29,18 @@ const CommonTable = ({ fetchRows, columns }: CommonTableProps) => {
     <Paper>
       <DataGrid
         rows={rows}
-        // hideFooterPagination
         getRowId={(row) => row.id ?? row._id}
         columns={columns}
-        initialState={{ pagination: { paginationModel }, columns: { columnVisibilityModel } }}
-        // initialState={{  columns: { columnVisibilityModel } }}
-        pageSizeOptions={[5,  10, 25, 50]}
+        initialState={{
+          pagination: { paginationModel },
+          columns: { columnVisibilityModel },
+        }}
+        pageSizeOptions={[5, 10, 25, 50]}
         disableRowSelectionOnClick
         slots={{
           noRowsOverlay: () => (
-            <div className='h-full text-red-400 flex justify-center items-center'>
-              {fetchError ? "Error loading data" : "No rows"}
+            <div className="h-full text-red-400 flex justify-center items-center">
+              {fetchError ? t("table.errorLoading") : t("table.noRows")}
             </div>
           ),
         }}

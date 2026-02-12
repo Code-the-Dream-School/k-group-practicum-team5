@@ -18,6 +18,7 @@ import axios from "axios";
 import { resetPasswordApi } from "@/api/apiResetPassword";
 import reptileImage from "@/assets/logo/reptile4.webp";
 import BasicAlert from "../alert/BasicAlert";
+import { useTranslation } from "react-i18next";
 
 interface ResetPasswordForm {
   password: string;
@@ -25,6 +26,7 @@ interface ResetPasswordForm {
 }
 
 const ResetPassword = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
 
@@ -77,7 +79,7 @@ const ResetPassword = () => {
 
       await resetPasswordApi(token, formData.password);
       setAlert({
-        message: "Password reset successful. You can now login.",
+        message: t("resetPassword.success"),
         severity: "success",
       });
 
@@ -86,12 +88,12 @@ const ResetPassword = () => {
       if (axios.isAxiosError(err)) {
         setAlert({
           message:
-            err.response?.data?.message || "Reset link is invalid or expired",
+            err.response?.data?.message || t("resetPassword.invalidLink"),
           severity: "error",
         });
       } else {
         setAlert({
-          message: "Failed to reset password",
+          message: t("resetPassword.failed"),
           severity: "error",
         });
       }
@@ -121,6 +123,7 @@ const ResetPassword = () => {
         <IconButton
           onClick={handleClose}
           sx={{ position: "absolute", top: 12, right: 12 }}
+          aria-label={t("resetPassword.closeAria")}
         >
           <CloseIcon />
         </IconButton>
@@ -134,11 +137,11 @@ const ResetPassword = () => {
           }}
         >
           <Typography variant="h4" color="primary" mb={2}>
-            Reset Password
+            {t("resetPassword.title")}
           </Typography>
 
           <Typography variant="h6" color="secondary" mb={3}>
-            Enter your new password below.
+            {t("resetPassword.subtitle")}
           </Typography>
 
           {alert && (
@@ -147,7 +150,7 @@ const ResetPassword = () => {
 
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
-              label="New Password"
+              label={t("resetPassword.fields.newPassword")}
               name="password"
               type={showPassword ? "text" : "password"}
               fullWidth
@@ -156,7 +159,7 @@ const ResetPassword = () => {
               value={formData.password}
               onChange={handleChange}
               error={errors.password}
-              helperText={errors.password && "Minimum 6 characters"}
+              helperText={errors.password && t("resetPassword.errors.min")}
               slotProps={{
                 input: {
                   endAdornment: (
@@ -164,6 +167,7 @@ const ResetPassword = () => {
                       <IconButton
                         onClick={() => setShowPassword((p) => !p)}
                         edge="end"
+                        aria-label={t("resetPassword.togglePassword")}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -174,7 +178,7 @@ const ResetPassword = () => {
             />
 
             <TextField
-              label="Confirm Password"
+              label={t("resetPassword.fields.confirmPassword")}
               name="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
               fullWidth
@@ -183,7 +187,9 @@ const ResetPassword = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               error={errors.confirmPassword}
-              helperText={errors.confirmPassword && "Passwords do not match"}
+              helperText={
+                errors.confirmPassword && t("resetPassword.errors.mismatch")
+              }
               slotProps={{
                 input: {
                   endAdornment: (
@@ -191,6 +197,7 @@ const ResetPassword = () => {
                       <IconButton
                         onClick={() => setShowConfirmPassword((p) => !p)}
                         edge="end"
+                        aria-label={t("resetPassword.toggleConfirm")}
                       >
                         {showConfirmPassword ? (
                           <VisibilityOff />
@@ -211,7 +218,11 @@ const ResetPassword = () => {
               sx={{ mt: 3 }}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={22} /> : "Reset Password"}
+              {loading ? (
+                <CircularProgress size={22} />
+              ) : (
+                t("resetPassword.submit")
+              )}
             </Button>
           </Box>
 
@@ -222,7 +233,7 @@ const ResetPassword = () => {
               color="secondary"
               fontWeight={600}
             >
-              Back to Login
+              {t("resetPassword.backToLogin")}
             </Link>
           </Typography>
         </CardContent>
@@ -237,7 +248,7 @@ const ResetPassword = () => {
           <Box
             component="img"
             src={reptileImage}
-            alt="Reptile"
+            alt={t("resetPassword.imageAlt")}
             sx={{
               width: "100%",
               height: "100%",

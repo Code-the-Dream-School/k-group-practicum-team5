@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import reptileImage from "@/assets/logo/reptile3.jpg";
 import { forgotPasswordApi } from "@/api/apiForgotPassword";
@@ -23,6 +24,7 @@ interface ForgotPasswordForm {
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState<ForgotPasswordForm>({
     email: "",
@@ -64,18 +66,18 @@ const ForgotPassword = () => {
       await forgotPasswordApi(formData.email);
 
       setAlert({
-        message: "If this email exists, a reset link has been sent.",
+        message: t("forgotPassword.success"),
         severity: "success",
       });
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setAlert({
-          message: err.response?.data?.message || "Something went wrong",
+          message: err.response?.data?.message || t("forgotPassword.failed"),
           severity: "error",
         });
       } else {
         setAlert({
-          message: "Failed to send reset link",
+          message: t("forgotPassword.failed"),
           severity: "error",
         });
       }
@@ -105,6 +107,7 @@ const ForgotPassword = () => {
         <IconButton
           onClick={handleClose}
           sx={{ position: "absolute", top: 12, right: 12, zIndex: 1 }}
+          aria-label={t("forgotPassword.closeAria")}
         >
           <CloseIcon />
         </IconButton>
@@ -118,12 +121,11 @@ const ForgotPassword = () => {
           }}
         >
           <Typography variant="h4" color="primary" mb={2}>
-            Forgot Password
+            {t("forgotPassword.title")}
           </Typography>
 
           <Typography variant="h6" color="secondary" mb={3}>
-            Enter your registered email address and we’ll send you a password
-            reset link.
+            {t("forgotPassword.subtitle")}
           </Typography>
 
           {alert && (
@@ -132,7 +134,7 @@ const ForgotPassword = () => {
 
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
-              label="Email"
+              label={t("forgotPassword.fields.email")}
               name="email"
               type="email"
               fullWidth
@@ -142,7 +144,7 @@ const ForgotPassword = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               error={error}
-              helperText={error && "Enter a valid email address"}
+              helperText={error && t("forgotPassword.errors.email")}
             />
 
             <Button
@@ -152,19 +154,23 @@ const ForgotPassword = () => {
               sx={{ mt: 3 }}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={22} /> : "Send Reset Link"}
+              {loading ? (
+                <CircularProgress size={22} />
+              ) : (
+                t("forgotPassword.submit")
+              )}
             </Button>
           </Box>
 
           <Typography variant="h5" color="primary" mt={4}>
-            Remember your password?{" "}
+            {t("forgotPassword.remember")}{" "}
             <Link
               component={RouterLink}
               to="/login"
               color="secondary"
               sx={{ fontWeight: 600 }}
             >
-              Login
+              {t("forgotPassword.login")}
             </Link>
           </Typography>
         </CardContent>
@@ -179,7 +185,7 @@ const ForgotPassword = () => {
           <Box
             component="img"
             src={reptileImage}
-            alt="Reptile"
+            alt={t("forgotPassword.imageAlt")}
             sx={{
               width: "100%",
               height: "100%",
