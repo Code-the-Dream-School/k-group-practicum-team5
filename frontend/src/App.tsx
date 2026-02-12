@@ -12,7 +12,8 @@ import NewVolunteeringOpportunity from "@/pages/volunteering/admin/NewVolunteeri
 import ViewOpportunitiesAdmin from "@/pages/volunteering/admin/ViewOpportunitiesAdmin";
 import MapPage from "./pages/Map";
 import Calendar from "./components/Calendar";
-import ProtectedRoute from "@/routes/ProtectedRoute";
+import AdminRoute from "@/routes/AdminRoute";
+import UserRoute from "./routes/UserRoute";
 import Signup from "./components/Authentication/Signup";
 import StaffDirectory from "./pages/StaffDirectory";
 import Login from "./components/Authentication/Login";
@@ -37,9 +38,11 @@ function App() {
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password/:token" element={<ResetPassword />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="gallery/manage" element={<ManageGalleryPage />} />
+            <Route element={<UserRoute />}>
               <Route path="calendar" element={<Calendar />} />
+            </Route>
+            <Route element={<AdminRoute />}>
+              <Route path="gallery/manage" element={<ManageGalleryPage />} />
               <Route
                 path="volunteering/opportunities/admin/new"
                 element={<NewVolunteeringOpportunity />}
