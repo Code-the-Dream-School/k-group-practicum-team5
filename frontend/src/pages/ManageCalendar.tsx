@@ -4,44 +4,71 @@ import axios from "axios";
 import { Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Stack, Button, MenuItem, Alert,  Typography } from "@mui/material";
 import Calendar from "@/components/Calendar";
 import { useAdminCalendar } from "@/hooks/useAdminCalendar";
-import type { Event } from "@/types/calendar.types";
+import type { Event, OpeningDay } from "@/types/calendar.types";
 import {useAuth} from "@/hooks/useAuth";
 import BasicAlert from "@/components/alert/BasicAlert";
+import { formatUTCDateToLocal } from "@/utils/utilDate";
  import dayjs from "dayjs";
 
 export default function ManageCalendar() {
   const { isAdmin, token} = useAuth();
   const [open, setOpen] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
+  const [openingDays, setOpeningDays] = useState<OpeningDay[]>([]);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState<
     "success" | "info" | "warning" | "error"
   >("success");
   const [showAlert, setShowAlert] = useState(false);
-  const { createEvent, updateEvent, deleteEvent } = useAdminCalendar();
+  const { createEvent, updateEvent, deleteEvent, createOpeningDay, updateOpeningDay } = useAdminCalendar();
   type EventForm = Partial<Omit<Event, "_id" | "createdAt">>;
 
   const [form, setForm] = useState<EventForm >({});
   const [formError, setFormError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      if (!isAdmin ||!token) return null;
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/events`,
+  const fetchOpeningDays = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/calendar/opening-days`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-        );
-        setEvents(res.data);
+      );
+      setOpeningDays(res.data);
+    } catch (error) {
+      console.error("Error fetching opening days:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!isAdmin ||!token) return null;
+      try {
+        const [eventsRes, openingDaysRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/events`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          ),
+          axios.get(`${import.meta.env.VITE_API_BASE_URL}/calendar/opening-days`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+        ]);
+        setEvents(eventsRes.data);
+        setOpeningDays(openingDaysRes.data);
       } catch (error) {
         console.error(error);
       }
     };
-    fetchEvents();
+    fetchData();
   }, [isAdmin,token]);
 
   const isPastOrYesterday = (dateStr: string) => {
@@ -49,6 +76,14 @@ export default function ManageCalendar() {
     const today = dayjs().startOf("day");
     return selected.isBefore(today); 
   };
+
+  const isZooClosed = (dateStr: string) => {
+    const openingDay = openingDays.find(
+      (od) => formatUTCDateToLocal(od.date) === dateStr
+    );
+    return openingDay ? !openingDay.isOpen : false;
+  };
+
   const handleTimeChange =
   (field: "startTime" | "endTime") =>
   (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +95,11 @@ export default function ManageCalendar() {
     if (isPastOrYesterday(date)) {
     setFormError("Cannot create an event for past dates.");
     return;
-    } 
+    }
+    if (isZooClosed(date)) {
+      setFormError("Cannot create an event on a day when the zoo is closed.");
+      return;
+    }
     setEditingEvent(null);
      setForm({ date });
     setFormError(null);
@@ -119,16 +158,45 @@ export default function ManageCalendar() {
     }
   };
 
+  const handleUpdateZooStatus = async (date: string, isOpen: boolean, openingDayId?: string) => {
+    try {
+      if (openingDayId) {
+        // Update existing opening day
+        await updateOpeningDay(openingDayId, { isOpen });
+      } else {
+        // Create new opening day
+        await createOpeningDay({ date, isOpen });
+      }
+      // Refetch opening days to update calendar
+      await fetchOpeningDays();
+      
+      setAlertMessage(
+        isOpen
+          ? "Zoo marked as Open for this date!"
+          : "Zoo marked as Closed for this date!"
+      );
+      setAlertSeverity("success");
+      setShowAlert(true);
+    } catch (err) {
+      console.error(err);
+      setAlertMessage("Failed to update zoo status.");
+      setAlertSeverity("error");
+      setShowAlert(true);
+    }
+  };
+
 
   return (
     <Box>
        {showAlert && <BasicAlert message={alertMessage} severity={alertSeverity} />}
       <Calendar
         events={events}
+        openingDays={openingDays}
         isAdmin = {true}
         onCreateEvent={handleCreate}
         onEditEvent={handleEdit}
         onDeleteEvent={handleDeleteEvent}
+        onUpdateZooStatus={handleUpdateZooStatus}
       />
 
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth>

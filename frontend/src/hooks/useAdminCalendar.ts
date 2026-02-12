@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import useRequest from "./useRequest";
 import { adminCalendarApi } from "@/api/apiAdminCalendar";
-import type { Event } from "@/types/calendar.types";
+import type { Event, OpeningDay } from "@/types/calendar.types";
 
 export const useAdminCalendar = () => {
   const { run, isLoading, isError, error } = useRequest();
@@ -24,10 +24,31 @@ export const useAdminCalendar = () => {
     [run]
   );
 
+  const createOpeningDay = useCallback(
+    (data: Partial<OpeningDay>) =>
+      run(() => adminCalendarApi.createOpeningDay(data)),
+    [run]
+  );
+
+  const updateOpeningDay = useCallback(
+    (id: string, data: Partial<OpeningDay>) =>
+      run(() => adminCalendarApi.updateOpeningDay(id, data)),
+    [run]
+  );
+
+  const deleteOpeningDay = useCallback(
+    (id: string) =>
+      run(() => adminCalendarApi.deleteOpeningDay(id)),
+    [run]
+  );
+
   return {
     createEvent,
     updateEvent,
     deleteEvent,
+    createOpeningDay,
+    updateOpeningDay,
+    deleteOpeningDay,
     isLoading,
     isError,
     error,

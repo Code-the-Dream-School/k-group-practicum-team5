@@ -5,10 +5,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import type { PickersDayProps } from "@mui/x-date-pickers/PickersDay";
-import { Box, CircularProgress, Typography, Paper, Chip, Button} from "@mui/material";
+import { Box, CircularProgress, Typography, Paper, Chip, Button, ToggleButton, ToggleButtonGroup} from "@mui/material";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
-import { formatDate } from "../utils/utilDate";
+import { formatDate, formatUTCDateToLocal } from "../utils/utilDate";
 import { downloadICS } from "../utils/addToCalendar";
 import { useCalendar } from "../hooks/useCalendar";
 import type { MonthData, Event, OpeningDay } from "../types/calendar.types";
@@ -20,7 +20,9 @@ interface CalendarProps {
   onEditEvent?: (event: Event) => void;
   onCreateEvent?: (date: string) => void;
   onDeleteEvent?: (eventId: string) => void;
-  events?: Event[];  
+  onUpdateZooStatus?: (date: string, isOpen: boolean, openingDayId?: string) => void;
+  events?: Event[];
+  openingDays?: OpeningDay[];
 }
 
 export default function Calendar({
@@ -28,7 +30,9 @@ export default function Calendar({
   onEditEvent,
   onCreateEvent,
   onDeleteEvent,
+  onUpdateZooStatus,
   events = [],
+  openingDays = [],
 }: CalendarProps) {
   const theme = useTheme();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
@@ -55,12 +59,21 @@ export default function Calendar({
     fetchData();
   }, [year, month, getMonthData]);
 
+  const mergedOpeningDays = useMemo(() => {
+    // Use openingDays prop if available (from ManageCalendar), otherwise use monthData.openingDays
+    return openingDays.length > 0 ? openingDays : monthData.openingDays;
+  }, [openingDays, monthData.openingDays]);
+
   const eventDaysSet = useMemo(() => {
     const source = isAdmin ? events : monthData.events;
-    return new Set(source.map(e => formatDate(e.date)));
+    return new Set(source.map(e => formatUTCDateToLocal(e.date)));
 
   }, [isAdmin, events, monthData.events]);
 
+  const isPastDate = (day: Dayjs): boolean => {
+    const today = dayjs().startOf("day");
+    return day.startOf("day").isBefore(today);
+  };
 
   const hasEventsOnDay = (day: Dayjs): boolean => {
     if (!monthData) return false;
@@ -68,19 +81,17 @@ export default function Calendar({
   };
 
   const isClosedOnDay = (day: Dayjs): boolean => {
-    if (!monthData) return false;
     const dayStr = formatDate(day);
-    const openingDay = monthData.openingDays.find(
-      (od: OpeningDay) => formatDate(od.date) === dayStr,
+    const openingDay = mergedOpeningDays.find(
+      (od: OpeningDay) => formatUTCDateToLocal(od.date) === dayStr,
     );
     return openingDay ? !openingDay.isOpen : false;
   };
 
   const hasSpecialHours = (day: Dayjs): boolean => {
-    if (!monthData) return false;
     const dayStr = formatDate(day);
-    const openingDay = monthData.openingDays.find(
-     (od: OpeningDay) => formatDate(od.date) === dayStr,
+    const openingDay = mergedOpeningDays.find(
+     (od: OpeningDay) => formatUTCDateToLocal(od.date) === dayStr,
     );
     return openingDay?.specialHours ? true : false;
   };
@@ -113,7 +124,8 @@ export default function Calendar({
         {...other}
         day={day}
         onClick = {() => {
-          if(isAdmin && onCreateEvent ){
+          const isClosed = isClosedOnDay(day as Dayjs);
+          if(isAdmin && onCreateEvent && !isClosed){
             onCreateEvent(day.format("YYYY-MM-DD"));
           }
         }}
@@ -121,8 +133,10 @@ export default function Calendar({
         sx={{
           backgroundColor,
           fontWeight: hasEvents || isClosed || specialHours ? "bold" : "normal",
+          cursor: (isAdmin && isClosed) ? "pointer" : (isClosed ? "not-allowed" : "pointer"),
+          opacity: (!isAdmin && isClosed) ? 0.6 : 1,
           "&:hover": {
-            backgroundColor: hoverColor,
+            backgroundColor: (!isAdmin && isClosed) ? backgroundColor : hoverColor,
           },
           "&.Mui-selected": {
             backgroundColor: `${backgroundColor} !important`,
@@ -137,12 +151,12 @@ export default function Calendar({
 
   const eventsOnSelectedDay = eventSource.filter(
     event =>
-        formatDate(event.date) === formatDate(selectedDate)
+        formatUTCDateToLocal(event.date) === formatDate(selectedDate)
   );
 
 
-  const openingDayInfo = (monthData?.openingDays ?? []).find(
-     (od) => formatDate(od.date) === formatDate(selectedDate),
+  const openingDayInfo = mergedOpeningDays.find(
+     (od) => formatUTCDateToLocal(od.date) === formatDate(selectedDate),
   );
 
   return (
@@ -237,13 +251,56 @@ export default function Calendar({
               <Typography variant="h6" gutterBottom>
                 {selectedDate.format("MMMM D, YYYY")}
               </Typography>
-              {openingDayInfo && (
+              {openingDayInfo ? (
                 <Box sx={{ mb: 2 }}>
                   <Chip
                     label={openingDayInfo.isOpen ? "Zoo Open" : "Zoo Closed"}
                     color={openingDayInfo.isOpen ? "success" : "error"}
                     sx={{ mb: 1 }}
                   />
+                  {isAdmin && (
+                    <Box sx={{ mb: 1 }}>
+                      <ToggleButtonGroup
+                        value={openingDayInfo.isOpen ? "open" : "closed"}
+                        exclusive
+                        onChange={(event, newValue) => {
+                          if (newValue !== null) {
+                            onUpdateZooStatus?.(
+                              formatDate(selectedDate),
+                              newValue === "open",
+                              openingDayInfo._id
+                            );
+                          }
+                        }}
+                        size="small"
+                      >
+                        <ToggleButton value="open" sx={{ 
+                          color: "success.main",
+                          "&.Mui-selected": {
+                            backgroundColor: "success.light",
+                            color: "success.dark",
+                            "&:hover": {
+                              backgroundColor: "success.light"
+                            }
+                          }
+                        }}>
+                          Open
+                        </ToggleButton>
+                        <ToggleButton value="closed" sx={{ 
+                          color: "error.main",
+                          "&.Mui-selected": {
+                            backgroundColor: "error.light",
+                            color: "error.dark",
+                            "&:hover": {
+                              backgroundColor: "error.light"
+                            }
+                          }
+                        }}>
+                          Closed
+                        </ToggleButton>
+                      </ToggleButtonGroup>
+                    </Box>
+                  )}
                   {openingDayInfo.specialHours && (
                     <Typography variant="body2" color="text.secondary">
                       Special Hours: {openingDayInfo.specialHours.openTime} -{" "}
@@ -258,6 +315,56 @@ export default function Calendar({
                     >
                       {openingDayInfo.notes}
                     </Typography>
+                  )}
+                </Box>
+              ) : (
+                <Box sx={{ mb: 2 }}>
+                  <Chip
+                    label="Zoo Open"
+                    color="success"
+                    sx={{ mb: 1 }}
+                  />
+                  {isAdmin && !isPastDate(selectedDate) && (
+                    <Box sx={{ mb: 1, mt: 1 }}>
+                      <ToggleButtonGroup
+                        value="open"
+                        exclusive
+                        onChange={(event, newValue) => {
+                          if (newValue !== null) {
+                            onUpdateZooStatus?.(
+                              formatDate(selectedDate),
+                              newValue === "open"
+                            );
+                          }
+                        }}
+                        size="small"
+                      >
+                        <ToggleButton value="open" sx={{ 
+                          color: "success.main",
+                          "&.Mui-selected": {
+                            backgroundColor: "success.light",
+                            color: "success.dark",
+                            "&:hover": {
+                              backgroundColor: "success.light"
+                            }
+                          }
+                        }}>
+                          Open
+                        </ToggleButton>
+                        <ToggleButton value="closed" sx={{ 
+                          color: "error.main",
+                          "&.Mui-selected": {
+                            backgroundColor: "error.light",
+                            color: "error.dark",
+                            "&:hover": {
+                              backgroundColor: "error.light"
+                            }
+                          }
+                        }}>
+                          Closed
+                        </ToggleButton>
+                      </ToggleButtonGroup>
+                    </Box>
                   )}
                 </Box>
               )}
@@ -331,14 +438,16 @@ export default function Calendar({
                           {event.description}
                         </Typography>
                       )}
-                      <Box sx={{ mt: 2 }}>
-                        <Chip
-                          label="Add to Calendar"
-                          color="info"
-                          onClick={handleAddToCalendar}
-                          sx={{ cursor: "pointer" }}
-                        />-
-                      </Box>
+                      {!isPastDate(selectedDate) && (
+                        <Box sx={{ mt: 2 }}>
+                          <Chip
+                            label="Add to Calendar"
+                            color="info"
+                            onClick={handleAddToCalendar}
+                            sx={{ cursor: "pointer" }}
+                          />
+                        </Box>
+                      )}
                       {event.image && (
                         <Box
                           component="img"
@@ -354,7 +463,7 @@ export default function Calendar({
                           }}
                         />
                       )} 
-                      {isAdmin && (
+                      {isAdmin && !isPastDate(selectedDate) && (
                         
                           <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
                             <Button
