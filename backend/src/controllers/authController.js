@@ -83,7 +83,7 @@ const login = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email, lang = "en" } = req.body;
         if (!email) {
             return res.status(400).json({ error: "Please provide email" });
         }
@@ -94,18 +94,35 @@ const forgotPassword = async (req, res) => {
         const resetToken = user.createPasswordResetToken();
         await user.save({ validateBeforeSave: false });
         const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-        const html = `
-      <h2>Password Reset Request</h2>
-      <p>You requested to reset your password.</p>
-      <p>Click the link below to reset your password:</p>
-      <a href="${resetURL}">Reset Password</a>
-      <p>This link expires in 10 minutes.</p>
-    `;
+                const html =
+                    lang === "es"
+                        ? `
+            <h2>Solicitud de restablecimiento de contraseña</h2>
+            <p>Has solicitado restablecer tu contraseña.</p>
+            <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
+            <a href="${resetURL}">Restablecer contraseña</a>
+            <p>Este enlace expira en 10 minutos.</p>
+        `
+                        : `
+            <h2>Password Reset Request</h2>
+            <p>You requested to reset your password.</p>
+            <p>Click the link below to reset your password:</p>
+            <a href="${resetURL}">Reset Password</a>
+            <p>This link expires in 10 minutes.</p>
+        `;
 
+        const subject = lang === "es"
+            ? "Restablece tu contraseña"
+            : "Reset Your Password";
+            
+        const from = lang === "es"
+            ? `"Equipo de Soporte" <${process.env.EMAIL_USER}>`
+            : `"Support Team" <${process.env.EMAIL_USER}>`;
         await sendEmail({
             to: user.email,
-            subject: "Reset Your Password",
-            html
+            subject,
+            html,
+            from
         });
         console.log(`Password reset link (send this via email): ${resetURL}`);
         res.status(200).json({ message: "If email is correct, you will receive a reset link to your email" });
