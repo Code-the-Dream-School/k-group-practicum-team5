@@ -1,3 +1,3 @@
 import { apiCall } from "./axios";
-export const forgotPasswordApi = (email: string) =>
-  apiCall("post", "/auth/forgot-password", { email });
+export const forgotPasswordApi = (email: string, lang: string) =>
+  apiCall("post", "/auth/forgot-password", { email, lang });
