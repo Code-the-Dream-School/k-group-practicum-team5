@@ -2,9 +2,10 @@ export const commonTableSx = {
   "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
     outline: "none",
   },
-  "& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
-    outline: "none",
-  },
+  "& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within":
+    {
+      outline: "none",
+    },
   "& .MuiDataGrid-columnSeparator": {
     display: "none",
   },

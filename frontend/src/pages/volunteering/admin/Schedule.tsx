@@ -33,7 +33,6 @@ export default function Schedule({
   useEffect(() => {
     console.log(schedules);
   }, [schedules]);
-    
 
   return (
     <>
@@ -42,7 +41,10 @@ export default function Schedule({
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr 1fr 0.5fr 85px" },
+              gridTemplateColumns: {
+                xs: "1fr",
+                md: "1.1fr 1fr 1fr 0.5fr 85px",
+              },
               gap: 2,
               alignItems: "center",
               marginBottom: 1,
@@ -83,7 +85,10 @@ export default function Schedule({
               onChange={(timeFrom) =>
                 setSchedules((p) => [
                   ...p.slice(0, index),
-                  { ...p[index], timeFrom: alignTimeWithDate(timeFrom, p[index].date) },
+                  {
+                    ...p[index],
+                    timeFrom: alignTimeWithDate(timeFrom, p[index].date),
+                  },
                   ...p.slice(index + 1),
                 ])
               }
@@ -91,7 +96,10 @@ export default function Schedule({
                 textField: {
                   size: "small",
                   fullWidth: true,
-                  error: !validateTimeRange(schedules[index].timeFrom, schedules[index].timeTo),
+                  error: !validateTimeRange(
+                    schedules[index].timeFrom,
+                    schedules[index].timeTo,
+                  ),
                 },
               }}
             />
@@ -102,7 +110,10 @@ export default function Schedule({
               onChange={(timeTo) =>
                 setSchedules((p) => [
                   ...p.slice(0, index),
-                  { ...p[index], timeTo: alignTimeWithDate(timeTo, p[index].date) },
+                  {
+                    ...p[index],
+                    timeTo: alignTimeWithDate(timeTo, p[index].date),
+                  },
                   ...p.slice(index + 1),
                 ])
               }
@@ -110,16 +121,19 @@ export default function Schedule({
                 textField: {
                   fullWidth: true,
                   size: "small",
-                  error: !validateTimeRange(schedules[index].timeFrom, schedules[index].timeTo),
+                  error: !validateTimeRange(
+                    schedules[index].timeFrom,
+                    schedules[index].timeTo,
+                  ),
                 },
               }}
             />
 
             {/* Slots Available */}
             <TextField
-              type='number'
+              type="number"
               value={val.slotsAvailable}
-              size='small'
+              size="small"
               fullWidth
               onChange={(e) => {
                 const raw = e.target.value;
@@ -140,10 +154,13 @@ export default function Schedule({
                 ]);
               }}
             />
-            <Stack display={"flex"} justifyContent='center' direction='row'>
+            <Stack display={"flex"} justifyContent="center" direction="row">
               <IconButton
                 sx={{
-                  "&:hover": { color: "error.dark", backgroundColor: "transparent" },
+                  "&:hover": {
+                    color: "error.dark",
+                    backgroundColor: "transparent",
+                  },
                   color: "error.main",
                   visibility: schedules.length === 1 ? "hidden" : "visible",
                   display: schedules.length === 1 ? "none" : "inline-flex",
@@ -151,16 +168,23 @@ export default function Schedule({
               >
                 <RemoveIcon
                   onClick={() => {
-                    setSchedules((p) => [...p.slice(0, index), ...p.slice(index + 1)]);
+                    setSchedules((p) => [
+                      ...p.slice(0, index),
+                      ...p.slice(index + 1),
+                    ]);
                   }}
                 />
               </IconButton>
               <IconButton
                 sx={{
-                  "&:hover": { color: "primary.light", backgroundColor: "transparent" },
+                  "&:hover": {
+                    color: "primary.light",
+                    backgroundColor: "transparent",
+                  },
                   color: "primary.main",
                   marginRight: schedules.length === 1 ? 4 : 2,
-                  visibility: index !== schedules.length - 1 ? "hidden" : "visible",
+                  visibility:
+                    index !== schedules.length - 1 ? "hidden" : "visible",
                 }}
               >
                 <AddIcon

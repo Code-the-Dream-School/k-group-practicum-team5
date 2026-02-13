@@ -26,7 +26,7 @@ export default function BookTicketsPage() {
         ticketTypeId: id,
         quantity: qty[id],
       })),
-    [qty]
+    [qty],
   );
 
   useEffect(() => {

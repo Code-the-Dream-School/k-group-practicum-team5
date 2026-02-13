@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useOpportunity } from "@/hooks/volunteering/admin/useOpportunity";
-import { Accordion, AccordionSummary, AccordionDetails, Box, Typography, Chip, Paper } from "@mui/material";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Box,
+  Typography,
+  Chip,
+  Paper,
+} from "@mui/material";
 import type { GetOpportunitiesResponse } from "@/types/volunteering/ViewOppUser.type";
 import { SectionHeading } from "@/components/GalleryImages";
 import { apiCall } from "@/api/axios";
@@ -14,14 +22,27 @@ import Button from "@mui/material/Button";
 const ViewOpportunities = () => {
   const limit = 10;
 
-  const { isLoading, isError, error, getOpportunities, getAppliedOpportunities } = useOpportunity();
-  const [opportunities, setOpportunities] = useState<GetOpportunitiesResponse["opportunities"]>([]);
-  const [appliedOpportunities, setAppliedOpportunities] = useState<GetOpportunitiesResponse["opportunities"]>([]);
+  const {
+    isLoading,
+    isError,
+    error,
+    getOpportunities,
+    getAppliedOpportunities,
+  } = useOpportunity();
+  const [opportunities, setOpportunities] = useState<
+    GetOpportunitiesResponse["opportunities"]
+  >([]);
+  const [appliedOpportunities, setAppliedOpportunities] = useState<
+    GetOpportunitiesResponse["opportunities"]
+  >([]);
   const errorMessage =
     typeof error === "string"
       ? error
       : error && typeof error === "object" && "message" in error
-        ? String((error as { message?: string }).message ?? "Failed to load opportunities.")
+        ? String(
+            (error as { message?: string }).message ??
+              "Failed to load opportunities.",
+          )
         : "Failed to load opportunities.";
 
   useEffect(() => {
@@ -47,7 +68,10 @@ const ViewOpportunities = () => {
   const userData = storedUser ? JSON.parse(storedUser) : undefined;
   const currentUserId = String(userData?.id ?? userData?._id ?? "");
 
-  const addApplicantToSchedule = async (opportunityId: string, scheduleId: string) => {
+  const addApplicantToSchedule = async (
+    opportunityId: string,
+    scheduleId: string,
+  ) => {
     try {
       if (currentUserId) {
         await apiCall("post", "/volunteering/opportunity/addApplicant", {
@@ -56,8 +80,12 @@ const ViewOpportunities = () => {
           userId: currentUserId,
         });
 
-        const selectedOpportunity = opportunities.find((o) => o._id === opportunityId);
-        const selectedSchedule = selectedOpportunity?.schedules.find((s) => s._id === scheduleId);
+        const selectedOpportunity = opportunities.find(
+          (o) => o._id === opportunityId,
+        );
+        const selectedSchedule = selectedOpportunity?.schedules.find(
+          (s) => s._id === scheduleId,
+        );
         if (!selectedOpportunity || !selectedSchedule) return;
 
         const updatedSchedule = {
@@ -70,7 +98,9 @@ const ViewOpportunities = () => {
         };
 
         setAppliedOpportunities((prev) => {
-          const opportunityIndex = prev.findIndex((o) => o._id === selectedOpportunity._id);
+          const opportunityIndex = prev.findIndex(
+            (o) => o._id === selectedOpportunity._id,
+          );
           if (opportunityIndex === -1) {
             return [
               ...prev,
@@ -86,7 +116,9 @@ const ViewOpportunities = () => {
               ? opportunity
               : {
                   ...opportunity,
-                  schedules: opportunity.schedules.some((s) => s._id === updatedSchedule._id)
+                  schedules: opportunity.schedules.some(
+                    (s) => s._id === updatedSchedule._id,
+                  )
                     ? opportunity.schedules
                     : [...opportunity.schedules, updatedSchedule],
                 },
@@ -103,13 +135,21 @@ const ViewOpportunities = () => {
                     if (schedule._id !== scheduleId) return schedule;
 
                     const alreadyApplied = schedule.applicants.some(
-                      (applicant) => String(applicant.userId) === String(currentUserId),
+                      (applicant) =>
+                        String(applicant.userId) === String(currentUserId),
                     );
                     if (alreadyApplied) return schedule;
 
                     return {
                       ...schedule,
-                      applicants: [...schedule.applicants, { userId: currentUserId, scheduleId, status: "Pending" }],
+                      applicants: [
+                        ...schedule.applicants,
+                        {
+                          userId: currentUserId,
+                          scheduleId,
+                          status: "Pending",
+                        },
+                      ],
                     };
                   }),
                 },
@@ -122,88 +162,149 @@ const ViewOpportunities = () => {
   };
 
   return (
-    <Box className='min-h-screen flex flex-col px-4 py-1' bgcolor={"background.default"} sx={{ borderRadius: 0 }}>
+    <Box
+      className="min-h-screen flex flex-col px-4 py-1"
+      bgcolor={"background.default"}
+      sx={{ borderRadius: 0 }}
+    >
       <Box sx={{ textAlign: { xs: "left", sm: "center" } }}>
-        <SectionHeading title='Available Opportunities' fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }} />
+        <SectionHeading
+          title="Available Opportunities"
+          fontSize={{ xs: "1rem", sm: "1.5rem", md: "1.5rem" }}
+        />
       </Box>
 
-      {isLoading && <Typography variant='body1'>Loading opportunities...</Typography>}
+      {isLoading && (
+        <Typography variant="body1">Loading opportunities...</Typography>
+      )}
 
       {isError && (
-        <Typography variant='body1' color='error'>
+        <Typography variant="body1" color="error">
           {errorMessage}
         </Typography>
       )}
 
       {!isLoading && !isError && opportunities.length === 0 && (
-        <Typography variant='body1'>No opportunities found, please try again later.</Typography>
+        <Typography variant="body1">
+          No opportunities found, please try again later.
+        </Typography>
       )}
-      <Typography variant='h6' fontWeight={700} mb={1} ml={1.5} color='primary.main'>
+      <Typography
+        variant="h6"
+        fontWeight={700}
+        mb={1}
+        ml={1.5}
+        color="primary.main"
+      >
         Available volunteer opportunities
       </Typography>
-      <Box display='flex' flexDirection='column' borderRadius={1} border={1.5} borderColor='primary.light'>
+      <Box
+        display="flex"
+        flexDirection="column"
+        borderRadius={1}
+        border={1.5}
+        borderColor="primary.light"
+      >
         {opportunities.map((opportunity) => (
-          <Accordion key={opportunity._id} sx={{ boxShadow: 20, paddingY: 0.5 }}>
+          <Accordion
+            key={opportunity._id}
+            sx={{ boxShadow: 20, paddingY: 0.5 }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Box display='flex' flexDirection='row' alignItems={"center"} gap={1.5}>
-                <Typography variant='subtitle1' fontWeight={700} color='primary.main'>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems={"center"}
+                gap={1.5}
+              >
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={700}
+                  color="primary.main"
+                >
                   {opportunity.category}
                 </Typography>
                 <Chip
-                  size='small'
+                  size="small"
                   label={`${opportunity.schedules.length} ${opportunity.schedules.length === 1 ? "Schedule" : "Schedules"} Available`}
-                  sx={{ backgroundColor: "primary.light", color: "primary.contrastText", fontWeight: 500 }}
+                  sx={{
+                    backgroundColor: "primary.light",
+                    color: "primary.contrastText",
+                    fontWeight: 500,
+                  }}
                 />
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant='body1' mb={3}>
+              <Typography variant="body1" mb={3}>
                 {opportunity.description || "No description provided."}
               </Typography>
 
               {opportunity.schedules.length === 0 ? (
-                <Typography variant='body2'>No schedules available.</Typography>
+                <Typography variant="body2">No schedules available.</Typography>
               ) : (
                 <Box
-                  display='flex'
-                  flexDirection='column'
+                  display="flex"
+                  flexDirection="column"
                   gap={1}
-                  sx={{ borderStyle: "solid", borderTop: 1, pt: 2, borderColor: "primary.light" }}
+                  sx={{
+                    borderStyle: "solid",
+                    borderTop: 1,
+                    pt: 2,
+                    borderColor: "primary.light",
+                  }}
                 >
                   {opportunity.schedules.map((schedule) => {
                     const hasApplied =
                       !!currentUserId &&
-                      schedule.applicants.some((applicant) => String(applicant.userId) === String(currentUserId));
+                      schedule.applicants.some(
+                        (applicant) =>
+                          String(applicant.userId) === String(currentUserId),
+                      );
 
                     return (
                       <Box key={`${schedule.timeFrom}-${schedule.timeTo}`}>
                         <Box
-                          display='flex'
+                          display="flex"
                           gap={1.5}
-                          alignItems='center'
+                          alignItems="center"
                           sx={{ ":hover": { bgcolor: "background.default" } }}
                         >
-                          <Typography variant='body2' fontWeight={600}>
+                          <Typography variant="body2" fontWeight={600}>
                             <EventIcon
-                              fontSize='small'
-                              sx={{ verticalAlign: "middle", mr: 0.5, color: "primary.main" }}
+                              fontSize="small"
+                              sx={{
+                                verticalAlign: "middle",
+                                mr: 0.5,
+                                color: "primary.main",
+                              }}
                             />
-                            {new Date(schedule.timeFrom).toLocaleDateString("en-US", {
-                              weekday: "long",
-                              year: "numeric",
-                              month: "long",
-                              day: "2-digit",
-                            })}
+                            {new Date(schedule.timeFrom).toLocaleDateString(
+                              "en-US",
+                              {
+                                weekday: "long",
+                                year: "numeric",
+                                month: "long",
+                                day: "2-digit",
+                              },
+                            )}
                           </Typography>
-                          <Typography variant='body2'>
+                          <Typography variant="body2">
                             <AccessTimeFilledIcon
-                              fontSize='small'
-                              sx={{ verticalAlign: "middle", mx: 0.5, color: "primary.main" }}
+                              fontSize="small"
+                              sx={{
+                                verticalAlign: "middle",
+                                mx: 0.5,
+                                color: "primary.main",
+                              }}
                             />
-                            {new Date(schedule.timeFrom).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
+                            {new Date(schedule.timeFrom).toLocaleTimeString(
+                              [],
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              },
+                            )}
                             -{" "}
                             {new Date(schedule.timeTo).toLocaleTimeString([], {
                               hour: "2-digit",
@@ -211,24 +312,35 @@ const ViewOpportunities = () => {
                             })}
                           </Typography>
                           <Chip
-                            size='small'
+                            size="small"
                             label={`${schedule.slotsAvailable - schedule.applicants.filter((a) => a.status === "Approved").length} slots`}
                           />
                           {!hasApplied ? (
                             <Button
                               onClick={() => {
                                 if (hasApplied) return;
-                                addApplicantToSchedule(opportunity._id, schedule._id);
+                                addApplicantToSchedule(
+                                  opportunity._id,
+                                  schedule._id,
+                                );
                               }}
-                              variant='contained'
-                              sx={{ paddingY: 0, boxShadow: "1px 3px 10px rgba(0,0,0,0.2)", borderRadius: 0.5 }}
-                              color='primary'
-                              size='small'
+                              variant="contained"
+                              sx={{
+                                paddingY: 0,
+                                boxShadow: "1px 3px 10px rgba(0,0,0,0.2)",
+                                borderRadius: 0.5,
+                              }}
+                              color="primary"
+                              size="small"
                             >
                               {hasApplied ? "Applied" : "💚 Apply"}
                             </Button>
                           ) : (
-                            <Typography variant='body2' color='text.primary' ml={1.8}>
+                            <Typography
+                              variant="body2"
+                              color="text.primary"
+                              ml={1.8}
+                            >
                               👍🏻 Applied
                             </Typography>
                           )}
@@ -245,16 +357,25 @@ const ViewOpportunities = () => {
 
       {!isLoading && !isError && appliedOpportunities.length > 0 && (
         <Box mt={5}>
-          <Typography variant='h6' fontWeight={700} mb={1} ml={1.5} color='primary.main'>
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            mb={1}
+            ml={1.5}
+            color="primary.main"
+          >
             Your Applied Schedules
           </Typography>
-          <Paper elevation={3} sx={{ p: 2, boxShadow: "1px 3px 10px rgba(0,0,0,0.2)", border: 1 }}>
+          <Paper
+            elevation={3}
+            sx={{ p: 2, boxShadow: "1px 3px 10px rgba(0,0,0,0.2)", border: 1 }}
+          >
             <Box
-              display='flex'
-              flexDirection='column'
+              display="flex"
+              flexDirection="column"
               gap={1}
               // border={1}
-              borderColor='primary.light'
+              borderColor="primary.light"
               borderRadius={1}
               p={2}
             >
@@ -262,17 +383,24 @@ const ViewOpportunities = () => {
                 opportunity.schedules.map((schedule) => (
                   <Box
                     key={`applied-${opportunity._id}-${schedule._id}`}
-                    display='flex'
-                    justifyContent='space-between'
-                    alignItems='center'
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
                     gap={1}
-                    sx={{ flexWrap: "wrap", p: 1, borderBottom: "1px solid", borderColor: "divider" }}
+                    sx={{
+                      flexWrap: "wrap",
+                      p: 1,
+                      borderBottom: "1px solid",
+                      borderColor: "divider",
+                    }}
                   >
-                    <Typography variant='body2' fontWeight={600}>
-                      <Typography variant='body2' fontWeight={600}>
+                    <Typography variant="body2" fontWeight={600}>
+                      <Typography variant="body2" fontWeight={600}>
                         {opportunity.category}:{" "}
                       </Typography>
-                      <Typography variant='body2'>{opportunity.description}</Typography>
+                      <Typography variant="body2">
+                        {opportunity.description}
+                      </Typography>
                       {new Date(schedule.timeFrom).toLocaleDateString("en-US", {
                         weekday: "long",
                         year: "numeric",
@@ -290,7 +418,7 @@ const ViewOpportunities = () => {
                       })}
                     </Typography>
                     <Chip
-                      size='small'
+                      size="small"
                       label={schedule.applicationStatus ?? "Pending"}
                       color={
                         schedule.applicationStatus === "Approved"
@@ -307,25 +435,36 @@ const ViewOpportunities = () => {
           </Paper>
         </Box>
       )}
-      <Paper elevation={3} sx={{ p: 3, mt: 4, bgcolor: "background.paper", borderRadius: 1, mb: 5 }}>
+      <Paper
+        elevation={3}
+        sx={{
+          p: 3,
+          mt: 4,
+          bgcolor: "background.paper",
+          borderRadius: 1,
+          mb: 5,
+        }}
+      >
         <Typography
-          variant='h5'
+          variant="h5"
           fontWeight={900}
-          color='text.secondary'
-          align='left'
+          color="text.secondary"
+          align="left"
           mt={5}
           mb={3}
           sx={{ color: "primary.main" }}
         >
-          Didn't find an opportunity that fits you, or are you interested in future opportunities?
+          Didn't find an opportunity that fits you, or are you interested in
+          future opportunities?
         </Typography>
-        <Typography variant='h5' color='text.secondary' align='left' mb={6}>
-          Kindly inform us of your interest in future volunteering opportunities so that we can expand our offerings
-          based on the number of interested individuals.
+        <Typography variant="h5" color="text.secondary" align="left" mb={6}>
+          Kindly inform us of your interest in future volunteering opportunities
+          so that we can expand our offerings based on the number of interested
+          individuals.
         </Typography>
         <Button
-          variant='contained'
-          size='large'
+          variant="contained"
+          size="large"
           sx={{
             alignSelf: "center",
             mb: 3,
