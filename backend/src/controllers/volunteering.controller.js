@@ -1,5 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
+const mongoose = require('mongoose');
 const Volunteering = require('../models/Volunteering');
+const User = require('../models/User');
 
 
 const getCategories = async (req, res) => {
@@ -289,6 +291,100 @@ const addApplicantToSchedule = async (req, res) => {
     }
 };
 
+const getOpportunityApplicants = async (req, res) => {
+    const { opportunityId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(opportunityId)) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid opportunity id" });
+    }
+
+    try {
+        const opportunity = await Volunteering.findById(opportunityId).lean();
+        if (!opportunity) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Volunteering opportunity not found" });
+        }
+
+        const uniqueUserIds = [...new Set(
+            opportunity.schedules.flatMap((schedule) =>
+                schedule.applicants.map((applicant) => String(applicant.userId)),
+            ),
+        )];
+
+        const validObjectIds = uniqueUserIds.filter((userId) => mongoose.Types.ObjectId.isValid(userId));
+        const users = validObjectIds.length > 0
+            ? await User.find({ _id: { $in: validObjectIds } })
+                .select('first_name last_name email')
+                .lean()
+            : [];
+
+        const usersById = new Map(users.map((user) => [String(user._id), user]));
+
+        const schedules = opportunity.schedules.map((schedule) => ({
+            ...schedule,
+            applicants: schedule.applicants.map((applicant) => ({
+                ...applicant,
+                user: usersById.get(String(applicant.userId))
+                    ? {
+                        first_name: usersById.get(String(applicant.userId)).first_name,
+                        last_name: usersById.get(String(applicant.userId)).last_name,
+                        email: usersById.get(String(applicant.userId)).email,
+                    }
+                    : null,
+            })),
+        }));
+
+        return res.status(StatusCodes.OK).json({
+            opportunity: {
+                _id: String(opportunity._id),
+                category: opportunity.category,
+                description: opportunity.description,
+                schedules,
+            },
+        });
+    } catch (error) {
+        console.error("getOpportunityApplicants error:", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Failed to load applicants" });
+    }
+};
+
+const updateApplicantStatus = async (req, res) => {
+    const { opportunityId, scheduleId, userId, status } = req.body;
+    const allowedStatuses = ["Pending", "Approved", "Rejected"];
+
+    if (!opportunityId || !scheduleId || !userId || !status) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: "opportunityId, scheduleId, userId and status are required" });
+    }
+
+    if (!allowedStatuses.includes(status)) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid status value" });
+    }
+
+    try {
+        const opportunity = await Volunteering.findById(opportunityId);
+        if (!opportunity) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Volunteering opportunity not found" });
+        }
+
+        const schedule = opportunity.schedules.find((item) => String(item._id) === String(scheduleId));
+        if (!schedule) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Schedule not found" });
+        }
+
+        const applicant = schedule.applicants.find((item) => String(item.userId) === String(userId));
+        if (!applicant) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Applicant not found on selected schedule" });
+        }
+
+        applicant.status = status;
+        await opportunity.save();
+
+        return res.status(StatusCodes.OK).json({ message: "Applicant status updated successfully" });
+    } catch (error) {
+        console.error("updateApplicantStatus error:", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Failed to update applicant status" });
+    }
+};
+
 module.exports = {
     createOpportunity,
     getCategories,
@@ -296,4 +392,6 @@ module.exports = {
     getUserOpportunities,
     getUserAppliedOpportunities,
     addApplicantToSchedule,
+    getOpportunityApplicants,
+    updateApplicantStatus,
 }
