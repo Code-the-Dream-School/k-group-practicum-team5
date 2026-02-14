@@ -14,7 +14,7 @@ export const LoggedNavItems = [
   { labelKey: "nav.media", path: "/video" },
   { labelKey: "nav.gallery", path: "/gallery" },
   { labelKey: "nav.calendar", path: "/calendar" },
-  { labelKey: "nav.joinVolunteer", path: "/volunteering/opportunities/apply" },
+  { labelKey: "nav.joinVolunteer", path: "/volunteering/opportunities/view" },
   { labelKey: "nav.staff", path: "/staff" },
   { labelKey: "nav.contact", path: "/contact" },
   { labelKey: "nav.map", path: "/map" },
@@ -32,6 +32,6 @@ export const adminNavItems = [
     labelKey: "nav.volunteerOpportunities",
     path: "/volunteering/opportunities/admin/view",
   },
-  { labelKey: "nav.manageCalendar", path: "/calendar/manage" },
+  { labelKey: "nav.manageCalendar", path: "/admin/calendar" },
   { labelKey: "nav.logout", path: "/logout" },
 ];

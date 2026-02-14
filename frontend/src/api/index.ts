@@ -4,3 +4,7 @@ export {
   updateImage,
   deleteImage,
 } from "./apiGallery";
+export {
+  getOpportunitiesData,
+  getAppliedOpportunitiesData,
+} from "./volunteering/apiOpportunity";

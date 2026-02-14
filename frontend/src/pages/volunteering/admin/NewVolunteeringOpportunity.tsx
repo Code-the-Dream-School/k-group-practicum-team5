@@ -27,6 +27,18 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CircularProgress from "@mui/material/CircularProgress";
+import type { AxiosError } from "axios";
+
+type Opportunity = {
+  category?: string | null;
+  description?: string | null;
+  schedules?: {
+    date: string | null;
+    timeFrom: string | null;
+    timeTo: string | null;
+    slotsAvailable: number;
+  }[];
+};
 
 export default function NewVolunteeringOpportunity() {
   const { t } = useTranslation();
@@ -67,38 +79,47 @@ export default function NewVolunteeringOpportunity() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const opportunityData: Opportunity = {
+      ...opportunity,
+      schedules: schedules.map((s) => ({
+        date: s.date ? s.date.toISOString() : null,
+        timeFrom: s.timeFrom ? s.timeFrom.toISOString() : null,
+        timeTo: s.timeTo ? s.timeTo.toISOString() : null,
+        slotsAvailable: s.slotsAvailable,
+      })),
+    };
+
     try {
       setIsSaving(true);
-      const response = await apiCall<{ data: { id: string } }>(
+      await apiCall<{ data: { id: string } }>(
         "post",
         `${import.meta.env.VITE_API_BASE_URL}/volunteering/new`,
-        opportunity,
+        opportunityData,
       );
 
-      const volunteeringId = response.data.id;
-      // Create schedules
-      for (const schedule of schedules) {
-        await apiCall(
-          "post",
-          `${import.meta.env.VITE_API_BASE_URL}/volunteeringSchedule/${volunteeringId}/schedules`,
-          {
-            volunteeringId,
-            date: schedule.date,
-            timeFrom: schedule.timeFrom,
-            timeTo: schedule.timeTo,
-            slotsAvailable: schedule.slotsAvailable,
-          },
-        );
-      }
       setSuccessMessage(t("volunteeringAdmin.newOpportunity.success"));
       setErrorMessage(null);
       setTimeout(() => {
         setSuccessMessage(null);
+        setIsSaving(false);
       }, 3000);
-      setIsSaving(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error("Error creating opportunity:", error);
-      setErrorMessage(t("volunteeringAdmin.newOpportunity.failed"));
+      const axiosError = error as AxiosError<{
+        message?: string;
+        errors?: string[];
+        data?: object;
+        error?: string[];
+      }>;
+      const errorDetail =
+        axiosError.response?.data.error ||
+        axiosError.response?.data?.message ||
+        axiosError.message ||
+        "An unexpected error occurred.";
+      setErrorMessage(`${errorDetail}`);
       setSuccessMessage(null);
       setIsSaving(false);
     }

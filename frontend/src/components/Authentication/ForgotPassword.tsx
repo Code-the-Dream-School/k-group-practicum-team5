@@ -24,7 +24,7 @@ interface ForgotPasswordForm {
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [formData, setFormData] = useState<ForgotPasswordForm>({
     email: "",
@@ -63,7 +63,7 @@ const ForgotPassword = () => {
 
     try {
       setLoading(true);
-      await forgotPasswordApi(formData.email);
+      await forgotPasswordApi(formData.email, i18n.language);
 
       setAlert({
         message: t("forgotPassword.success"),

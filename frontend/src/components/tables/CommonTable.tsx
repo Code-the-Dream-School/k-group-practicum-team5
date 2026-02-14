@@ -5,7 +5,7 @@ import type { CommonTableProps } from "@/types/volunteering/CommonTableProps.typ
 import { commonTableSx } from "./CommonTable.styles.ts";
 import { useTranslation } from "react-i18next";
 
-const CommonTable = ({ fetchRows, columns }: CommonTableProps) => {
+const CommonTable = ({ fetchRows, columns, onRowClick, refreshKey }: CommonTableProps) => {
   const { t } = useTranslation();
   const [rows, setRows] = useState<object[]>([]);
   const [fetchError, setFetchError] = useState(false);
@@ -20,7 +20,7 @@ const CommonTable = ({ fetchRows, columns }: CommonTableProps) => {
         setFetchError(true);
         setRows([]);
       });
-  }, [fetchRows]);
+  }, [fetchRows, refreshKey]);
 
   const paginationModel = { page: 0, pageSize: 25 };
   const columnVisibilityModel = { id: false, timeFrom: false, timeTo: false };
@@ -29,16 +29,15 @@ const CommonTable = ({ fetchRows, columns }: CommonTableProps) => {
     <Paper>
       <DataGrid
         rows={rows}
-        // hideFooterPagination
         getRowId={(row) => row.id ?? row._id}
         columns={columns}
         initialState={{
           pagination: { paginationModel },
           columns: { columnVisibilityModel },
         }}
-        // initialState={{  columns: { columnVisibilityModel } }}
         pageSizeOptions={[5, 10, 25, 50]}
         disableRowSelectionOnClick
+        onRowClick={onRowClick}
         slots={{
           noRowsOverlay: () => (
             <div className="h-full text-red-400 flex justify-center items-center">
