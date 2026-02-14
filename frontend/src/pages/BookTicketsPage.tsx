@@ -4,6 +4,7 @@ import { getCheckoutQuote, getTicketTypes } from "@/api/apiCheckout";
 import { TicketList } from "@/components/tickets/TicketList";
 import { OrderSummary } from "@/components/tickets/OrderSummary";
 import type { QuoteResponse, TicketType, TicketTypeId } from "@/types/tickets";
+import axios from "axios";
 
 const EMPTY_QTY: Record<TicketTypeId, number> = {
   adult: 0,
@@ -33,6 +34,24 @@ export default function BookTicketsPage() {
     getCheckoutQuote(items).then(setQuote);
   }, [items]);
 
+  const handleCheckout = async () => {
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/stripe/create-session`,
+        { items }
+      );
+
+      window.location.href = data.url;
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        alert(err.response?.data?.error || "Checkout failed");
+      } else {
+        alert("Unexpected error occurred");
+      }
+      console.error("Stripe checkout error:", err);
+    }
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h3" sx={{ mb: 3 }}>
@@ -56,7 +75,11 @@ export default function BookTicketsPage() {
 
         <Card>
           <CardContent>
-            <OrderSummary quote={quote} disabled={!quote} />
+            <OrderSummary
+              quote={quote}
+              disabled={!quote}
+              onCheckout={handleCheckout}
+            />
           </CardContent>
         </Card>
       </Box>

@@ -63,7 +63,7 @@ app.use("/api/v1/business-hours", businessHoursRoutes);
 app.use("/api/v1/staff", staffRoutes);
 app.use("/api/v1/volunteeringSchedule", volunteeringScheduleRoutes);
 app.use("/api/v1/checkout", checkoutRoutes);
-app.use("/api/v1/checkout", stripeRoutes);
+app.use("/api/v1/stripe", stripeRoutes);
 
 app.use("/api/v1/contact-messages", contactRoutes);
 // Root route
