@@ -2,10 +2,11 @@ import { apiCall } from "./axios";
 import type { MonthData, OpeningDay, Event } from "../types/calendar.types";
 
 export const apiCalendar = {
+  
   async getMonthData(year: number, month: number): Promise<MonthData> {
-    return await apiCall<MonthData>("get", "/calendar/month-data", {
-      year,
-      month,
+    console.log("API call: getMonthData with", { year, month });
+    return await apiCall<MonthData>("get", "/calendar/month-data",  {
+       year, month ,
     });
   },
 
@@ -19,10 +20,11 @@ export const apiCalendar = {
     });
   },
 
-  async getEvents(startDate: string, endDate: string): Promise<Event[]> {
+  async getEvents(startDate: string, endDate: string, params?:Record<string, string | number | boolean>): Promise<Event[]> {
     return await apiCall<Event[]>("get", "/calendar/events", {
       startDate,
       endDate,
+      ...params
     });
   },
 };

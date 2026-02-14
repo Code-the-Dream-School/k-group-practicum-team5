@@ -26,7 +26,7 @@ export async function apiCall<T>(
     case "get": {
       const response = await api.get<T>(url, {
         ...config,
-        params: paramsOrData,
+        ...(paramsOrData ? { params: paramsOrData } : {}),
       });
       return response.data;
     }
@@ -38,7 +38,7 @@ export async function apiCall<T>(
       return response.data;
     }
     case "put": {
-      const response = await api.put<T>(url, paramsOrData, config);
+      const response = (await api.put<T>(url, paramsOrData, config));
       return response.data;
     }
     case "post": {
