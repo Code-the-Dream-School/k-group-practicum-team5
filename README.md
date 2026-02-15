@@ -116,10 +116,18 @@ npm run dev
 
 Create a `.env` file inside the `backend` folder:
 
-```env
-PORT=5000
-DATABASE_URL=your_database_url
-JWT_SECRET=your_secret_key
+```backend env
+PORT=8080
+MONGO_URI=<mongo_uri>
+JWT_SECRET=<jwt_secret>
+JWT_LIFETIME=<jwt_lifetime>
+EMAIL_USER=<email_user>
+EMAIL_PASS=<email_pass>
+FRONTEND_URL=<frontend_url>
+CLOUDINARY_CLOUD_NAME=<cloudinary_cloud_name>
+CLOUDINARY_API_KEY=<cloudinary_api_key>
+CLOUDINARY_API_SECRET=<cloudinary_api_secret>
+STRIPE_SECRET_KEY=<stripe_secret_key>
 ```
 
 Backend runs on:  
@@ -132,6 +140,8 @@ cd frontend
 npm install
 npm run dev
 ```
+Create a `.env` file inside the `frontend` folder:
+VITE_API_BASE_URL=<vite_api_base_url>
 
 Frontend runs on:  
 http://localhost:5173
