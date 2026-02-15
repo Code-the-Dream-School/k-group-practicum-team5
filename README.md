@@ -1,4 +1,4 @@
-# <img src="screenshots/logo.png" alt="Reptile Zoo logo" width="120"> THE REPTILE ZOO
+# <img src="screenshots/logo.png" alt="Reptile Zoo logo" width="120"> <span style="color: #2F6F3E;">THE REPTILE ZOO</span>
 
 A full-stack web app for Reptile Zoo visitors and staff to browse animals and events, book visits, and manage schedules and content.  
 Built for guests seeking planning info and admins who maintain the zoo's daily operations.
@@ -34,13 +34,19 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 ## 📸 Screenshots
 
 <a href="screenshots/HomePage.jpg">
-  <img src="screenshots/HomePage.jpg" alt="Homepage" width="420">
+  <img src="screenshots/HomePage.jpg" alt="Homepage" width="450">
 </a>
 <a href="screenshots/FeaturedAttractionsSection.jpg">
-  <img src="screenshots/FeaturedAttractionsSection.jpg" alt="FeaturedAttractions" width="420">
+  <img src="screenshots/FeaturedAttractionsSection.jpg" alt="FeaturedAttractions" width="450">
 </a>
 <a href="screenshots/CustomerHighlights.jpg">
-  <img src="screenshots/CustomerHighlights.jpg" alt="FeaturedAttractions" width="420">
+  <img src="screenshots/CustomerHighlights.jpg" alt="FeaturedAttractions" width="450">
+</a>
+<a href="screenshots/Media.jpg">
+  <img src="screenshots/Media.jpg" alt="FeaturedAttractions" width="450">
+</a>
+<a href="screenshots/Gallery.jpg">
+  <img src="screenshots/Gallery.jpg" alt="FeaturedAttractions" width="450">
 </a>
 
 ## 🛠 Tech Stack
@@ -70,6 +76,16 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 - Git & GitHub & Actions GitHub
 - dotenv (environment variables)
 - ESLint / Prettier
+
+## 🎨 Design System
+
+### Color Palette
+- **Primary Green**: <span style="color: #2F6F3E;">**#2F6F3E**</span> (Zoo Green)
+- **Dark Green**: <span style="color: #1F3D2B;">**#1F3D2B**</span> (Zoo Dark)
+- **Secondary Orange**: <span style="color: #E67E22;">**#E67E22**</span> (Zoo Orange)
+- **Light Background**: <span style="color: #EAF4ED; background: #333; padding: 2px 4px;">**#EAF4ED**</span> (Zoo Light)
+- **White**: <span style="background: #ddd; padding: 2px 4px;">**#FFFFFF**</span>
+- **Black**: <span style="color: #000000;">**#000000**</span>
 
 ## 📁 Project Structure
 
