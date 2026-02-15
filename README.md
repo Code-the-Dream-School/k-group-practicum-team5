@@ -319,9 +319,9 @@ DELETE /api/v1/admin/users/:id
 
 ## 🙌 Acknowledgments
 
-- Mentors
-- Instructors
-- Open-source libraries and tools
+We sincerely thank Gina Castromonte, Node CIL Leader. She helped us run clear, productive meetings, kept the team focused and motivated, and guided us through challenges as we grew as developers.
+
+We are also grateful to Code the Dream for real-world experience, strong technical support, and the confidence to move forward in our tech careers.
 
 ## 📄 License
 
