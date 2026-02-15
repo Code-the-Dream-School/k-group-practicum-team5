@@ -1,4 +1,4 @@
-# <img src="screenshots/logo.png" alt="Reptile Zoo logo" width="120"> <span style="color: #2F6F3E;">THE REPTILE ZOO</span>
+# <img src="screenshots/logo.png" alt="Reptile Zoo logo" width="120"> <span style="color: #2F6F3E;">THE REPTILE ZOO</span> 🦎🐍🐊
 
 A full-stack web app for Reptile Zoo visitors and staff to browse animals and events, book visits, and manage schedules and content.  
 Built for guests seeking planning info and admins who maintain the zoo's daily operations.
@@ -17,7 +17,7 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 - **What pain point does it address?** Guests struggle to find reliable visit details, while staff waste time updating multiple channels.
 - **Why does this solution matter?** It improves the visitor experience and reduces operational overhead with a single source of truth.
 
-## 🎯 Features
+## 🎯 Features 🦎
 
 - User authentication with admin roles and password reset
 - Enhanced homepage with hero media and clear call-to-action
@@ -77,7 +77,7 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 - dotenv (environment variables)
 - ESLint / Prettier
 
-## 🎨 Design System
+## 🎨 Design System 🐍
 
 ### Color Palette
 - **Primary Green**: <span style="color: #2F6F3E;">**#2F6F3E**</span> (Zoo Green)
@@ -87,7 +87,7 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 - **White**: <span style="background: #ddd; padding: 2px 4px;">**#FFFFFF**</span>
 - **Black**: <span style="color: #000000;">**#000000**</span>
 
-## 📁 Project Structure
+## 📁 Project Structure 🐊
 
 #### Backend Structure
 <a href="screenshots/ProjectStructureBackend.jpg">
