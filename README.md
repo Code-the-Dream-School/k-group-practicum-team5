@@ -5,7 +5,7 @@ Built for guests seeking planning info and admins who maintain the zoo's daily o
 
 ## 🚀 Live Demo
 
-- **Frontend Live Site:** https://k-group-practicum-team5.onrender.com/  
+- **Live Site:** https://k-group-practicum-team5.onrender.com/  
 - **Frontend Repo:** /frontend  
 - **Backend Repo:** /backend
 
