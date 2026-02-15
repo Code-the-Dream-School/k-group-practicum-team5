@@ -1,4 +1,4 @@
-# <img src="screenshots/logo.png" alt="Reptile Zoo logo" width="50"> THE REPTILE ZOO
+# <img src="screenshots/logo.png" alt="Reptile Zoo logo" width="120"> THE REPTILE ZOO
 
 A full-stack web app for Reptile Zoo visitors and staff to browse animals and events, book visits, and manage schedules and content.  
 Built for guests seeking planning info and admins who maintain the zoo's daily operations.
@@ -36,6 +36,12 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 <a href="screenshots/HomePage.jpg">
   <img src="screenshots/HomePage.jpg" alt="Homepage" width="420">
 </a>
+<a href="screenshots/FeaturedAttractionsSection.jpg">
+  <img src="screenshots/FeaturedAttractionsSection.jpg" alt="FeaturedAttractions" width="420">
+</a>
+<a href="screenshots/CustomerHighlights.jpg">
+  <img src="screenshots/CustomerHighlights.jpg" alt="FeaturedAttractions" width="420">
+</a>
 
 ## 🛠 Tech Stack
 
@@ -67,33 +73,15 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 
 ## 📁 Project Structure
 
-```text
-project-root/
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── hooks/
-│   │   ├── services/        
-│   │   ├── styles/
-│   │   ├── utils/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── index.html
-│   └── package.json
-│
-├── backend/
-│   ├── controllers/
-│   ├── routes/
-│   ├── models/
-│   ├── middleware/
-│   ├── config/
-│   ├── app.js
-│   ├── server.js
-│   └── package.json
-│
-└── README.md
-```
+#### Backend Structure
+<a href="screenshots/ProjectStructureBackend.jpg">
+  <img src="screenshots/ProjectStructureBackend.jpg" alt="Backend Project Structure" width="600">
+</a>
+
+#### Frontend Structure
+<a href="screenshots/ProjectStructureFrontend.jpg">
+  <img src="screenshots/ProjectStructureFrontend.jpg" alt="Frontend Project Structure" width="600">
+</a>
 
 ## ⚙️ Setup & Installation
 
