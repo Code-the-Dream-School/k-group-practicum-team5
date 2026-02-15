@@ -1,4 +1,4 @@
-# ![Reptile Zoo logo](screenshots/logo.png) THE REPTILE ZOO
+# <img src="screenshots/logo.png" alt="Reptile Zoo logo" width="50"> THE REPTILE ZOO
 
 A full-stack web app for Reptile Zoo visitors and staff to browse animals and events, book visits, and manage schedules and content.  
 Built for guests seeking planning info and admins who maintain the zoo's daily operations.
@@ -34,7 +34,7 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 ## 📸 Screenshots
 
 <a href="screenshots/HomePage.jpg">
-  <img src="screenshots/homepage-thumb.png" alt="Homepage" width="420">
+  <img src="screenshots/HomePage.jpg" alt="Homepage" width="420">
 </a>
 
 ## 🛠 Tech Stack
@@ -152,7 +152,6 @@ npm start
 ### Endpoints
 
 ```text
-
 # Public
 POST   /api/v1/auth/register
 POST   /api/v1/auth/login
@@ -207,11 +206,11 @@ DELETE /api/v1/admin/users/:id
 ## 🤝 Team & Collaboration
 
 ### Team Members
-- Tracy Cano — Full Stack Developer [GitHub Repo](https://github.com/trca831)
-- Tetiana Klitna — Full Stack Developer [GitHub Repo](https://github.com/TetianaKlitna/)
-- Masouma Ahmadi — Full Stack Developer [GitHub Repo](https://github.com/MASOUMA2023)
-- Uma Sekar — Full Stack Developer [GitHub Repo](https://github.com/umavenki)
-- Maher Algepha — Full Stack Developer [GitHub Repo](https://github.com/Maher-Algepah)
+- Tracy Cano — Full Stack Developer [GitHub](https://github.com/trca831)
+- Tetiana Klitna — Full Stack Developer [GitHub](https://github.com/TetianaKlitna/)
+- Masouma Ahmadi — Full Stack Developer [GitHub](https://github.com/MASOUMA2023)
+- Uma Sekar — Full Stack Developer [GitHub](https://github.com/umavenki)
+- Maher Algepha — Full Stack Developer [GitHub](https://github.com/Maher-Algepah)
 
 ### Workflow
 - GitHub Issues for task tracking
@@ -233,8 +232,6 @@ DELETE /api/v1/admin/users/:id
 - Performance optimizations pending
 
 ## 🛣 Future Improvements
-
-
 - Add automated testing (Jest, Supertest)
 - Improve security and validation
 - Add caching and performance improvements
