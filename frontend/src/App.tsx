@@ -18,6 +18,7 @@ import UserRoute from "./routes/UserRoute";
 import Signup from "./components/Authentication/Signup";
 import StaffDirectory from "./pages/StaffDirectory";
 import BookTicketsPage from "@/pages/BookTicketsPage";
+import TicketSuccessPage from "@/pages/TicketSuccessPage";
 import Login from "./components/Authentication/Login";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
@@ -38,6 +39,7 @@ function App() {
             <Route path="/book-tickets" element={<BookTicketsPage />} />
             <Route path="signup" element={<Signup />} />
             <Route path="staff" element={<StaffDirectory />} />
+            <Route path="/tickets/success" element={<TicketSuccessPage />} />
             <Route path="login" element={<Login />} />
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />

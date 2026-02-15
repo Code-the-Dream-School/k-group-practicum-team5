@@ -8,9 +8,10 @@ function money(cents?: number) {
 interface Props {
   quote: QuoteResponse | null;
   disabled: boolean;
+  onCheckout: () => void;
 }
 
-export function OrderSummary({ quote, disabled }: Props) {
+export function OrderSummary({ quote, disabled, onCheckout }: Props) {
   return (
     <Box>
       <Typography variant="h3">Order Summary</Typography>
@@ -30,6 +31,7 @@ export function OrderSummary({ quote, disabled }: Props) {
           variant="contained"
           color="secondary"
           disabled={disabled}
+          onClick={onCheckout}
         >
           Continue to payment
         </Button>

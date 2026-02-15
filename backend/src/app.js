@@ -1,4 +1,3 @@
-
 require("express-async-errors");
 const express = require("express");
 const cors = require("cors");
@@ -18,10 +17,13 @@ const volunteeringRoutes = require("./routes/volunteering.routes");
 const businessHoursRoutes = require("./routes/businessHours.routes");
 const staffRoutes = require("./routes/staff.routes");
 const checkoutRoutes = require("./routes/checkout.routes");
-const adminEventRoutes = require('./routes/adminEventRouter');
-const notFoundMiddleware = require('./middleware/not-found');
-const errorHandlerMiddleware = require('./middleware/error-handler');
-const contactRoutes = require('./routes/contactMessage.routes');
+
+const stripeRoutes = require("./routes/stripe.routes");
+
+const adminEventRoutes = require("./routes/adminEventRouter");
+const notFoundMiddleware = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
+const contactRoutes = require("./routes/contactMessage.routes");
 
 const app = express();
 
@@ -51,10 +53,8 @@ app.use(limiter);
 // Routes
 app.use("/api/hello", helloRoutes);
 
-
-
 app.use("/api/v1/calendar", calendarRoutes);
-app.use('/api/v1/admin/events', adminEventRoutes);
+app.use("/api/v1/admin/events", adminEventRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/admin", adminRoutes);
@@ -64,9 +64,9 @@ app.use("/api/v1/volunteering", volunteeringRoutes);
 app.use("/api/v1/business-hours", businessHoursRoutes);
 app.use("/api/v1/staff", staffRoutes);
 app.use("/api/v1/checkout", checkoutRoutes);
+app.use("/api/v1/stripe", stripeRoutes);
 
-
-app.use('/api/v1/contact-messages', contactRoutes)
+app.use("/api/v1/contact-messages", contactRoutes);
 // Root route
 app.get("/", (req, res) => {
   res.send("Backend API is running");
