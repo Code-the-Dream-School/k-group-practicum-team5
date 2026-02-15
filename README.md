@@ -35,64 +35,75 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 
 ### 🧭 Public Pages
 
-<a href="screenshots/HomePage.jpg">
-  <img src="screenshots/HomePage.jpg" alt="Homepage" width="450">
+<a href="screenshots/public/HomePage.jpg">
+  <img src="screenshots/public/HomePage.jpg" alt="Homepage" width="450">
 </a>
-<a href="screenshots/HomePageSpanish.jpg">
-  <img src="screenshots/HomePageSpanish.jpg" alt="Homepage Spanish" width="450">
+<a href="screenshots/public/HomePageSpanish.jpg">
+  <img src="screenshots/public/HomePageSpanish.jpg" alt="Homepage Spanish" width="450">
 </a>
-<a href="screenshots/FeaturedAttractionsSection.jpg">
-  <img src="screenshots/FeaturedAttractionsSection.jpg" alt="Featured Attractions" width="450">
+<a href="screenshots/public/FeaturedAttractionsSection.jpg">
+  <img src="screenshots/public/FeaturedAttractionsSection.jpg" alt="Featured Attractions" width="450">
 </a>
-<a href="screenshots/CustomerHighlights.jpg">
-  <img src="screenshots/CustomerHighlights.jpg" alt="Customer Highlights" width="450">
+<a href="screenshots/public/CustomerHighlights.jpg">
+  <img src="screenshots/public/CustomerHighlights.jpg" alt="Customer Highlights" width="450">
 </a>
-<a href="screenshots/Media.jpg">
-  <img src="screenshots/Media.jpg" alt="Media" width="450">
+<a href="screenshots/public/Media.jpg">
+  <img src="screenshots/public/Media.jpg" alt="Media" width="450">
 </a>
-<a href="screenshots/Gallery.jpg">
-  <img src="screenshots/Gallery.jpg" alt="Gallery" width="450">
+<a href="screenshots/public/Gallery.jpg">
+  <img src="screenshots/public/Gallery.jpg" alt="Gallery" width="450">
 </a>
-<a href="screenshots/StaffDirectory.jpg">
-  <img src="screenshots/StaffDirectory.jpg" alt="Staff Directory" width="450">
+<a href="screenshots/public/StaffDirectory.jpg">
+  <img src="screenshots/public/StaffDirectory.jpg" alt="Staff Directory" width="450">
 </a>
-<a href="screenshots/Map.jpg">
-  <img src="screenshots/Map.jpg" alt="Map" width="450">
+<a href="screenshots/public/Map.jpg">
+  <img src="screenshots/public/Map.jpg" alt="Map" width="450">
 </a>
-<a href="screenshots/ContactUs.jpg">
-  <img src="screenshots/ContactUs.jpg" alt="Contact Us" width="450">
+<a href="screenshots/public/ContactUs.jpg">
+  <img src="screenshots/public/ContactUs.jpg" alt="Contact Us" width="450">
 </a>
-<a href="screenshots/SignUp.jpg">
-  <img src="screenshots/SignUp.jpg" alt="FeaturedSignUpAttractions" width="450">
+<a href="screenshots/public/SignUp.jpg">
+  <img src="screenshots/public/SignUp.jpg" alt="FeaturedSignUpAttractions" width="450">
 </a>
-<a href="screenshots/Login.jpg">
-  <img src="screenshots/Login.jpg" alt="Login" width="450">
+<a href="screenshots/public/Login.jpg">
+  <img src="screenshots/public/Login.jpg" alt="Login" width="450">
 </a>
-<a href="screenshots/ForgotPassword.jpg">
-  <img src="screenshots/ForgotPassword.jpg" alt="Forgot Password" width="450">
+<a href="screenshots/public/ForgotPassword.jpg">
+  <img src="screenshots/public/ForgotPassword.jpg" alt="Forgot Password" width="450">
 </a>
-<a href="screenshots/PaymentPage.jpg">
-  <img src="screenshots/PaymentPage.jpg" alt="Payment Page" width="450">
+<a href="screenshots/public/PaymentPage.jpg">
+  <img src="screenshots/public/PaymentPage.jpg" alt="Payment Page" width="450">
 </a>
-<a href="screenshots/StripePayment.jpg">
-  <img src="screenshots/StripePayment.jpg" alt="Stripe Payment" width="450">
+<a href="screenshots/public/StripePayment.jpg">
+  <img src="screenshots/public/StripePayment.jpg" alt="Stripe Payment" width="450">
 </a>
-<a href="screenshots/PaymentSuccess.jpg">
-  <img src="screenshots/PaymentSuccess.jpg" alt="Payment Success Message" width="450">
+<a href="screenshots/public/PaymentSuccess.jpg">
+  <img src="screenshots/public/PaymentSuccess.jpg" alt="Payment Success Message" width="450">
+</a>
+
+### 🔐 Protected Logged-In User Pages
+<a href="screenshots/user/Calendar.jpg">
+  <img src="screenshots/user/Calendar.jpg" alt="Calendar" width="450">
+</a>
+<a href="screenshots/user/JoinAsVolunteer.jpg">
+  <img src="screenshots/user/JoinAsVolunteer.jpg" alt="Join As a Volunteer" width="450">
+</a>
+<a href="screenshots/user/AppliedSchedules.jpg">
+  <img src="screenshots/user/AppliedSchedules.jpg" alt="AppliedSchedules" width="450">
 </a>
 
 ### 🛡️ Protected Admin Pages
-<a href="screenshots/ManageGallery.jpg">
-  <img src="screenshots/ManageGallery.jpg" alt="Manage Gallery" width="450">
+<a href="screenshots/admin/ManageGallery.jpg">
+  <img src="screenshots/admin/ManageGallery.jpg" alt="Manage Gallery" width="450">
 </a>
-<a href="screenshots/NewVolunteeringOpportunity.jpg">
-  <img src="screenshots/NewVolunteeringOpportunity.jpg" alt="New Volunteering Opportunity" width="450">
+<a href="screenshots/admin/NewVolunteeringOpportunity.jpg">
+  <img src="screenshots/admin/NewVolunteeringOpportunity.jpg" alt="New Volunteering Opportunity" width="450">
 </a>
-<a href="screenshots/VolunteeringOpportunities.jpg">
-  <img src="screenshots/VolunteeringOpportunities.jpg" alt="Volunteering Opportunities" width="450">
+<a href="screenshots/admin/VolunteeringOpportunities.jpg">
+  <img src="screenshots/admin/VolunteeringOpportunities.jpg" alt="Volunteering Opportunities" width="450">
 </a>
-<a href="screenshots/ManageCalendar.jpg">
-  <img src="screenshots/ManageCalendar.jpg" alt="Manage Calendar" width="450">
+<a href="screenshots/admin/ManageCalendar.jpg">
+  <img src="screenshots/admin/ManageCalendar.jpg" alt="Manage Calendar" width="450">
 </a>
 
 ## 🛠 Tech Stack
