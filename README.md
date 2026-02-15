@@ -81,6 +81,20 @@ It solves the problem of scattered or outdated zoo information by centralizing a
   <img src="screenshots/PaymentSuccess.jpg" alt="Payment Success Message" width="450">
 </a>
 
+### 🛡️ Protected Admin Pages
+<a href="screenshots/ManageGallery.jpg">
+  <img src="screenshots/ManageGallery.jpg" alt="Manage Gallery" width="450">
+</a>
+<a href="screenshots/NewVolunteeringOpportunity.jpg">
+  <img src="screenshots/NewVolunteeringOpportunity.jpg" alt="New Volunteering Opportunity" width="450">
+</a>
+<a href="screenshots/VolunteeringOpportunities.jpg">
+  <img src="screenshots/VolunteeringOpportunities.jpg" alt="Volunteering Opportunities" width="450">
+</a>
+<a href="screenshots/ManageCalendar.jpg">
+  <img src="screenshots/ManageCalendar.jpg" alt="Manage Calendar" width="450">
+</a>
+
 ## 🛠 Tech Stack
 
 ### Frontend
@@ -227,6 +241,7 @@ PUT    /api/v1/staff/:id
 DELETE /api/v1/staff/:id
 GET    /api/v1/checkout/ticket-types
 POST   /api/v1/checkout/quote
+POST   /api/v1/stripe/create-session
 GET    /api/v1/volunteering/enums/categories
 GET    /api/v1/volunteering/opportunities
 GET    /api/v1/volunteering/opportunities/full
