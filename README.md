@@ -33,20 +33,52 @@ It solves the problem of scattered or outdated zoo information by centralizing a
 
 ## 📸 Screenshots
 
+### 🧭 Public Pages
+
 <a href="screenshots/HomePage.jpg">
   <img src="screenshots/HomePage.jpg" alt="Homepage" width="450">
 </a>
+<a href="screenshots/HomePageSpanish.jpg">
+  <img src="screenshots/HomePageSpanish.jpg" alt="Homepage Spanish" width="450">
+</a>
 <a href="screenshots/FeaturedAttractionsSection.jpg">
-  <img src="screenshots/FeaturedAttractionsSection.jpg" alt="FeaturedAttractions" width="450">
+  <img src="screenshots/FeaturedAttractionsSection.jpg" alt="Featured Attractions" width="450">
 </a>
 <a href="screenshots/CustomerHighlights.jpg">
-  <img src="screenshots/CustomerHighlights.jpg" alt="FeaturedAttractions" width="450">
+  <img src="screenshots/CustomerHighlights.jpg" alt="Customer Highlights" width="450">
 </a>
 <a href="screenshots/Media.jpg">
-  <img src="screenshots/Media.jpg" alt="FeaturedAttractions" width="450">
+  <img src="screenshots/Media.jpg" alt="Media" width="450">
 </a>
 <a href="screenshots/Gallery.jpg">
-  <img src="screenshots/Gallery.jpg" alt="FeaturedAttractions" width="450">
+  <img src="screenshots/Gallery.jpg" alt="Gallery" width="450">
+</a>
+<a href="screenshots/StaffDirectory.jpg">
+  <img src="screenshots/StaffDirectory.jpg" alt="Staff Directory" width="450">
+</a>
+<a href="screenshots/Map.jpg">
+  <img src="screenshots/Map.jpg" alt="Map" width="450">
+</a>
+<a href="screenshots/ContactUs.jpg">
+  <img src="screenshots/ContactUs.jpg" alt="Contact Us" width="450">
+</a>
+<a href="screenshots/SignUp.jpg">
+  <img src="screenshots/SignUp.jpg" alt="FeaturedSignUpAttractions" width="450">
+</a>
+<a href="screenshots/Login.jpg">
+  <img src="screenshots/Login.jpg" alt="Login" width="450">
+</a>
+<a href="screenshots/ForgotPassword.jpg">
+  <img src="screenshots/ForgotPassword.jpg" alt="Forgot Password" width="450">
+</a>
+<a href="screenshots/PaymentPage.jpg">
+  <img src="screenshots/PaymentPage.jpg" alt="Payment Page" width="450">
+</a>
+<a href="screenshots/StripePayment.jpg">
+  <img src="screenshots/StripePayment.jpg" alt="Stripe Payment" width="450">
+</a>
+<a href="screenshots/PaymentSuccess.jpg">
+  <img src="screenshots/PaymentSuccess.jpg" alt="Payment Success Message" width="450">
 </a>
 
 ## 🛠 Tech Stack
