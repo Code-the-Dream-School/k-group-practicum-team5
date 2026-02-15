@@ -1,62 +1,67 @@
-# Project Name
+# ![Reptile Zoo logo](screenshots/logo.png) THE REPTILE ZOO
 
-Short, clear description of what this application does and who it’s for.  
-(1–2 sentences max.)
-
-**Example:**  
-A full-stack web application with a React frontend and a Node/Express backend that allows users to create, manage, and track data stored in a database.
+A full-stack web app for Reptile Zoo visitors and staff to browse animals and events, book visits, and manage schedules and content.  
+Built for guests seeking planning info and admins who maintain the zoo's daily operations.
 
 ## 🚀 Live Demo
 
-- **Frontend Live Site:** https://your-frontend-url.com  
+- **Frontend Live Site:** https://k-group-practicum-team5.onrender.com/  
 - **Frontend Repo:** /frontend  
 - **Backend Repo:** /backend
 
 ## 🧠 Problem Statement
 
-What problem does this project solve?
+It solves the problem of scattered or outdated zoo information by centralizing animals, events, hours, and bookings.
 
-- Who is this application for?
-- What pain point does it address?
-- Why does this solution matter?
-
-Focus on the **user problem**, not the technology.
+- **Who is this application for?** Reptile Zoo visitors planning a trip and staff who manage daily content, schedules, and inquiries.
+- **What pain point does it address?** Guests struggle to find reliable visit details, while staff waste time updating multiple channels.
+- **Why does this solution matter?** It improves the visitor experience and reduces operational overhead with a single source of truth.
 
 ## 🎯 Features
 
-- User authentication (register, login, logout)
-- CRUD operations for core resources
-- Protected routes and authorization
+- User authentication with admin roles and password reset
+- Enhanced homepage with hero media and clear call-to-action
+- Animals and education catalog with search and filters
+- Interactive calendar for hours, closures, and events
+- Online booking and visit management
+- Admin dashboard for content, schedule, and gallery updates
+- Contact form and inquiry management
+- Multi-language UI with language selector
+- Photo gallery with albums, lightbox, and admin uploads
+- Volunteer applications and scheduling tools
 - Responsive UI (mobile & desktop)
-- Form validation and error handling
-- RESTful API integration
 
 ## 📸 Screenshots
 
-Add screenshots or GIFs of key features here.
-
-
+<a href="screenshots/HomePage.jpg">
+  <img src="screenshots/homepage-thumb.png" alt="Homepage" width="420">
+</a>
 
 ## 🛠 Tech Stack
 
 ### Frontend
-- React
-- JavaScript (ES6+)
-- HTML5
-- CSS3 / Tailwind / Bootstrap
-- Vite or Create React App
+- React 19 + TypeScript
+- Vite
+- React Router
+- MUI (Material UI, MUI X Date Pickers)
+- Day.js
+- Axios
+- i18next (internationalization)
+- Leaflet (maps)
+- Tailwind CSS
 
 ### Backend
-- Node.js
-- Express.js
-- REST API
+- Node.js + Express.js (REST API)
+- Stripe (payments)
+- JWT authentication
+- Multer + Cloudinary (uploads)
+- Nodemailer
 
 ### Database
-- MongoDB (Mongoose) **or**
-- PostgreSQL (Prisma / Knex / Sequelize)
+- MongoDB + Mongoose
 
 ### Tooling
-- Git & GitHub
+- Git & GitHub & Actions GitHub
 - dotenv (environment variables)
 - ESLint / Prettier
 
@@ -114,7 +119,7 @@ JWT_SECRET=your_secret_key
 ```
 
 Backend runs on:  
-http://localhost:5000
+http://localhost:8080
 
 ### Frontend Setup
 
@@ -144,50 +149,104 @@ npm start
 
 ## 🔐 API Overview
 
-### Example Endpoints
+### Endpoints
 
 ```text
-POST   /api/auth/register
-POST   /api/auth/login
-GET    /api/items
-POST   /api/items
-PUT    /api/items/:id
-DELETE /api/items/:id
+
+# Public
+POST   /api/v1/auth/register
+POST   /api/v1/auth/login
+POST   /api/v1/auth/forgot-password
+POST   /api/v1/auth/reset-password/:token
+GET    /api/v1/user/profile
+PUT    /api/v1/user/profile
+GET    /api/v1/calendar/opening-days
+GET    /api/v1/calendar/events
+GET    /api/v1/calendar/month-data
+GET    /api/v1/business-hours
+GET    /api/v1/business-hours/status
+PUT    /api/v1/business-hours
+GET    /api/v1/contact-info
+POST   /api/v1/contact-messages
+GET    /api/v1/contact-messages
+GET    /api/v1/contact-messages/:id
+DELETE /api/v1/contact-messages/:id
+GET    /api/v1/images
+POST   /api/v1/images/upload
+PUT    /api/v1/images
+DELETE /api/v1/images
+GET    /api/v1/staff
+GET    /api/v1/staff/:id
+POST   /api/v1/staff
+PUT    /api/v1/staff/:id
+DELETE /api/v1/staff/:id
+GET    /api/v1/checkout/ticket-types
+POST   /api/v1/checkout/quote
+GET    /api/v1/volunteering/enums/categories
+GET    /api/v1/volunteering/opportunities
+GET    /api/v1/volunteering/opportunities/full
+GET    /api/v1/volunteering/opportunities/applied
+GET    /api/v1/volunteering/opportunities/:opportunityId/applicants
+POST   /api/v1/volunteering/new
+POST   /api/v1/volunteering/opportunity/addApplicant
+PATCH  /api/v1/volunteering/opportunity/applicant/status
+
+# Admin
+GET    /api/v1/admin/events
+POST   /api/v1/admin/events
+PUT    /api/v1/admin/events/:id
+DELETE /api/v1/admin/events/:id
+POST   /api/v1/admin/opening-days
+PUT    /api/v1/admin/opening-days/:id
+DELETE /api/v1/admin/opening-days/:id
+GET    /api/v1/admin/users
+PUT    /api/v1/admin/users/:id
+DELETE /api/v1/admin/users/:id
 ```
 
 ## 🤝 Team & Collaboration
 
 ### Team Members
-- Name — Role
-- Name — Role
-- Name — Role
+- Tracy Cano — Full Stack Developer [GitHub Repo](https://github.com/trca831)
+- Tetiana Klitna — Full Stack Developer [GitHub Repo](https://github.com/TetianaKlitna/)
+- Masouma Ahmadi — Full Stack Developer [GitHub Repo](https://github.com/MASOUMA2023)
+- Uma Sekar — Full Stack Developer [GitHub Repo](https://github.com/umavenki)
+- Maher Algepha — Full Stack Developer [GitHub Repo](https://github.com/Maher-Algepah)
 
 ### Workflow
 - GitHub Issues for task tracking
 - Feature branches for development
 - Pull Requests required for all merges
-- Code reviews before merging to `main`
+- Code reviews before merging to `dev`
 
 
 ## 🧩 Development Process
 
-- Agile / sprint-based workflow
-- Backend API built before frontend integration
-- MVP defined early
-- Incremental feature development
+- Sprint planning with scoped MVP goals
+- Backend-first API design and validation
+- Parallel frontend integration with staged endpoints
+- Incremental delivery with frequent demos and feedback
 
 ## 📌 Known Issues / Limitations
 
-- Limited role-based access control
 - No automated tests yet
 - Performance optimizations pending
 
 ## 🛣 Future Improvements
 
+
 - Add automated testing (Jest, Supertest)
 - Improve security and validation
 - Add caching and performance improvements
 - Dockerize the application
+- Add monitoring/logging (Sentry, structured logs)
+- Accessibility audit and improvements
+
+### Planned Features
+
+- Event booking system
+- Founder story page
+- Virtual zoo tour
 
 ## 🙌 Acknowledgments
 
