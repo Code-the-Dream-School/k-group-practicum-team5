@@ -5,7 +5,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import type { PickersDayProps } from "@mui/x-date-pickers/PickersDay";
-import { Box, CircularProgress, Typography, Paper, Chip, Button, ToggleButton, ToggleButtonGroup} from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  Paper,
+  Chip,
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { formatDate, formatUTCDateToLocal } from "../utils/utilDate";
@@ -15,13 +24,16 @@ import type { MonthData, Event, OpeningDay } from "../types/calendar.types";
 import { ErrorAlert } from "./alert";
 import { useTranslation } from "react-i18next";
 
-
 interface CalendarProps {
   isAdmin?: boolean;
   onEditEvent?: (event: Event) => void;
   onCreateEvent?: (date: string) => void;
   onDeleteEvent?: (eventId: string) => void;
-  onUpdateZooStatus?: (date: string, isOpen: boolean, openingDayId?: string) => void;
+  onUpdateZooStatus?: (
+    date: string,
+    isOpen: boolean,
+    openingDayId?: string,
+  ) => void;
   events?: Event[];
   openingDays?: OpeningDay[];
 }
@@ -52,11 +64,10 @@ export default function Calendar({
   const { getMonthData, isLoading, isError, error } = useCalendar();
   const eventSource = isAdmin ? events : monthData.events;
 
-
   useEffect(() => {
     const fetchData = async () => {
       const data = await getMonthData(year, month);
-       setMonthData(data);
+      setMonthData(data);
     };
     fetchData();
   }, [year, month, getMonthData]);
@@ -68,8 +79,7 @@ export default function Calendar({
 
   const eventDaysSet = useMemo(() => {
     const source = isAdmin ? events : monthData.events;
-    return new Set(source.map(e => formatUTCDateToLocal(e.date)));
-
+    return new Set(source.map((e) => formatUTCDateToLocal(e.date)));
   }, [isAdmin, events, monthData.events]);
 
   const isPastDate = (day: Dayjs): boolean => {
@@ -93,7 +103,7 @@ export default function Calendar({
   const hasSpecialHours = (day: Dayjs): boolean => {
     const dayStr = formatDate(day);
     const openingDay = mergedOpeningDays.find(
-     (od: OpeningDay) => formatUTCDateToLocal(od.date) === dayStr,
+      (od: OpeningDay) => formatUTCDateToLocal(od.date) === dayStr,
     );
     return openingDay?.specialHours ? true : false;
   };
@@ -103,8 +113,6 @@ export default function Calendar({
     const hasEvents = hasEventsOnDay(day as Dayjs);
     const isClosed = isClosedOnDay(day as Dayjs);
     const specialHours = hasSpecialHours(day as Dayjs);
-
-  
 
     let backgroundColor = "transparent";
     let hoverColor = "transparent";
@@ -119,15 +127,14 @@ export default function Calendar({
       backgroundColor = theme.palette.success.light;
       hoverColor = theme.palette.success.main;
     }
-  
 
     return (
       <PickersDay
         {...other}
         day={day}
-        onClick = {() => {
+        onClick={() => {
           const isClosed = isClosedOnDay(day as Dayjs);
-          if(isAdmin && onCreateEvent && !isClosed){
+          if (isAdmin && onCreateEvent && !isClosed) {
             onCreateEvent(day.format("YYYY-MM-DD"));
           }
         }}
@@ -135,10 +142,16 @@ export default function Calendar({
         sx={{
           backgroundColor,
           fontWeight: hasEvents || isClosed || specialHours ? "bold" : "normal",
-          cursor: (isAdmin && isClosed) ? "pointer" : (isClosed ? "not-allowed" : "pointer"),
-          opacity: (!isAdmin && isClosed) ? 0.6 : 1,
+          cursor:
+            isAdmin && isClosed
+              ? "pointer"
+              : isClosed
+                ? "not-allowed"
+                : "pointer",
+          opacity: !isAdmin && isClosed ? 0.6 : 1,
           "&:hover": {
-            backgroundColor: (!isAdmin && isClosed) ? backgroundColor : hoverColor,
+            backgroundColor:
+              !isAdmin && isClosed ? backgroundColor : hoverColor,
           },
           "&.Mui-selected": {
             backgroundColor: `${backgroundColor} !important`,
@@ -152,23 +165,20 @@ export default function Calendar({
   };
 
   const eventsOnSelectedDay = eventSource.filter(
-    event =>
-        formatUTCDateToLocal(event.date) === formatDate(selectedDate)
+    (event) => formatUTCDateToLocal(event.date) === formatDate(selectedDate),
   );
 
-
   const openingDayInfo = mergedOpeningDays.find(
-     (od) => formatUTCDateToLocal(od.date) === formatDate(selectedDate),
+    (od) => formatUTCDateToLocal(od.date) === formatDate(selectedDate),
   );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ p: 3 }}>
-        
         <Typography variant="h4" gutterBottom>
           {t("calendar.title")}
         </Typography>
-       
+
         {isError && <ErrorAlert message={error} />}
 
         <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
@@ -275,39 +285,45 @@ export default function Calendar({
                       <ToggleButtonGroup
                         value={openingDayInfo.isOpen ? "open" : "closed"}
                         exclusive
-                        onChange={(event, newValue) => {
+                        onChange={(_event, newValue) => {
                           if (newValue !== null) {
                             onUpdateZooStatus?.(
                               formatDate(selectedDate),
                               newValue === "open",
-                              openingDayInfo._id
+                              openingDayInfo._id,
                             );
                           }
                         }}
                         size="small"
                       >
-                        <ToggleButton value="open" sx={{ 
-                          color: "success.main",
-                          "&.Mui-selected": {
-                            backgroundColor: "success.light",
-                            color: "success.dark",
-                            "&:hover": {
-                              backgroundColor: "success.light"
-                            }
-                          }
-                        }}>
+                        <ToggleButton
+                          value="open"
+                          sx={{
+                            color: "success.main",
+                            "&.Mui-selected": {
+                              backgroundColor: "success.light",
+                              color: "success.dark",
+                              "&:hover": {
+                                backgroundColor: "success.light",
+                              },
+                            },
+                          }}
+                        >
                           Open
                         </ToggleButton>
-                        <ToggleButton value="closed" sx={{ 
-                          color: "error.main",
-                          "&.Mui-selected": {
-                            backgroundColor: "error.light",
-                            color: "error.dark",
-                            "&:hover": {
-                              backgroundColor: "error.light"
-                            }
-                          }
-                        }}>
+                        <ToggleButton
+                          value="closed"
+                          sx={{
+                            color: "error.main",
+                            "&.Mui-selected": {
+                              backgroundColor: "error.light",
+                              color: "error.dark",
+                              "&:hover": {
+                                backgroundColor: "error.light",
+                              },
+                            },
+                          }}
+                        >
                           Closed
                         </ToggleButton>
                       </ToggleButtonGroup>
@@ -332,48 +348,50 @@ export default function Calendar({
                 </Box>
               ) : (
                 <Box sx={{ mb: 2 }}>
-                  <Chip
-                    label="Zoo Open"
-                    color="success"
-                    sx={{ mb: 1 }}
-                  />
+                  <Chip label="Zoo Open" color="success" sx={{ mb: 1 }} />
                   {isAdmin && !isPastDate(selectedDate) && (
                     <Box sx={{ mb: 1, mt: 1 }}>
                       <ToggleButtonGroup
                         value="open"
                         exclusive
-                        onChange={(event, newValue) => {
+                        onChange={(_event, newValue) => {
                           if (newValue !== null) {
                             onUpdateZooStatus?.(
                               formatDate(selectedDate),
-                              newValue === "open"
+                              newValue === "open",
                             );
                           }
                         }}
                         size="small"
                       >
-                        <ToggleButton value="open" sx={{ 
-                          color: "success.main",
-                          "&.Mui-selected": {
-                            backgroundColor: "success.light",
-                            color: "success.dark",
-                            "&:hover": {
-                              backgroundColor: "success.light"
-                            }
-                          }
-                        }}>
+                        <ToggleButton
+                          value="open"
+                          sx={{
+                            color: "success.main",
+                            "&.Mui-selected": {
+                              backgroundColor: "success.light",
+                              color: "success.dark",
+                              "&:hover": {
+                                backgroundColor: "success.light",
+                              },
+                            },
+                          }}
+                        >
                           Open
                         </ToggleButton>
-                        <ToggleButton value="closed" sx={{ 
-                          color: "error.main",
-                          "&.Mui-selected": {
-                            backgroundColor: "error.light",
-                            color: "error.dark",
-                            "&:hover": {
-                              backgroundColor: "error.light"
-                            }
-                          }
-                        }}>
+                        <ToggleButton
+                          value="closed"
+                          sx={{
+                            color: "error.main",
+                            "&.Mui-selected": {
+                              backgroundColor: "error.light",
+                              color: "error.dark",
+                              "&:hover": {
+                                backgroundColor: "error.light",
+                              },
+                            },
+                          }}
+                        >
                           Closed
                         </ToggleButton>
                       </ToggleButtonGroup>
@@ -390,7 +408,6 @@ export default function Calendar({
               </Typography>
               {eventsOnSelectedDay.length > 0 ? (
                 eventsOnSelectedDay.map((event) => {
-                 
                   const handleAddToCalendar = () => {
                     const date = formatDate(selectedDate);
                     const start = event.startTime
@@ -477,28 +494,26 @@ export default function Calendar({
                             mt: 2,
                           }}
                         />
-                      )} 
+                      )}
                       {isAdmin && !isPastDate(selectedDate) && (
-                        
-                          <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              onClick={() => onEditEvent?.(event)}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              size="small"
-                              color="error"
-                              variant="outlined"
-                              onClick={() => onDeleteEvent?.(event._id)}
-                            >
-                              Delete
-                            </Button>
-                          </Box>
-                        )}
-
+                        <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() => onEditEvent?.(event)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            color="error"
+                            variant="outlined"
+                            onClick={() => onDeleteEvent?.(event._id)}
+                          >
+                            Delete
+                          </Button>
+                        </Box>
+                      )}
                     </Paper>
                   );
                 })
@@ -514,4 +529,3 @@ export default function Calendar({
     </LocalizationProvider>
   );
 }
-
