@@ -39,7 +39,7 @@ function App() {
             <Route path="book-tickets" element={<BookTicketsPage />} />
             <Route path="signup" element={<Signup />} />
             <Route path="staff" element={<StaffDirectory />} />
-            <Route path="tickets/success" element={<TicketSuccessPage />} />
+            <Route path="tickets-success" element={<TicketSuccessPage />} />
             <Route path="login" element={<Login />} />
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />

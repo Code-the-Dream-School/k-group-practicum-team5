@@ -36,7 +36,7 @@ router.post("/create-session", async (req, res) => {
     }
 
     if (quantity === 0) continue;
-    if (type.priceCents === 0) continue; // toddler is free → skip Stripe line item
+    if (type.priceCents === 0) continue;
 
     line_items.push({
       price_data: {
@@ -55,7 +55,7 @@ router.post("/create-session", async (req, res) => {
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     line_items,
-    success_url: `${process.env.FRONTEND_URL}/tickets/success`,
+    success_url: `${process.env.FRONTEND_URL}/tickets-success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.FRONTEND_URL}/book-tickets`,
   });
 
