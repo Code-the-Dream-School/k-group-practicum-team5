@@ -36,10 +36,10 @@ function App() {
             <Route path="gallery" element={<GalleryPage />} />
             <Route path="contact" element={<Contact />} />
             <Route path="map" element={<MapPage />} />
-            <Route path="/book-tickets" element={<BookTicketsPage />} />
+            <Route path="book-tickets" element={<BookTicketsPage />} />
             <Route path="signup" element={<Signup />} />
             <Route path="staff" element={<StaffDirectory />} />
-            <Route path="/tickets/success" element={<TicketSuccessPage />} />
+            <Route path="tickets/success" element={<TicketSuccessPage />} />
             <Route path="login" element={<Login />} />
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
@@ -53,7 +53,7 @@ function App() {
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="gallery/manage" element={<ManageGalleryPage />} />
-              <Route path="admin/calendar" element={ <ManageCalendar /> } />
+              <Route path="admin/calendar" element={<ManageCalendar />} />
               <Route
                 path="volunteering/opportunities/admin/new"
                 element={<NewVolunteeringOpportunity />}
